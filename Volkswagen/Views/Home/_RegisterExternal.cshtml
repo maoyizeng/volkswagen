@@ -1,0 +1,25 @@
+﻿<!-- ko with: registerExternal -->
+<h2>注册</h2>
+<form class="form-horizontal" role="form">
+    <h4 data-bind="text: 'Associate your ' + loginProvider() + ' account.'"></h4>
+    <hr />
+    <p class="text-success">
+        你已成功使用 <strong data-bind="text: loginProvider"></strong> 进行身份验证。
+            请在下面输入此站点的用户名，然后单击“注册”按钮以完成登录。
+    </p>
+    <ul class="text-danger" data-bind="foreach: errors">
+        <li data-bind="text: $data"></li>
+    </ul>
+    <div class="form-group">
+        <label for="RegisterExternalUserName" class="col-md-2 control-label">用户名</label>
+        <div class="col-md-10">
+            <input type="text" id="RegisterExternalUserName" class="form-control" data-bind="value: userName, hasFocus: true" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-default" data-bind="click: register, disable: registering">注册</button>
+        </div>
+    </div>
+</form>
+<!-- /ko -->
