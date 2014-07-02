@@ -37,6 +37,12 @@ namespace Volkswagen.Controllers
             try
             {
                 // TODO: Add insert logic here
+                if (!CheckEntity())
+                {
+                    Error();
+                }
+
+                InsertToDB();
 
                 return RedirectToAction("Index");
             }

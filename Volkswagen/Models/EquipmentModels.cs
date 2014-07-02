@@ -7,7 +7,7 @@ namespace Volkswagen.Models
 {
     // 用作 EquipmentController 操作的参数的模型。
 
-    public class EquipmentModelsDefault1
+    public class EquipmentModels
     {
         [Display(Name = "设备编号")]
         public string EquipmentNumber { get; set; }
