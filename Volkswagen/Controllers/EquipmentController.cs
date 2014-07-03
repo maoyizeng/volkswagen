@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Volkswagen.Models;
 
 namespace Volkswagen.Controllers
 {
@@ -32,7 +33,7 @@ namespace Volkswagen.Controllers
         //
         // POST: /Equipment/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create([Bind(Include = "CourseID,Title,Credits,DepartmentID")]EquipmentModels em)
         {
             try
             {
@@ -42,7 +43,7 @@ namespace Volkswagen.Controllers
                     Error();
                 }
 
-                InsertToDB();
+                InsertToDB(em);
 
                 return RedirectToAction("Index");
             }
@@ -50,6 +51,7 @@ namespace Volkswagen.Controllers
             {
                 return View();
             }
+            
         }
 
         //
@@ -62,12 +64,17 @@ namespace Volkswagen.Controllers
         //
         // POST: /Equipment/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(int id, [Bind(Include = "CourseID,Title,Credits,DepartmentID")]EquipmentModels em)
         {
             try
             {
                 // TODO: Add update logic here
+                if (!CheckEntity())
+                {
+                    Error();
+                }
 
+                EditDB(em);
                 return RedirectToAction("Index");
             }
             catch
@@ -80,6 +87,8 @@ namespace Volkswagen.Controllers
         // GET: /Equipment/Delete/5
         public ActionResult Delete(int id)
         {
+            InsertToDB(TableAdmin, id);
+            DeleteFromDB(id);
             return View();
         }
 
