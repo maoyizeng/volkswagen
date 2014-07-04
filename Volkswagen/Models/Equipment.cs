@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Volkswagen
+namespace Volkswagen.Models
 {
     using System;
     using System.Collections.Generic;
