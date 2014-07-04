@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="VWContextModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Equipments">
+          <Key>
+            <PropertyRef Name="EquipId" />
+          </Key>
+          <Property Name="EquipId" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="EquipDes" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Person" Type="nvarchar" MaxLength="10" />
+          <Property Name="Section" Type="nvarchar" MaxLength="30" />
+          <Property Name="WSArea" Type="nvarchar" MaxLength="15" />
+          <Property Name="Photo" Type="nvarchar(max)" />
+          <Property Name="ItemInspect" Type="nvarchar" MaxLength="15" />
+          <Property Name="RegularCare" Type="nvarchar" MaxLength="15" />
+          <Property Name="Check" Type="nvarchar" MaxLength="15" />
+          <Property Name="RoutingInspect" Type="nvarchar" MaxLength="15" />
+          <Property Name="TPMFile" Type="nvarchar(max)" />
+          <Property Name="Rules" Type="nvarchar(max)" />
+          <Property Name="TechnicFile" Type="nvarchar(max)" />
+          <Property Name="TrainingFile" Type="nvarchar(max)" />
+          <Property Name="ChangeTime" Type="datetime" />
+          <Property Name="Changer" Type="nvarchar" MaxLength="10" />
+          <Property Name="CreateTime" Type="datetime" />
+          <Property Name="Creator" Type="nvarchar" MaxLength="10" />
+          <Property Name="Remark" Type="text" />
+        </EntityType>
+        <EntityType Name="Equipments_backup">
+          <Key>
+            <PropertyRef Name="EquipId" />
+          </Key>
+          <Property Name="EquipId" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="EquipDes" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Person" Type="nvarchar" MaxLength="10" />
+          <Property Name="Section" Type="nvarchar" MaxLength="30" />
+          <Property Name="WSArea" Type="nvarchar" MaxLength="15" />
+          <Property Name="Photo" Type="nvarchar(max)" />
+          <Property Name="ItemInspect" Type="nvarchar" MaxLength="15" />
+          <Property Name="RegularCare" Type="nvarchar" MaxLength="15" />
+          <Property Name="Check" Type="nvarchar" MaxLength="15" />
+          <Property Name="RoutingInspect" Type="nvarchar" MaxLength="15" />
+          <Property Name="TPMFile" Type="nvarchar(max)" />
+          <Property Name="Rules" Type="nvarchar(max)" />
+          <Property Name="TechnicFile" Type="nvarchar(max)" />
+          <Property Name="TrainingFile" Type="nvarchar(max)" />
+          <Property Name="ChangeTime" Type="datetime" />
+          <Property Name="Changer" Type="nvarchar" MaxLength="10" />
+          <Property Name="CreateTime" Type="datetime" />
+          <Property Name="Creator" Type="nvarchar" MaxLength="10" />
+          <Property Name="Remark" Type="text" />
+        </EntityType>
+        <EntityContainer Name="VWContextModelStoreContainer">
+          <EntitySet Name="Equipments" EntityType="Self.Equipments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Equipments_backup" EntityType="Self.Equipments_backup" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="VWContextModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Equipment">
+          <Key>
+            <PropertyRef Name="EquipId" />
+          </Key>
+          <Property Name="EquipId" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EquipDes" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Person" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Section" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="WSArea" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Photo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ItemInspect" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="RegularCare" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Check" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="RoutingInspect" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="TPMFile" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Rules" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TechnicFile" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TrainingFile" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ChangeTime" Type="DateTime" Precision="3" />
+          <Property Name="Changer" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Precision="3" />
+          <Property Name="Creator" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Equipments_backup">
+          <Key>
+            <PropertyRef Name="EquipId" />
+          </Key>
+          <Property Name="EquipId" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EquipDes" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Person" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Section" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="WSArea" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Photo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ItemInspect" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="RegularCare" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Check" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="RoutingInspect" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="TPMFile" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Rules" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TechnicFile" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TrainingFile" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ChangeTime" Type="DateTime" Precision="3" />
+          <Property Name="Changer" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Precision="3" />
+          <Property Name="Creator" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Equipments" EntityType="Self.Equipment" />
+          <EntitySet Name="Equipments_backup" EntityType="Self.Equipments_backup" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="VWContextModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Equipments">
+            <EntityTypeMapping TypeName="VWContextModel.Equipment">
+              <MappingFragment StoreEntitySet="Equipments">
+                <ScalarProperty Name="EquipId" ColumnName="EquipId" />
+                <ScalarProperty Name="EquipDes" ColumnName="EquipDes" />
+                <ScalarProperty Name="Person" ColumnName="Person" />
+                <ScalarProperty Name="Section" ColumnName="Section" />
+                <ScalarProperty Name="WSArea" ColumnName="WSArea" />
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+                <ScalarProperty Name="ItemInspect" ColumnName="ItemInspect" />
+                <ScalarProperty Name="RegularCare" ColumnName="RegularCare" />
+                <ScalarProperty Name="Check" ColumnName="Check" />
+                <ScalarProperty Name="RoutingInspect" ColumnName="RoutingInspect" />
+                <ScalarProperty Name="TPMFile" ColumnName="TPMFile" />
+                <ScalarProperty Name="Rules" ColumnName="Rules" />
+                <ScalarProperty Name="TechnicFile" ColumnName="TechnicFile" />
+                <ScalarProperty Name="TrainingFile" ColumnName="TrainingFile" />
+                <ScalarProperty Name="ChangeTime" ColumnName="ChangeTime" />
+                <ScalarProperty Name="Changer" ColumnName="Changer" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Creator" ColumnName="Creator" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Equipments_backup">
+            <EntityTypeMapping TypeName="VWContextModel.Equipments_backup">
+              <MappingFragment StoreEntitySet="Equipments_backup">
+                <ScalarProperty Name="EquipId" ColumnName="EquipId" />
+                <ScalarProperty Name="EquipDes" ColumnName="EquipDes" />
+                <ScalarProperty Name="Person" ColumnName="Person" />
+                <ScalarProperty Name="Section" ColumnName="Section" />
+                <ScalarProperty Name="WSArea" ColumnName="WSArea" />
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+                <ScalarProperty Name="ItemInspect" ColumnName="ItemInspect" />
+                <ScalarProperty Name="RegularCare" ColumnName="RegularCare" />
+                <ScalarProperty Name="Check" ColumnName="Check" />
+                <ScalarProperty Name="RoutingInspect" ColumnName="RoutingInspect" />
+                <ScalarProperty Name="TPMFile" ColumnName="TPMFile" />
+                <ScalarProperty Name="Rules" ColumnName="Rules" />
+                <ScalarProperty Name="TechnicFile" ColumnName="TechnicFile" />
+                <ScalarProperty Name="TrainingFile" ColumnName="TrainingFile" />
+                <ScalarProperty Name="ChangeTime" ColumnName="ChangeTime" />
+                <ScalarProperty Name="Changer" ColumnName="Changer" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Creator" ColumnName="Creator" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
