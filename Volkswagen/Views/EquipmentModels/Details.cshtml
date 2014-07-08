@@ -1,0 +1,170 @@
+﻿@model Volkswagen.Models.EquipmentModels
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>EquipmentModels</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.EquipId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EquipId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EquipDes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EquipDes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Person)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Person)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Section)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Section)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WSArea)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WSArea)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Photo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Photo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ItemInspect)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ItemInspect)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RegularCare)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RegularCare)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Check)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Check)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RoutingInspect)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RoutingInspect)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TPMFile)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TPMFile)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Rules)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Rules)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TechnicFile)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TechnicFile)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TrainingFile)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TrainingFile)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ChangeTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ChangeTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Changer)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Changer)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Creator)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Creator)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.EquipmentNumber }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
