@@ -9,6 +9,7 @@ namespace Volkswagen.Models
 {
     // 用作 EquipmentController 操作的参数的模型。
 
+    [Table("Equipments")]
     public class EquipmentModels
     {
         [Key]
