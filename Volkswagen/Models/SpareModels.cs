@@ -103,7 +103,8 @@ namespace Volkswagen.Models
 
 //      表连接关系
         public virtual EquipmentModels Equipments { get; set; }
-
+        public virtual ICollection<SpareUserModels> SpareUsers { get; set; }
+      
 
 
     }
