@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Edit</h2>
@@ -15,15 +16,7 @@
         <h4>EquipmentModels</h4>
         <hr />
         @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.EquipmentNumber)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.EquipId, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EquipId)
-                @Html.ValidationMessageFor(model => model.EquipId)
-            </div>
-        </div>
+        @Html.HiddenFor(model => model.EquipmentID)
 
         <div class="form-group">
             @Html.LabelFor(model => model.EquipDes, new { @class = "control-label col-md-2" })
