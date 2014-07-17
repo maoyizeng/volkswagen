@@ -75,6 +75,25 @@ namespace Volkswagen.Controllers
             return View(equipmentmodels);
         }
 
+        // POST: /Equipment/Query
+        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
+        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Details(JsonResult json)
+        {
+            if (json == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            EquipmentModels equipmentmodels = await db.Equipments.FindAsync(json);
+            if (equipmentmodels == null)
+            {
+                return HttpNotFound();
+            }
+            return View(equipmentmodels);
+        }
+
         // POST: /Equipment/Edit/5
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
