@@ -92,5 +92,8 @@ namespace Volkswagen.Models
         [Column(TypeName = "ntext")]
         public string Remark { get; set; }
 
+
+        public virtual ICollection<SpareModels> Spares { get; set; }
+        public virtual ICollection<InspectionModels> Inspections { get; set; }
     }
 }

@@ -59,6 +59,7 @@ namespace Volkswagen.Models
         [StringLength(50)]
         public string Property { get; set; }
 
+  //      [ForeignKey("Equipments")]
         [Display(Name = "设备编号")]
         [StringLength(15)]
         public string EquipmentID { get; set; }
@@ -100,6 +101,10 @@ namespace Volkswagen.Models
         [StringLength(10)]
         public string Creator { get; set; }
 
+//      表连接关系
+        public virtual EquipmentModels Equipments { get; set; }
+        public virtual ICollection<SpareUserModels> SpareUsers { get; set; }
+      
 
 
     }

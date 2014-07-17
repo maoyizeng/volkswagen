@@ -89,6 +89,9 @@ namespace Volkswagen.Models
         public string Creator { get; set; }
 
 
+        //      表连接关系
+        public virtual EquipmentModels Equipments { get; set; }
+
 
     }
 }
