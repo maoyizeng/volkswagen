@@ -9,12 +9,29 @@ using System.Web;
 using System.Web.Mvc;
 using Volkswagen.Models;
 using Volkswagen.DAL;
+using System.Linq.Expressions;
 
 namespace Volkswagen.Controllers
 {
     public class EquipmentController : Controller
     {
         private SVWContext db = new SVWContext();
+        /*private enum operation
+        {
+            EQ,     // == equal to
+            GT,     // >  greater than
+            LT,     // <  less than
+            GE,     // >= greater than or equal to
+            LE,     // <= less than or equal to
+            CONTAIN // contain
+        };
+        string[] operation = new string[] {
+            "=",
+            ">",
+            "<",
+            ">=",
+            "<="
+        };*/
 
         // GET: /Equipment/
         public async Task<ActionResult> Index()
@@ -82,11 +99,85 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Query()
         {
-            string field = Request.Form["field"];
-            string op = Request.Form["op"];
-            string operand = Request.Form["operand"];
-            EquipmentModels equipmentmodels = null;// = await db.Equipments.Where(p => p);
-            return View(equipmentmodels);
+            //var equipmentList = await db.Equipments.ToListAsync();// = await db.Equipments.Where(p => p);
+            //string sql = "SELECT * FROM Equipments WHERE 1=1";
+
+            /*for (int n = 0; ; n++) {
+                string field = Request.Form["field" + n];
+                string op = Request.Form["op" + n];
+                string operand = Request.Form["operand" + n];
+                if (string.IsNullOrEmpty(field)) break;
+                switch (Convert.ToByte(op))
+                {
+                    case 0:
+                        sql += " AND p." + field + "=" + operand;
+                        break;
+                    case 1:
+                        sql += " AND p." + field + ">" + operand;
+                        break;
+                    case 2:
+                        sql += " AND p." + field + "<" + operand;
+                        break;
+                    case 3:
+                        sql += " AND p." + field + ">=" + operand;
+                        break;
+                    case 4:
+                        sql += " AND p." + field + "<=" + operand;
+                        break;
+                    case 5:
+                        //sql += " AND " + field + ">" + operand;
+                        break;
+                    default:
+                        break;
+                }
+            }*/
+
+            ParameterExpression param = Expression.Parameter(typeof(EquipmentModels), "p");
+            Expression filter = Expression.Constant(true);
+            for (int n = 0; ; n++) {
+                string field = Request.Form["field" + n];
+                string op = Request.Form["op" + n];
+                string operand = Request.Form["operand" + n];
+                if (string.IsNullOrEmpty(field)) break;
+
+                Expression left = Expression.Property(param, typeof(EquipmentModels).GetProperty(field));
+                Expression right = Expression.Constant(operand);
+                Expression result;
+
+                switch (Convert.ToByte(op))
+                {
+                    case 0:
+                        result = Expression.Equal(left, right);
+                        break;
+                    case 1:
+                        result = Expression.GreaterThan(left, right);
+                        break;
+                    case 2:
+                        result = Expression.LessThan(left, right);
+                        break;
+                    case 3:
+                        result = Expression.GreaterThanOrEqual(left, right);
+                        break;
+                    case 4:
+                        result = Expression.LessThanOrEqual(left, right);
+                        break;
+                    case 5:
+                        result = Expression.Equal(left, right);
+                        break;
+                    default:
+                        result = Expression.Equal(left, right);
+                        break;
+                }
+                filter = Expression.And(filter, result);
+            }
+
+            Expression pred = Expression.Lambda(filter, param);
+
+            var e = db.Equipments;
+            Expression expr = Expression.Call(typeof(Queryable), "Where", new Type[] { typeof(EquipmentModels) }, Expression.Constant(e), pred);
+
+            IQueryable<EquipmentModels> equipmentList = db.Equipments.AsQueryable().Provider.CreateQuery<EquipmentModels>(expr);
+            return View(equipmentList.ToList());
         }
 
         // POST: /Equipment/Edit/5

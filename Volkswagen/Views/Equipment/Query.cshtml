@@ -10,9 +10,10 @@
 <div class="container">
     <div class="form-group">
         @using(Html.BeginForm("Query", "Equipment", FormMethod.Post)) {
-            @Html.TextBox("field")
-            @Html.TextBox("op")
-            @Html.TextBox("operand")
+            @Html.TextBox("field0")
+            @Html.TextBox("op0")
+            @Html.TextBox("operand0")
+            <button type="submit" value="+" onclick="append_input()" />
             <input type="submit" id="query" value="确定" />
         }
     </div>

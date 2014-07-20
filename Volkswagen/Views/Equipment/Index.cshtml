@@ -7,6 +7,37 @@
 
 <h2>Index</h2>
 
+<script type="text/javascript">
+    var row = 1;
+    function append_input() {
+        var f = document.getElementById("query_form");
+        var field = document.createElement("input");
+        var op = document.createElement("input");
+        var operand = document.createElement("input");
+
+        field.name = "field" + row;
+        field.name = "op" + row;
+        field.name = "operand" + row;
+
+        f.appendChild(field);
+        f.appendChild(op);
+        f.appendChild(operand);
+    }
+</script>
+
+<div class="container">
+    <div class="form-group" id="query_form">
+        @using (Html.BeginForm("Query", "Equipment", FormMethod.Post))
+        {
+            @Html.TextBox("field0")
+            @Html.TextBox("op0")
+            @Html.TextBox("operand0")
+            <button type="submit" value="+" onclick="append_input()" />
+            <button type="submit" id="query" value="确定" />
+        }
+    </div>
+</div>
+
 <p>
     @Html.ActionLink("Create New", "Create")
     @Html.ActionLink("Query", "Query")
