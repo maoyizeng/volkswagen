@@ -80,17 +80,12 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Details(JsonResult json)
+        public async Task<ActionResult> Query()
         {
-            if (json == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            EquipmentModels equipmentmodels = await db.Equipments.FindAsync(json);
-            if (equipmentmodels == null)
-            {
-                return HttpNotFound();
-            }
+            string field = Request.Form["field"];
+            string op = Request.Form["op"];
+            string operand = Request.Form["operand"];
+            EquipmentModels equipmentmodels = null;// = await db.Equipments.Where(p => p);
             return View(equipmentmodels);
         }
 
