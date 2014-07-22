@@ -1,191 +1,168 @@
-﻿@model Volkswagen.Models.EquipmentModels
+﻿@model IEnumerable<Volkswagen.Models.EquipmentModels>
 
 @{
     ViewBag.Title = "Query";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Query</h2>
+<h2>Index</h2>
+
+<script type="text/javascript">
+    var row = 1;
+    function append_input() {
+        var f = document.getElementById("query_form");
+        var field = document.createElement("input");
+        var op = document.createElement("input");
+        var operand = document.createElement("input");
+
+        field.name = "field" + row;
+        field.name = "op" + row;
+        field.name = "operand" + row;
+
+        f.appendChild(field);
+        f.appendChild(op);
+        f.appendChild(operand);
+    }
+</script>
 
 <div class="container">
-    <div class="form-group">
-        @using(Html.BeginForm("Query", "Equipment", FormMethod.Post)) {
+    <div class="form-group" id="query_form">
+        @using (Html.BeginForm("Query", "Equipment", FormMethod.Post))
+        {
             @Html.TextBox("field0")
             @Html.TextBox("op0")
             @Html.TextBox("operand0")
             <button type="submit" value="+" onclick="append_input()" />
-            <input type="submit" id="query" value="确定" />
+            <button type="submit" id="query" value="确定" />
         }
     </div>
 </div>
 
+<p>
+    @Html.ActionLink("Query", "Query")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.EquipDes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Person)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Section)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WSArea)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Photo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ItemInspect)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RegularCare)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Check)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RoutingInspect)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TPMFile)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Rules)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TechnicFile)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TrainingFile)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChangeTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Changer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Creator)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remark)
+        </th>
+        <th></th>
+    </tr>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>EquipmentModels</h4>
-        <hr />
-        @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.EquipmentID)
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EquipDes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Person)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Section)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WSArea)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Photo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemInspect)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegularCare)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Check)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoutingInspect)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TPMFile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rules)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TechnicFile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TrainingFile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChangeTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Changer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Creator)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Remark)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.EquipmentID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.EquipmentID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.EquipmentID })
+            </td>
+        </tr>
+    }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.EquipDes, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EquipDes)
-                @Html.ValidationMessageFor(model => model.EquipDes)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Person, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Person)
-                @Html.ValidationMessageFor(model => model.Person)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Section, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Section)
-                @Html.ValidationMessageFor(model => model.Section)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.WSArea, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.WSArea)
-                @Html.ValidationMessageFor(model => model.WSArea)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Photo, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Photo)
-                @Html.ValidationMessageFor(model => model.Photo)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ItemInspect, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ItemInspect)
-                @Html.ValidationMessageFor(model => model.ItemInspect)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.RegularCare, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.RegularCare)
-                @Html.ValidationMessageFor(model => model.RegularCare)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Check, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Check)
-                @Html.ValidationMessageFor(model => model.Check)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.RoutingInspect, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.RoutingInspect)
-                @Html.ValidationMessageFor(model => model.RoutingInspect)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.TPMFile, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TPMFile)
-                @Html.ValidationMessageFor(model => model.TPMFile)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Rules, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Rules)
-                @Html.ValidationMessageFor(model => model.Rules)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.TechnicFile, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TechnicFile)
-                @Html.ValidationMessageFor(model => model.TechnicFile)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.TrainingFile, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TrainingFile)
-                @Html.ValidationMessageFor(model => model.TrainingFile)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ChangeTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ChangeTime)
-                @Html.ValidationMessageFor(model => model.ChangeTime)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Changer, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Changer)
-                @Html.ValidationMessageFor(model => model.Changer)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CreateTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CreateTime)
-                @Html.ValidationMessageFor(model => model.CreateTime)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Creator, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Creator)
-                @Html.ValidationMessageFor(model => model.Creator)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Remark)
-                @Html.ValidationMessageFor(model => model.Remark)
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+</table>

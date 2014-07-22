@@ -96,7 +96,7 @@ namespace Volkswagen.Controllers
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> Query()
         {
             //var equipmentList = await db.Equipments.ToListAsync();// = await db.Equipments.Where(p => p);
@@ -176,8 +176,9 @@ namespace Volkswagen.Controllers
             var e = db.Equipments;
             Expression expr = Expression.Call(typeof(Queryable), "Where", new Type[] { typeof(EquipmentModels) }, Expression.Constant(e), pred);
 
-            IQueryable<EquipmentModels> equipmentList = db.Equipments.AsQueryable().Provider.CreateQuery<EquipmentModels>(expr);
-            return View(equipmentList.ToList());
+            //IQueryable<EquipmentModels> equipmentList = db.Equipments.AsQueryable().Provider.CreateQuery<EquipmentModels>(expr).ToListAsync();
+           // var equipmentList = db.Equipments.AsQueryable().Provider.CreateQuery<EquipmentModels>(expr).ToListAsync();
+            return View(db.Equipments.AsQueryable().Provider.CreateQuery<EquipmentModels>(expr).ToList());
         }
 
         // POST: /Equipment/Edit/5
