@@ -178,7 +178,8 @@ namespace Volkswagen.Controllers
 
             //IQueryable<EquipmentModels> equipmentList = db.Equipments.AsQueryable().Provider.CreateQuery<EquipmentModels>(expr).ToListAsync();
            // var equipmentList = db.Equipments.AsQueryable().Provider.CreateQuery<EquipmentModels>(expr).ToListAsync();
-            return View(db.Equipments.AsQueryable().Provider.CreateQuery<EquipmentModels>(expr).ToList());
+            ViewData.Model = db.Equipments.AsQueryable().Provider.CreateQuery<EquipmentModels>(expr).ToList();
+            return RedirectToAction("Index");
         }
 
         // POST: /Equipment/Edit/5
