@@ -1,36 +1,103 @@
 ﻿@model IEnumerable<Volkswagen.Models.EquipmentModels>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "设备";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Index</h2>
 
+@{
+    IEnumerable<SelectListItem> fields = ViewData["fields"] as IEnumerable<SelectListItem>;
+    IEnumerable<SelectListItem> ops = ViewData["operations"] as IEnumerable<SelectListItem>;
+    int row = 0;
+}
+
 <script type="text/javascript">
-    var row = 1;
+    var row = 0;
+    var fieldMap = new Array(
+        "设备编号",
+        "设备名称",
+        "负责人",
+        "所在工段",
+        "车间生产线",
+        "点检",
+        "日常保养",
+        "巡检",
+        "需更新否",
+        "最后修改时间",
+        "修改人",
+        "创建时间",
+        "创建人",
+        "备注"
+    );
+
+    var opMap = new Array(
+        "=",
+        ">",
+        "<",
+        ">=",
+        "<="
+        );
+
+    var valueMap = new Array(
+    "EquipmentID",
+    "EquipDes",
+    "Person",
+    "Section",
+    "WSArea",
+    "ItemInspect",
+    "RegularCare",
+    "Check",
+    "RoutingInspect",
+    "ChangeTime",
+    "Changer",
+    "CreateTime",
+    "Creator",
+    "Remark");
+
     function append_input() {
+        row++;
         var f = document.getElementById("query_form");
-        var field = document.createElement("input");
-        var op = document.createElement("input");
+        var field = document.createElement("select");
+        var op = document.createElement("select");
         var operand = document.createElement("input");
 
         field.name = "field" + row;
-        field.name = "op" + row;
-        field.name = "operand" + row;
+        op.name = "op" + row;
+        operand.name = "operand" + row;
+
+        for (var i = 0; i < fieldMap.length; i++) {
+            var option = document.createElement("option");
+            option.text = fieldMap[i];
+            option.value = valueMap[i];
+            field.add(option);
+        }
+
+        for (var i = 0; i < opMap.length; i++) {
+            var ooption = document.createElement("option");
+            ooption.text = opMap[i];
+            ooption.value = i;
+            op.add(ooption);
+        }
+       
 
         f.appendChild(field);
         f.appendChild(op);
         f.appendChild(operand);
+        
+        
     }
 </script>
+
+
 
 <div class="container">
     <div class="form-group" id="query_form">
         @using (Html.BeginForm("Query", "Equipment", FormMethod.Post))
         {
-            @Html.TextBox("field0")
-            @Html.TextBox("op0")
+            @Html.DropDownList("field0", fields)
+            @Html.DropDownList("op0", ops)
             @Html.TextBox("operand0")
             <button type="submit" value="+" onclick="append_input()" />
             <button type="submit" id="query" value="确定" />

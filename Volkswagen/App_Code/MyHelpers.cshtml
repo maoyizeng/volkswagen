@@ -1,0 +1,24 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+@helper AppendRow(int row, IEnumerable<SelectListItem> fields, IEnumerable<SelectListItem> ops)
+{
+    @Html.DropDownList("field" + row, fields)
+    @Html.DropDownList("op" + row, ops)
+    @Html.TextBox("operand" + row)
+    <button type="submit" value="+" onclick="@AppendRow(row + 1, fields, ops)" />
+}
+    <div>
+    
+    </div>
+</body>
+</html>

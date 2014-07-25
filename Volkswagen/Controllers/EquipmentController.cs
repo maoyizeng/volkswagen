@@ -15,6 +15,7 @@ namespace Volkswagen.Controllers
 {
     public class EquipmentController : Controller
     {
+        static int fieldRow;
         private SVWContext db = new SVWContext();
         /*private enum operation
         {
@@ -25,17 +26,34 @@ namespace Volkswagen.Controllers
             LE,     // <= less than or equal to
             CONTAIN // contain
         };
-        string[] operation = new string[] {
+        private string[] fieldMap = new string[] {
+             "设备编号",
+             "设备名称",
+             "负责人",
+             "所在工段",
+             "车间生产线",
+             "点检",
+             "日常保养",
+             "巡检",
+             "需更新否",
+             "最后修改时间",
+             "修改人",
+             "创建时间",
+             "创建人",
+             "备注"
+        };*/
+        private string[] operation = new string[] {
             "=",
             ">",
             "<",
             ">=",
             "<="
-        };*/
+        };
 
         // GET: /Equipment/
         public async Task<ActionResult> Index()
         {
+            PrepareSelectItems();
             return View(await db.Equipments.ToListAsync());
         }
 
@@ -232,5 +250,38 @@ namespace Volkswagen.Controllers
             }
             base.Dispose(disposing);
         }
+
+        private void PrepareSelectItems()
+        {
+            List<SelectListItem> fieldlist = new List<SelectListItem> {
+                new SelectListItem { Text = "设备编号", Value = "EquipmentID", Selected = true},
+                new SelectListItem { Text = "设备名称", Value = "EquipDes"},
+                new SelectListItem { Text = "负责人", Value = "Person"},
+                new SelectListItem { Text = "所在工段", Value = "Section"},
+                new SelectListItem { Text = "车间生产线", Value = "WSArea"},
+                new SelectListItem { Text = "点检", Value = "ItemInspect"},
+                new SelectListItem { Text = "日常保养", Value = "RegularCare"},
+                new SelectListItem { Text = "巡检", Value = "Check"},
+                new SelectListItem { Text = "需更新否", Value = "RoutingInspect"},
+                new SelectListItem { Text = "最后修改时间", Value = "ChangeTime"},
+                new SelectListItem { Text = "修改人", Value = "Changer"},
+                new SelectListItem { Text = "创建时间", Value = "CreateTime"},
+                new SelectListItem { Text = "创建人", Value = "Creator"},
+                new SelectListItem { Text = "备注", Value = "Remark"}
+            };
+            List<SelectListItem> operationList = new List<SelectListItem> {
+                new SelectListItem { Text = "=", Value = "0", Selected = true},
+                new SelectListItem { Text = ">", Value = "1"},
+                new SelectListItem { Text = "<", Value = "2"},
+                new SelectListItem { Text = ">=", Value = "3"},
+                new SelectListItem { Text = "<=", Value = "4"},
+                new SelectListItem { Text = "包含", Value = "5"}
+            };
+            ViewData["fields"] = fieldlist;
+            ViewData["operations"] = operationList;
+
+            fieldRow = 0;
+        }
+
     }
 }
