@@ -85,7 +85,15 @@
         f.appendChild(field);
         f.appendChild(op);
         f.appendChild(operand);
+
+        var input = document.createElement("input");
+        input.type = "submit";
+        input.value = "+";
+        input.onclick = "append_input(); return false;";
+
+        f.appendChild(input);
         
+        return false;
         
     }
 </script>
@@ -99,8 +107,8 @@
             @Html.DropDownList("field0", fields)
             @Html.DropDownList("op0", ops)
             @Html.TextBox("operand0")
-            <button type="submit" value="+" onclick="append_input()" />
-            <button type="submit" id="query" value="确定" />
+            <input type="submit" value="+" onclick="append_input(); return false;" />
+            <input type="submit" id="query" value="确定" />
         }
     </div>
 </div>
