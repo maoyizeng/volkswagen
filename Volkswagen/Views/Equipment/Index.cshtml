@@ -10,7 +10,6 @@
 @{
     IEnumerable<SelectListItem> fields = ViewData["fields"] as IEnumerable<SelectListItem>;
     IEnumerable<SelectListItem> ops = ViewData["operations"] as IEnumerable<SelectListItem>;
-    int row = 0;
 }
 
 <script type="text/javascript">
@@ -86,14 +85,12 @@
         f.appendChild(op);
         f.appendChild(operand);
 
-        var input = document.createElement("input");
-        input.type = "submit";
+        /*var input = document.createElement("input");
+        input.type = "button";
         input.value = "+";
-        input.onclick = "append_input(); return false;";
+        input.onclick = "append_input()";
 
-        f.appendChild(input);
-        
-        return false;
+        f.appendChild(input);*/
         
     }
 </script>
@@ -107,7 +104,7 @@
             @Html.DropDownList("field0", fields)
             @Html.DropDownList("op0", ops)
             @Html.TextBox("operand0")
-            <input type="submit" value="+" onclick="append_input(); return false;" />
+            <input type="button" value="+" onclick="append_input()" />
             <input type="submit" id="query" value="确定" />
         }
     </div>
@@ -117,10 +114,12 @@
     @Html.ActionLink("Create New", "Create")
     @Html.ActionLink("Query", "Query")
 </p>
+<!--
 <table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.EquipDes)
+
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Person)
@@ -239,5 +238,30 @@
         </td>
     </tr>
 }
-
+    
 </table>
+-->
+
+@using MvcContrib.UI.Grid
+@Html.Grid(Model).Columns(column =>
+        {
+            column.For(p => p.EquipmentID).Sortable(true);
+            column.For(p => p.EquipDes).Sortable(true);
+            column.For(p => p.Person).Sortable(true);
+            column.For(p => p.Section).Sortable(true);
+            column.For(p => p.WSArea).Sortable(true);
+            column.For(p => p.Photo).Sortable(true);
+            column.For(p => p.ItemInspect).Sortable(true);
+            column.For(p => p.RegularCare).Sortable(true);
+            column.For(p => p.Check).Sortable(true);
+            column.For(p => p.RoutingInspect).Sortable(true);
+            column.For(p => p.TPMFile).Sortable(true);
+            column.For(p => p.Rules).Sortable(true);
+            column.For(p => p.TechnicFile).Sortable(true);
+            column.For(p => p.TrainingFile).Sortable(true);
+            column.For(p => p.ChangeTime).Sortable(true);
+            column.For(p => p.Changer).Sortable(true);
+            column.For(p => p.CreateTime).Sortable(true);
+            column.For(p => p.Creator).Sortable(true);
+            column.For(p => p.Remark).Sortable(true);
+        }).Empty("无数据")

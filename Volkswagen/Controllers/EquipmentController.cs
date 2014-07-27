@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+//using System.Linq.Dynamic;
 using System.Threading.Tasks;
 using System.Net;
 using System.Web;
@@ -10,12 +11,12 @@ using System.Web.Mvc;
 using Volkswagen.Models;
 using Volkswagen.DAL;
 using System.Linq.Expressions;
+using MvcContrib.UI.Grid;
 
 namespace Volkswagen.Controllers
 {
     public class EquipmentController : Controller
     {
-        static int fieldRow;
         private SVWContext db = new SVWContext();
         /*private enum operation
         {
@@ -53,9 +54,26 @@ namespace Volkswagen.Controllers
         // GET: /Equipment/
         public async Task<ActionResult> Index()
         {
-            PrepareSelectItems();
+            //PrepareSelectItems();
             return View(await db.Equipments.ToListAsync());
         }
+
+        /*public async Task<ActionResult> Index(GridSortOptions model)
+        {
+            ViewData["model"] = model;
+            if (model == null)
+            {
+                return View(await db.Equipments.ToListAsync());
+            }
+            IQueryable<EquipmentModels> list = ViewData.Model as IQueryable<EquipmentModels>;
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                list = list.OrderBy(model.Column);
+                //list = list.OrderBy(model.Column, model.Direction);
+            }
+            //list = list.AsPagination(page ?? 1, 5);
+            return View(list);
+        }  */
 
         // GET: /Equipment/Details/5
         public async Task<ActionResult> Details(string id)
@@ -280,7 +298,7 @@ namespace Volkswagen.Controllers
             ViewData["fields"] = fieldlist;
             ViewData["operations"] = operationList;
 
-            fieldRow = 0;
+            //fieldRow = 0;
         }
 
     }
