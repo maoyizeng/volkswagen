@@ -56,7 +56,7 @@
     "Remark");
 
     function append_input() {
-        row++;
+        
         var f = document.getElementById("query_form");
         var field = document.createElement("select");
         var op = document.createElement("select");
@@ -85,6 +85,8 @@
         f.appendChild(op);
         f.appendChild(operand);
 
+        row++;
+
         /*var input = document.createElement("input");
         input.type = "button";
         input.value = "+";
@@ -101,9 +103,9 @@
     <div class="form-group" id="query_form">
         @using (Html.BeginForm("Query", "Equipment", FormMethod.Post))
         {
-            @Html.DropDownList("field0", fields)
-            @Html.DropDownList("op0", ops)
-            @Html.TextBox("operand0")
+            //@Html.DropDownList("field0", fields)
+            //@Html.DropDownList("op0", ops)
+            //@Html.TextBox("operand0")
             <input type="button" value="+" onclick="append_input()" />
             <input type="submit" id="query" value="确定" />
         }
@@ -243,7 +245,7 @@
 -->
 
 @using MvcContrib.UI.Grid
-@Html.Grid(Model).Columns(column =>
+@Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
         {
             column.For(p => p.EquipmentID).Sortable(true);
             column.For(p => p.EquipDes).Sortable(true);

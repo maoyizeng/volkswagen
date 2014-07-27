@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
-//using System.Linq.Dynamic;
+using System.Linq.Dynamic;
 using System.Threading.Tasks;
 using System.Net;
 using System.Web;
@@ -52,13 +52,13 @@ namespace Volkswagen.Controllers
         };
 
         // GET: /Equipment/
-        public async Task<ActionResult> Index()
+        /*public async Task<ActionResult> Index()
         {
             //PrepareSelectItems();
             return View(await db.Equipments.ToListAsync());
-        }
+        }*/
 
-        /*public async Task<ActionResult> Index(GridSortOptions model)
+        public async Task<ActionResult> Index(GridSortOptions model)
         {
             ViewData["model"] = model;
             if (model == null)
@@ -73,7 +73,7 @@ namespace Volkswagen.Controllers
             }
             //list = list.AsPagination(page ?? 1, 5);
             return View(list);
-        }  */
+        }
 
         // GET: /Equipment/Details/5
         public async Task<ActionResult> Details(string id)
