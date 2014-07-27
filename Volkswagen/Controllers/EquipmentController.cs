@@ -61,15 +61,17 @@ namespace Volkswagen.Controllers
         public async Task<ActionResult> Index(GridSortOptions model)
         {
             ViewData["model"] = model;
-            if (model == null)
-            {
-                return View(await db.Equipments.ToListAsync());
-            }
-            IQueryable<EquipmentModels> list = ViewData.Model as IQueryable<EquipmentModels>;
+            
+            //IQueryable<EquipmentModels> list = ViewData.Model as IQueryable<EquipmentModels>;
+            IQueryable<EquipmentModels> list = db.Equipments.Where("1 = 1");
             if (!string.IsNullOrEmpty(model.Column))
             {
                 list = list.OrderBy(model.Column);
                 //list = list.OrderBy(model.Column, model.Direction);
+            }
+            else
+            {
+                return View(await db.Equipments.ToListAsync());
             }
             //list = list.AsPagination(page ?? 1, 5);
             return View(list);

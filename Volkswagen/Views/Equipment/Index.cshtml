@@ -266,4 +266,7 @@
             column.For(p => p.CreateTime).Sortable(true);
             column.For(p => p.Creator).Sortable(true);
             column.For(p => p.Remark).Sortable(true);
+            column.For(p => Html.ActionLink("编辑", "Edit", new { id = p.EquipmentID }));
+            column.For(p => Html.ActionLink("查看", "Details", new { id = p.EquipmentID }));
+            column.For(p => Html.ActionLink("删除", "Delete", new { id = p.EquipmentID }));
         }).Empty("无数据")
