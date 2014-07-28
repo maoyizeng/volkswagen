@@ -12,6 +12,7 @@ using Volkswagen.Models;
 using Volkswagen.DAL;
 using System.Linq.Expressions;
 using MvcContrib.UI.Grid;
+using System.IO;
 
 namespace Volkswagen.Controllers
 {
@@ -271,7 +272,7 @@ namespace Volkswagen.Controllers
             base.Dispose(disposing);
         }
 
-        private void PrepareSelectItems()
+        /*private void PrepareSelectItems()
         {
             List<SelectListItem> fieldlist = new List<SelectListItem> {
                 new SelectListItem { Text = "设备编号", Value = "EquipmentID", Selected = true},
@@ -301,7 +302,27 @@ namespace Volkswagen.Controllers
             ViewData["operations"] = operationList;
 
             //fieldRow = 0;
-        }
+        }*/
 
+        // POST: /Equipment/FileUpload
+        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
+        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult FileUpload()
+        {
+            HttpPostedFileBase file = Request.Files["file"];
+            if (file != null)
+            {
+                string filePath = Path.Combine( (AppDomain.CurrentDomain.BaseDirectory + @"uploads\"), Path.GetFileName(file.FileName));
+                //file.SaveAs(Server.MapPath(@"UploadFile\" + file.FileName));
+                file.SaveAs(filePath);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("Edit", new { id = 2 });
+            }
+        }
     }
 }
