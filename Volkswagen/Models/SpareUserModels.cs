@@ -10,6 +10,7 @@ namespace Volkswagen.Models
     // 用作 EquipmentController 操作的参数的模型。
 
     [Table("SpareUsers")]
+    // 表4 备件领用记录
     public class SpareUserModels
     {
         

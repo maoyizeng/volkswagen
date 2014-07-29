@@ -22,6 +22,7 @@ namespace Volkswagen.DAL
 
         public DbSet<SpareOrderModels> SpareOrders { get; set; }
 
+        public DbSet<RepairModels> Repairs { get; set; }
 /*        protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();

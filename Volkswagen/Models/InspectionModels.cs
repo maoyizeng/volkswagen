@@ -10,6 +10,7 @@ namespace Volkswagen.Models
     // 用作 EquipmentController 操作的参数的模型。
 
     [Table("Inspections")]
+    // 表2 设备保养计划
     public class InspectionModels
     {
 

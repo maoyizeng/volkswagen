@@ -10,6 +10,7 @@ namespace Volkswagen.Models
     // 用作 EquipmentController 操作的参数的模型。
 
     [Table("Equipments")]
+    // 表1 设备履历
     public class EquipmentModels
     {
         [Key]
@@ -96,5 +97,6 @@ namespace Volkswagen.Models
         public virtual ICollection<SpareModels> Spares { get; set; }
         public virtual ICollection<InspectionModels> Inspections { get; set; }
         public virtual ICollection<SpareOrderModels> SpareOrders { get; set; }
+        public virtual ICollection<RepairModels> Repairs { get; set; }
     }
 }
