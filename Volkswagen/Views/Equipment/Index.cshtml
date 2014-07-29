@@ -121,7 +121,6 @@
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.EquipDes)
-
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Person)
@@ -252,15 +251,15 @@
             column.For(p => p.Person).Sortable(true);
             column.For(p => p.Section).Sortable(true);
             column.For(p => p.WSArea).Sortable(true);
-            column.For(p => p.Photo).Sortable(true);
+            column.For(p => p.Photo.IsEmpty() ? "无" : "有").Named("设备照片").Sortable(true);
             column.For(p => p.ItemInspect).Sortable(true);
             column.For(p => p.RegularCare).Sortable(true);
             column.For(p => p.Check).Sortable(true);
             column.For(p => p.RoutingInspect).Sortable(true);
-            column.For(p => p.TPMFile).Sortable(true);
-            column.For(p => p.Rules).Sortable(true);
-            column.For(p => p.TechnicFile).Sortable(true);
-            column.For(p => p.TrainingFile).Sortable(true);
+            column.For(p => p.TPMFile.IsEmpty() ? "无" : "有").Named("TPM文件").Sortable(true);
+            column.For(p => p.Rules.IsEmpty() ? "无" : "有").Named("操作规程").Sortable(true);
+            column.For(p => p.TechnicFile.IsEmpty() ? "无" : "有").Named("技术文件").Sortable(true);
+            column.For(p => p.TrainingFile.IsEmpty() ? "无" : "有").Named("培训资料").Sortable(true);
             column.For(p => p.ChangeTime).Sortable(true);
             column.For(p => p.Changer).Sortable(true);
             column.For(p => p.CreateTime).Sortable(true);
@@ -269,4 +268,4 @@
             column.For(p => Html.ActionLink("编辑", "Edit", new { id = p.EquipmentID }));
             column.For(p => Html.ActionLink("查看", "Details", new { id = p.EquipmentID }));
             column.For(p => Html.ActionLink("删除", "Delete", new { id = p.EquipmentID }));
-        }).Empty("无数据")
+        }).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse", @class => "panel-body")
