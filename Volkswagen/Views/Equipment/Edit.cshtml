@@ -182,8 +182,12 @@
             @Html.ValidationMessageFor(model => model.TPMFile)*@
         @using (Html.BeginForm("FileUpload", "Equipment", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
-            <input type="file" name="file" value="浏览" />
+            /*<input type="file" name="file" value="浏览" />
             <input type="submit" value="上传" />
+            <input type="submit" value="删除" />*/
+            <div class="form-group">
+                 <input id="file-tpm" type="file" class="file" name="file" data-preview-file-type="any" data-initial-caption="Kartik" data-overwrite-initial="true">
+            </div>
         }
     </div>
 </div>

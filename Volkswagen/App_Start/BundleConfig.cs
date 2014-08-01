@@ -37,11 +37,13 @@ namespace Volkswagen
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                 "~/Scripts/bootstrap.js",
-                "~/Scripts/respond.js"));
+                "~/Scripts/respond.js",
+                "~/Scripts/fileinput.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                  "~/Content/bootstrap.css",
-                 "~/Content/Site.css"));
+                 "~/Content/Site.css",
+                 "~/Content/fileinput.css"));
         }
     }
 }

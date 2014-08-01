@@ -57,7 +57,11 @@
 
     function append_input() {
         
-        var f = document.getElementById("query_form");
+        var fm = document.getElementById("query_form");
+        var f = document.createElement("div");
+        f.className = "form-group";
+        fm.appendChild(f);
+
         var field = document.createElement("select");
         var op = document.createElement("select");
         var operand = document.createElement("input");
@@ -66,9 +70,7 @@
         op.name = "op" + row;
         operand.name = "operand" + row;
 
-        field.classList = "btn-group";
-        
-        
+        //operand.className = "form-control"
 
         for (var i = 0; i < fieldMap.length; i++) {
             var option = document.createElement("option");
@@ -142,7 +144,7 @@
 </script>
 
 
-<div class="container">
+<div class="row">
 <div class="col-sm-6" >
     <div class="panel panel-default">
         <div class="panel-heading">
