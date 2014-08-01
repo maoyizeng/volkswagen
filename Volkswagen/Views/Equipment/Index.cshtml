@@ -66,6 +66,10 @@
         op.name = "op" + row;
         operand.name = "operand" + row;
 
+        field.classList = "btn-group";
+        
+        
+
         for (var i = 0; i < fieldMap.length; i++) {
             var option = document.createElement("option");
             option.text = fieldMap[i];
@@ -85,7 +89,7 @@
         f.appendChild(op);
         f.appendChild(operand);
 
-        row++;
+        
 
         /*var input = document.createElement("input");
         input.type = "button";
@@ -93,27 +97,72 @@
         input.onclick = "append_input()";
 
         f.appendChild(input);*/
+
+        /*var f = document.getElementById("query_form");
+        var div = document.createElement("div");
+        div.className("form-group");
         
+        var div_field = document.createElement("div");
+        var in_field = document.createElement("input");
+        in_field.name = "field" + row;
+        in_field.type = "text";
+        in_field.className = "form-control";
+        div_field.appendChild(in_field);
+        var bg_field = document.createElement("div");
+        bg_field.className = "input-group-btn";
+        var bt_field = document.createElement("button");
+        bt_field.type = "button";
+        bt_field.className = "btn btn-default dropdown-toggle";
+        //bt_field.name = "变量";
+        bt_field.setAttribute("data-toggle", "dropdown");
+        var span_field = document.createElement("span");
+        span_field.className = "caret";
+        bt_field.appendChild(span_field);
+        var ul_field = document.createElement("ul");
+        ul_field.className = "dropdown-menu";
+        ul_field.setAttribute("role", "menu");
+        for (var i = 0; i < fieldMap.length; i++) {
+            var li = document.createElement("li");
+            var a = document.createElement("a");
+            a.onclick = "in_field.textContent=valueMap[" + i + "]";
+            a.name = valueMap[i];
+            a.id = fieldMap[i];
+            li.add(a);
+            ul_field.appendChild(a);
+        }
+        bg_field.appendChild(bt_field);
+        bg_field.appendChild(ul_field);
+        div_field.appendChild(bg_field);
+        div.appendChild(div_field);
+        
+        f.appendChild(div);*/
+
+        row++;
     }
 </script>
 
 
-
 <div class="container">
-    <div class="form-group" id="query_form">
-        @using (Html.BeginForm("Query", "Equipment", FormMethod.Post))
-{
-    //@Html.DropDownList("field0", fields)
-    //@Html.DropDownList("op0", ops)
-    //@Html.TextBox("operand0")
-    <input type="button" value="+" onclick="append_input()" class="btn btn-default" />
-    <input type="submit" id="query" value="确定" class="btn btn-default" />
-}
+<div class="col-sm-6" >
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">查询</h3>
+        </div>
+        <div class="panel-body" id="query_form">
+            @using (Html.BeginForm("Query", "Equipment", FormMethod.Post))
+            {
+                <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
+                <input type="submit" id="query" value="确定" class="btn btn-sm" />
+            }
+        </div>
     </div>
 </div>
+</div>
+
+<br />
 
 <p>
-    @Html.ActionLink("新建", "Create", new { @class = "btn btn-default" })
+    @Html.ActionLink("新建", "Create", "Equipment", null, new { @class = "btn btn-default" })
     @*@tml.ActionLink("Query", "Query")*@
 </p>
 <!--
