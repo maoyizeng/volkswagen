@@ -1,0 +1,154 @@
+﻿@model IEnumerable<Volkswagen.Models.SpareOrderModels>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Equipments.EquipDes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Spares.SpareDes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SpareDes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderValue)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Producer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderNum)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Property)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Maker)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MakerNum)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Orderman)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UseTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UnitPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Mode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderFile)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChangeTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Changer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Creator)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Equipments.EquipDes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Spares.SpareDes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SpareDes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Type)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderValue)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Producer)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderNum)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Property)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Maker)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MakerNum)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Orderman)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UseTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UnitPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TotalPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Mode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderFile)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChangeTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Changer)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Creator)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.OrderID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.OrderID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.OrderID })
+        </td>
+    </tr>
+}
+
+</table>

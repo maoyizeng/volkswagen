@@ -1,0 +1,148 @@
+﻿@model IEnumerable<Volkswagen.Models.SpareModels>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Equipments.EquipDes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SpareDes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Picture1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Picture2)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Mark)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PresentValue)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SafeValue)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DCMinValue)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DCMaxValue)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Property)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Producer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remark)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.KeyPart)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.File)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChangeTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Changer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Creator)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Equipments.EquipDes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SpareDes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Type)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Picture1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Picture2)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Mark)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PresentValue)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SafeValue)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DCMinValue)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DCMaxValue)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Property)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Producer)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Remark)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.KeyPart)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.File)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChangeTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Changer)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Creator)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.SpareID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.SpareID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.SpareID })
+        </td>
+    </tr>
+}
+
+</table>
