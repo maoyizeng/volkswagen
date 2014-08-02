@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+<h2>设备保养计划 - 查看</h2>
 
 <div>
     <h4>InspectionModels</h4>
@@ -83,37 +83,7 @@
             @Html.DisplayFor(model => model.Remark)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.YInspectionFile)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.YInspectionFile)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.MInspectionFile)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.MInspectionFile)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.OInspectionFile)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.OInspectionFile)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.OtherFile)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.OtherFile)
-        </dd>
+        
 
         <dt>
             @Html.DisplayNameFor(model => model.ChangeTime)
@@ -150,6 +120,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.InspectionId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("编辑", "Edit", new { id = Model.InspectionId }) |
+    @Html.ActionLink("返回", "Index")
 </p>

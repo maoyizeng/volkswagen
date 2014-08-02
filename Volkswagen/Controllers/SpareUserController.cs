@@ -9,6 +9,10 @@ using System.Web;
 using System.Web.Mvc;
 using Volkswagen.Models;
 using Volkswagen.DAL;
+using MvcContrib.UI.Grid;
+using System.Linq.Expressions;
+using System.IO;
+using System.Linq.Dynamic;
 
 namespace Volkswagen.Controllers
 {
@@ -17,10 +21,20 @@ namespace Volkswagen.Controllers
         private SVWContext db = new SVWContext();
 
         // GET: /SpareUser/
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(GridSortOptions model)
         {
-            var spareusers = db.SpareUsers.Include(s => s.Spares);
-            return View(await spareusers.ToListAsync());
+            ViewData["model"] = model;
+
+            IQueryable<SpareUserModels> list = db.SpareUsers.Where("1 = 1");
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                list = list.OrderBy(model.Column);
+            }
+            else
+            {
+                return View(await db.SpareUsers.ToListAsync());
+            }
+            return View(list);
         }
 
         // GET: /SpareUser/Details/5
@@ -94,6 +108,63 @@ namespace Volkswagen.Controllers
             }
             ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareDes", spareusermodels.SpareID);
             return View(spareusermodels);
+        }
+
+        // POST: /SpareUser/Query
+        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
+        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> Query()
+        {
+
+            ParameterExpression param = Expression.Parameter(typeof(SpareUserModels), "p");
+            Expression filter = Expression.Constant(true);
+            for (int n = 0; ; n++)
+            {
+                string field = Request.Form["field" + n];
+                string op = Request.Form["op" + n];
+                string operand = Request.Form["operand" + n];
+                if (string.IsNullOrEmpty(field)) break;
+
+                Expression left = Expression.Property(param, typeof(SpareUserModels).GetProperty(field));
+                Expression right = Expression.Constant(operand);
+                Expression result;
+
+                switch (Convert.ToByte(op))
+                {
+                    case 0:
+                        result = Expression.Equal(left, right);
+                        break;
+                    case 1:
+                        result = Expression.GreaterThan(left, right);
+                        break;
+                    case 2:
+                        result = Expression.LessThan(left, right);
+                        break;
+                    case 3:
+                        result = Expression.GreaterThanOrEqual(left, right);
+                        break;
+                    case 4:
+                        result = Expression.LessThanOrEqual(left, right);
+                        break;
+                    case 5:
+                        result = Expression.Equal(left, right);
+                        break;
+                    default:
+                        result = Expression.Equal(left, right);
+                        break;
+                }
+                filter = Expression.And(filter, result);
+            }
+
+            Expression pred = Expression.Lambda(filter, param);
+
+            var e = db.SpareUsers;
+            Expression expr = Expression.Call(typeof(Queryable), "Where", new Type[] { typeof(SpareUserModels) }, Expression.Constant(e), pred);
+
+            ViewData.Model = db.SpareUsers.AsQueryable().Provider.CreateQuery<SpareUserModels>(expr).ToList();
+            return RedirectToAction("Index");
         }
 
         // GET: /SpareUser/Delete/5

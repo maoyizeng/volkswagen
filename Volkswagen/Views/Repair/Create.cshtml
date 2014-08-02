@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Create</h2>
+<h2>设备保修单 - 新建</h2>
 
 @using (Html.BeginForm()) 
 {
@@ -169,14 +169,6 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.File, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.File)
-                @Html.ValidationMessageFor(model => model.File)
-            </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.RepairNum, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.RepairNum)
@@ -184,37 +176,6 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ChangeTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ChangeTime)
-                @Html.ValidationMessageFor(model => model.ChangeTime)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Changer, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Changer)
-                @Html.ValidationMessageFor(model => model.Changer)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CreateTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CreateTime)
-                @Html.ValidationMessageFor(model => model.CreateTime)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Creator, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Creator)
-                @Html.ValidationMessageFor(model => model.Creator)
-            </div>
-        </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -225,5 +186,5 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("返回", "Index")
 </div>
