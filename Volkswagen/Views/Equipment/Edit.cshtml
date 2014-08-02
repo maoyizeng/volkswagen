@@ -101,7 +101,7 @@
                     <input type="submit" value="上传" />
                 }
             </div>
-        </div> -->
+        </div> 
 
         <div class="form-group">
             @Html.LabelFor(model => model.Rules, new { @class = "control-label col-md-2" })
@@ -125,7 +125,7 @@
                 @Html.EditorFor(model => model.TrainingFile)
                 @Html.ValidationMessageFor(model => model.TrainingFile)
             </div>
-        </div>
+        </div> 
 
         <div class="form-group">
             @Html.LabelFor(model => model.ChangeTime, new { @class = "control-label col-md-2" })
@@ -157,7 +157,7 @@
                 @Html.EditorFor(model => model.Creator)
                 @Html.ValidationMessageFor(model => model.Creator)
             </div>
-        </div>
+        </div> -->
 
         <div class="form-group">
             @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
@@ -175,7 +175,7 @@
     </div>
 }
 
-<div class="form-group">
+<!-- <div class="form-group">
     @Html.LabelFor(model => model.TPMFile, new { @class = "control-label col-md-2" })
     <div class="col-md-10">
         @*@Html.EditorFor(model => model.TPMFile)
@@ -186,11 +186,17 @@
             <input type="submit" value="上传" />
             <input type="submit" value="删除" />*/
             <div class="form-group">
-                 <input id="file-tpm" type="file" class="file" name="file" data-preview-file-type="any" data-initial-caption="Kartik" data-overwrite-initial="true">
+                 <input id="file-tpm" type="file" class="file" name="tpmfile" data-preview-file-type="any" data-initial-caption=@Html.DisplayFor(model => model.TPMFile) data-overwrite-initial="true">
+            </div>
+            <div class="form-group">
+                 <input id="file-tpm" type="file" class="file" name="tpmfile" data-preview-file-type="any" data-initial-caption=@Html.DisplayFor(model => model.TPMFile) data-overwrite-initial="true">
+            </div>
+            <div class="form-group">
+                 <input id="file-tpm" type="file" class="file" name="tpmfile" data-preview-file-type="any" data-initial-caption=@Html.DisplayFor(model => model.TPMFile) data-overwrite-initial="true">
             </div>
         }
     </div>
-</div>
+</div> -->
 
 
 
