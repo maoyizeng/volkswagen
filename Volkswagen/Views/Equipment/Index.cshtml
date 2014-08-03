@@ -31,7 +31,8 @@
         ">",
         "<",
         ">=",
-        "<="
+        "<=",
+        "<>"
         );
 
     var valueMap = new Array(
@@ -55,15 +56,18 @@
         var fm = document.getElementById("query_form");
         var f = document.createElement("div");
         f.className = "form-group";
-        fm.appendChild(f);
+        
 
         var field = document.createElement("select");
         var op = document.createElement("select");
         var operand = document.createElement("input");
 
-        field.name = "field" + row;
-        op.name = "op" + row;
-        operand.name = "operand" + row;
+        //field.name = "field" + row;
+        //op.name = "op" + row;
+        //operand.name = "operand" + row;
+        field.name = "field0";
+        op.name = "op0";
+        operand.name = "operand0";
 
         //operand.className = "form-control"
 
@@ -86,6 +90,12 @@
         f.appendChild(op);
         f.appendChild(operand);
 
+        fm.appendChild(f);
+        
+        var inp = document.createElement("input");
+        inp.type = "text";
+        inp.name = "haha";
+        fm.appendChild(inp);
         
 
         /*var input = document.createElement("input");
@@ -145,12 +155,11 @@
         <div class="panel-heading">
             <h3 class="panel-title">查询</h3>
         </div>
-        <div class="panel-body" id="query_form">
-            @using (Html.BeginForm("Query", "Equipment", FormMethod.Post))
-            {
+        <div class="panel-body">
+           <form action="/Equipment/" id="query_form" method="post"> 
                 <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
                 <input type="submit" id="query" value="确定" class="btn btn-sm" />
-            }
+            </form>
         </div>
     </div>
 </div>
@@ -193,18 +202,7 @@
         <th>
             @Html.DisplayNameFor(model => model.RoutingInspect)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TPMFile)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Rules)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TechnicFile)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TrainingFile)
-        </th>
+        
         <th>
             @Html.DisplayNameFor(model => model.ChangeTime)
         </th>
@@ -252,18 +250,7 @@
         <td>
             @Html.DisplayFor(modelItem => item.RoutingInspect)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TPMFile)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Rules)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TechnicFile)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TrainingFile)
-        </td>
+        
         <td>
             @Html.DisplayFor(modelItem => item.ChangeTime)
         </td>
@@ -292,32 +279,33 @@
 
 
 
-@using MvcContrib.UI.Grid
-@using MvcContrib
-@using MvcContrib.FluentHtml.Html
-@Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
-        {
-            column.For(p => Html.CheckBox("Checked" + p.EquipmentID));
-            column.For(p => p.EquipmentID).Sortable(true);
-            column.For(p => p.EquipDes).Sortable(true);
-            column.For(p => p.Person).Sortable(true);
-            column.For(p => p.Section).Sortable(true);
-            column.For(p => p.WSArea).Sortable(true);
-            column.For(p => p.Photo.IsEmpty() ? "无" : "有").Named("设备图片").Sortable(true);
-            column.For(p => p.ItemInspect).Sortable(true);
-            column.For(p => p.RegularCare).Sortable(true);
-            column.For(p => p.Check).Sortable(true);
-            column.For(p => p.RoutingInspect).Sortable(true);
-            //column.For(p => p.TPMFile.IsEmpty() ? "无" : "有").Named("TPM文件").Sortable(true);
-            //column.For(p => p.Rules.IsEmpty() ? "无" : "有").Named("操作规程").Sortable(true);
-            //column.For(p => p.TechnicFile.IsEmpty() ? "无" : "有").Named("技术文件").Sortable(true);
-            //column.For(p => p.TrainingFile.IsEmpty() ? "无" : "有").Named("培训资料").Sortable(true);
-            column.For(p => p.ChangeTime).Sortable(true);
-            column.For(p => p.Changer).Sortable(true);
-            column.For(p => p.CreateTime).Sortable(true);
-            column.For(p => p.Creator).Sortable(true);
-            column.For(p => p.Remark).Sortable(true);
-            column.For(p => Html.ActionLink("编辑", "Edit", new { id = p.EquipmentID }));
-            column.For(p => Html.ActionLink("查看", "Details", new { id = p.EquipmentID }));
-            column.For(p => Html.ActionLink("删除", "Delete", new { id = p.EquipmentID }));
-        }).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse", @class => "table table-striped table-hover")
+    @using MvcContrib.UI.Grid
+    @using MvcContrib
+    @using MvcContrib.FluentHtml.Html
+
+    @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
+            {
+                column.For(p => Html.CheckBox("Checked" + p.EquipmentID)).Sortable(true);
+                column.For(p => p.EquipmentID).Sortable(true);
+                column.For(p => p.EquipDes).Sortable(true);
+                column.For(p => p.Person).Sortable(true);
+                column.For(p => p.Section).Sortable(true);
+                column.For(p => p.WSArea).Sortable(true);
+                column.For(p => p.Photo.IsEmpty() ? "无" : "有").Named("设备图片").Sortable(true);
+                column.For(p => p.ItemInspect).Sortable(true);
+                column.For(p => p.RegularCare).Sortable(true);
+                column.For(p => p.Check).Sortable(true);
+                column.For(p => p.RoutingInspect).Sortable(true);
+                //column.For(p => p.TPMFile.IsEmpty() ? "无" : "有").Named("TPM文件").Sortable(true);
+                //column.For(p => p.Rules.IsEmpty() ? "无" : "有").Named("操作规程").Sortable(true);
+                //column.For(p => p.TechnicFile.IsEmpty() ? "无" : "有").Named("技术文件").Sortable(true);
+                //column.For(p => p.TrainingFile.IsEmpty() ? "无" : "有").Named("培训资料").Sortable(true);
+                column.For(p => p.ChangeTime).Sortable(true);
+                column.For(p => p.Changer).Sortable(true);
+                column.For(p => p.CreateTime).Sortable(true);
+                column.For(p => p.Creator).Sortable(true);
+                column.For(p => p.Remark).Sortable(true);
+                column.For(p => Html.ActionLink("编辑", "Edit", new { id = p.EquipmentID }));
+                column.For(p => Html.ActionLink("查看", "Details", new { id = p.EquipmentID }));
+                column.For(p => Html.ActionLink("删除", "Delete", new { id = p.EquipmentID }));
+            }).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse", @class => "table table-striped table-hover")
