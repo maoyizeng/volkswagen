@@ -1,0 +1,347 @@
+﻿@model IEnumerable<Volkswagen.Models.MaintainModels>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>设备维护及状态跟踪</h2>
+
+<script type="text/javascript">
+    var row = 0;
+    var fieldMap = new Array(
+        "设备编号",
+        "设备名称",
+        "车间生产线",
+        "维护类别",
+        "维护部位",
+        "维护内容",
+        "维护开始时间",
+        "维护完成时间",
+        "责任班组",
+        "检具状态",
+        "检具详细的状态",
+        "设备两行",
+        "设备详细状况",
+        "检查人类别",
+        "检查人",
+        "检查时间",
+        "问题",
+        "分数",
+        "等级",
+        "问题状态",
+        "检查次数",
+        "编号",
+        "最后修改时间",
+        "修改人",
+        "创建时间",
+        "创建人"
+    );
+
+    var opMap = new Array(
+        "=",
+        ">",
+        "<",
+        ">=",
+        "<="
+        );
+
+    var valueMap = new Array(
+        "EquipmentID",
+        "EquipDes",
+        "Line",
+        "MType",
+        "MPart",
+        "Content",
+        "Period",
+        "MStartTime",
+        "MEndTime",
+        "ResponseClass",
+        "CheckStatus",
+        "EquipDetail",
+        "CheckerType",
+        "Checker",
+        "CheckTime",
+        "Problem",
+        "Mark",
+        "Grade",
+        "ProblemStatus",
+        "CheckNum",
+        "MaintainId",
+        "ChangeTime",
+        "Changer",
+        "CreateTime",
+        "Creator");
+
+    function append_input() {
+
+        var fm = document.getElementById("query_form");
+        var f = document.createElement("div");
+        f.className = "form-group";
+        fm.appendChild(f);
+
+        var field = document.createElement("select");
+        var op = document.createElement("select");
+        var operand = document.createElement("input");
+
+        field.name = "field" + row;
+        op.name = "op" + row;
+        operand.name = "operand" + row;
+
+        //operand.className = "form-control"
+
+        for (var i = 0; i < fieldMap.length; i++) {
+            var option = document.createElement("option");
+            option.text = fieldMap[i];
+            option.value = valueMap[i];
+            field.add(option);
+        }
+
+        for (var i = 0; i < opMap.length; i++) {
+            var ooption = document.createElement("option");
+            ooption.text = opMap[i];
+            ooption.value = i;
+            op.add(ooption);
+        }
+
+
+        f.appendChild(field);
+        f.appendChild(op);
+        f.appendChild(operand);
+
+        row++;
+    }
+</script>
+
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">查询</h3>
+            </div>
+            <div class="panel-body">
+                <form action="/Maintain/" id="query_form" method="post">
+                    <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
+                    <input type="submit" id="query" value="确定" class="btn btn-sm" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+
+<p>
+    @Html.ActionLink("新建", "Create", "Maintain", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("导出", "ExportExcel", "Maintain", null, new { @class = "btn btn-default" })
+</p>
+
+<!--
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Equipments.EquipDes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EquipDes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Line)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MPart)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Period)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MStartTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MEndTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ResponseClass)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CheckStatus)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CheckDetail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EquipStatus)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EquipDetail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CheckerType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Checker)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CheckTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Problem)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Mark)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Grade)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProblemStatus)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CheckNum)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChangeTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Changer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Creator)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Equipments.EquipDes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EquipDes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Line)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MPart)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Content)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Period)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MStartTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MEndTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ResponseClass)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CheckStatus)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CheckDetail)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EquipStatus)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EquipDetail)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CheckerType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Checker)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CheckTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Problem)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Mark)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Grade)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProblemStatus)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CheckNum)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChangeTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Changer)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Creator)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.MaintainId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.MaintainId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.MaintainId })
+        </td>
+    </tr>
+}
+
+</table> -->
+
+@using MvcContrib.UI.Grid
+@using MvcContrib
+@Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
+        {
+            column.For(p => p.EquipmentID).Sortable(true);
+            column.For(p => p.EquipDes).Sortable(true);
+            column.For(p => p.Line).Sortable(true);
+            column.For(p => p.MType).Sortable(true);
+            column.For(p => p.MPart).Sortable(true);
+            column.For(p => p.Content).Sortable(true);
+            column.For(p => p.Period).Sortable(true);
+            column.For(p => p.MStartTime).Sortable(true);
+            column.For(p => p.MEndTime).Sortable(true);
+            column.For(p => p.ResponseClass).Sortable(true);
+            column.For(p => p.CheckStatus).Sortable(true);
+            column.For(p => p.EquipDetail).Sortable(true);
+            column.For(p => p.CheckerType).Sortable(true);
+            column.For(p => p.Checker).Sortable(true);
+            column.For(p => p.CheckTime).Sortable(true);
+            column.For(p => p.Problem).Sortable(true);
+            column.For(p => p.Mark).Sortable(true);
+            column.For(p => p.Grade).Sortable(true);
+            column.For(p => p.ProblemStatus).Sortable(true);
+            column.For(p => p.CheckNum).Sortable(true);
+            column.For(p => p.MaintainId).Sortable(true);
+            column.For(p => p.ChangeTime).Sortable(true);
+            column.For(p => p.Changer).Sortable(true);
+            column.For(p => p.CreateTime).Sortable(true);
+            column.For(p => p.Creator).Sortable(true);
+            column.For(p => Html.ActionLink("编辑", "Edit", new { id = p.MaintainId }));
+            column.For(p => Html.ActionLink("查看", "Details", new { id = p.MaintainId }));
+            column.For(p => Html.ActionLink("删除", "Delete", new { id = p.MaintainId }));
+        }).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse", @class => "table table-striped table-hover")
+

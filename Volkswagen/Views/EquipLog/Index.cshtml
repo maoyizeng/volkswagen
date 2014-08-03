@@ -1,0 +1,269 @@
+﻿@model IEnumerable<Volkswagen.Models.EquipLogModels>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>设备台账</h2>
+
+<script type="text/javascript">
+    var row = 0;
+    var fieldMap = new Array(
+        "设备编号",
+        "使用部门",
+        "设备名称",
+        "型号",
+        "规格",
+        "立卡时间",
+        "启用时间",
+        "原值",
+        "累计折旧",
+        "一级地点",
+        "二级地点",
+        "三级地点",
+        "备注",
+        "最后修改时间",
+        "修改人",
+        "创建时间",
+        "创建人"
+    );
+
+    var opMap = new Array(
+        "=",
+        ">",
+        "<",
+        ">=",
+        "<="
+        );
+
+    var valueMap = new Array(
+    "EquipmentID",
+    "Department",
+    "EquipDes",
+    "Type",
+    "Spec",
+    "DocumentDate",
+    "EnableDate",
+    "OriginValue",
+    "Depreciation",
+    "Spot1",
+    "Spot2",
+    "Spot3",
+    "Remark",
+    "ChangeTime",
+    "Changer",
+    "CreateTime",
+    "Creator");
+
+    function append_input() {
+
+        var fm = document.getElementById("query_form");
+        var f = document.createElement("div");
+        f.className = "form-group";
+        fm.appendChild(f);
+
+        var field = document.createElement("select");
+        var op = document.createElement("select");
+        var operand = document.createElement("input");
+
+        field.name = "field" + row;
+        op.name = "op" + row;
+        operand.name = "operand" + row;
+
+        //operand.className = "form-control"
+
+        for (var i = 0; i < fieldMap.length; i++) {
+            var option = document.createElement("option");
+            option.text = fieldMap[i];
+            option.value = valueMap[i];
+            field.add(option);
+        }
+
+        for (var i = 0; i < opMap.length; i++) {
+            var ooption = document.createElement("option");
+            ooption.text = opMap[i];
+            ooption.value = i;
+            op.add(ooption);
+        }
+
+
+        f.appendChild(field);
+        f.appendChild(op);
+        f.appendChild(operand);
+
+        row++;
+    }
+</script>
+
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">查询</h3>
+            </div>
+            <div class="panel-body">
+                <form action="/EquipLog/" id="query_form" method="post">
+                    <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
+                    <input type="submit" id="query" value="确定" class="btn btn-sm" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+
+<p>
+    @Html.ActionLink("新建", "Create", "EquipLog", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("导出", "ExportExcel", "EquipLog", null, new { @class = "btn btn-default" })
+</p>
+
+
+<!--
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Equipments.EquipDes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Department)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EquipDes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Spec)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DocumentDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EnableDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OriginValue)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Depreciation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Spot1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Spot2)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Spot3)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remark)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChangeTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Changer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Creator)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Equipments.EquipDes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Department)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EquipDes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Type)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Spec)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DocumentDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EnableDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OriginValue)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Depreciation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Spot1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Spot2)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Spot3)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Remark)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChangeTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Changer)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Creator)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.EquipmentID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.EquipmentID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.EquipmentID })
+        </td>
+    </tr>
+}
+
+</table>
+    -->
+
+@using MvcContrib.UI.Grid
+@using MvcContrib
+@Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
+        {
+            column.For(p => p.EquipmentID).Sortable(true);
+            column.For(p => p.Department).Sortable(true);
+            column.For(p => p.EquipDes).Sortable(true);
+            column.For(p => p.Type).Sortable(true);
+            column.For(p => p.Spec).Sortable(true);
+            column.For(p => p.DocumentDate).Sortable(true);
+            column.For(p => p.EnableDate).Sortable(true);
+            column.For(p => p.OriginValue).Sortable(true);
+            column.For(p => p.Depreciation).Sortable(true);
+            column.For(p => p.Spot1).Sortable(true);
+            column.For(p => p.Spot2).Sortable(true);
+            column.For(p => p.Spot3).Sortable(true);
+            column.For(p => p.Remark).Sortable(true);
+            column.For(p => p.ChangeTime).Sortable(true);
+            column.For(p => p.Changer).Sortable(true);
+            column.For(p => p.CreateTime).Sortable(true);
+            column.For(p => p.Creator).Sortable(true);
+            column.For(p => Html.ActionLink("编辑", "Edit", new { id = p.EquipmentID }));
+            column.For(p => Html.ActionLink("查看", "Details", new { id = p.EquipmentID }));
+            column.For(p => Html.ActionLink("删除", "Delete", new { id = p.EquipmentID }));
+        }).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse", @class => "table table-striped table-hover")

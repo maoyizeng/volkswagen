@@ -1,0 +1,227 @@
+﻿@model Volkswagen.Models.MaintainModels
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>MaintainModels</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Equipments.EquipDes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Equipments.EquipDes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EquipDes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EquipDes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Line)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Line)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MPart)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MPart)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Content)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Period)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Period)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MStartTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MStartTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MEndTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MEndTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ResponseClass)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ResponseClass)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CheckStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CheckStatus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CheckDetail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CheckDetail)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EquipStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EquipStatus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EquipDetail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EquipDetail)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CheckerType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CheckerType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Checker)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Checker)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CheckTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CheckTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Problem)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Problem)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Mark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mark)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Grade)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Grade)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProblemStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProblemStatus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CheckNum)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CheckNum)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ChangeTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ChangeTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Changer)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Changer)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Creator)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Creator)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.MaintainId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
