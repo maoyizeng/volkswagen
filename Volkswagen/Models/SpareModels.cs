@@ -82,9 +82,8 @@ namespace Volkswagen.Models
         public string KeyPart { get; set; }
 
 
-        [Display(Name = "文件")]
-  //      [StringLength(10)]
-        public string File { get; set; }
+  //      [Display(Name = "文件")]
+  //      public string File { get; set; }
 
         [Display(Name = "最后修改时间")]
   //      [StringLength(10)]

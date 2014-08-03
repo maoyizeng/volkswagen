@@ -44,7 +44,7 @@ namespace Volkswagen.Models
         public int RepairTime { get; set; }
 
         [Display(Name = "班次")]
-        [StringLength(3)]
+        [StringLength(5)]
         public string Class { get; set; }
 
         [Display(Name = "车间生产线")]
@@ -91,9 +91,8 @@ namespace Volkswagen.Models
         [Column(TypeName = "bigint")]
         public int StopTime { get; set; }
 
-        [Display(Name = "文件")]
-        //      [StringLength(10)]
-        public string File { get; set; }
+  //      [Display(Name = "文件")]
+  //      public string File { get; set; }
 
         [Display(Name = "维修次数")]
         public int RepairNum { get; set; }

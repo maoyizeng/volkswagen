@@ -57,21 +57,21 @@ namespace Volkswagen.Models
  //       [StringLength(15)]
         public int InspectionId { get; set; }
 
-        [Display(Name = "年度保养文件")]
+  //      [Display(Name = "年度保养文件")]
   //      [StringLength(15)]
-        public string YInspectionFile { get; set; }
+  //      public string YInspectionFile { get; set; }
 
-        [Display(Name = "月度保养文件")]
+  //      [Display(Name = "月度保养文件")]
   //      [StringLength(15)]
-        public string MInspectionFile { get; set; }
+  //      public string MInspectionFile { get; set; }
 
-        [Display(Name = "委外保养文件")]
+  //      [Display(Name = "委外保养文件")]
   //      [StringLength(10)]
-        public string OInspectionFile { get; set; }
+  //      public string OInspectionFile { get; set; }
 
-        [Display(Name = "委外保养文件")]
+  //      [Display(Name = "委外保养文件")]
   //      [StringLength(10)]
-        public string OtherFile { get; set; }
+  //      public string OtherFile { get; set; }
 
         [Display(Name = "最后修改时间")]
   //      [StringLength(10)]

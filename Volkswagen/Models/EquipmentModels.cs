@@ -56,21 +56,21 @@ namespace Volkswagen.Models
         [StringLength(15)]
         public string RoutingInspect { get; set; }
 
-        [Display(Name = "TPM文件")]
+  //      [Display(Name = "TPM文件")]
   //      [StringLength(10)]
-        public string TPMFile { get; set; }
+  //      public string TPMFile { get; set; }
 
-        [Display(Name = "操作规程")]
+  //      [Display(Name = "操作规程")]
   //      [StringLength(10)]
-        public string Rules { get; set; }
+  //      public string Rules { get; set; }
 
-        [Display(Name = "技术文件")]
+  //      [Display(Name = "技术文件")]
   //      [StringLength(10)]
-        public string TechnicFile { get; set; }
+  //      public string TechnicFile { get; set; }
 
-        [Display(Name = "培训资料")]
+  //      [Display(Name = "培训资料")]
   //      [StringLength(10)]
-        public string TrainingFile { get; set; }
+  //      public string TrainingFile { get; set; }
 
         [Display(Name = "最后修改时间")]
   //      [StringLength(10)]
