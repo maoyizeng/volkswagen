@@ -79,9 +79,8 @@ namespace Volkswagen.Models
         [StringLength(15)]
         public string Mode { get; set; }
 
-        [Display(Name = "订购文件")]
-        //      [StringLength(10)]
-        public string OrderFile { get; set; }
+    //    [Display(Name = "订购文件")]
+    //    public string OrderFile { get; set; }
 
         [Key]
         [Display(Name = "编号")]

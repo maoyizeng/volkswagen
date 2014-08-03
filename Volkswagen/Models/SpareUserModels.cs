@@ -40,7 +40,6 @@ namespace Volkswagen.Models
         public string User { get; set; }
 
         [Display(Name = "领用时间")]
- //       [StringLength(30)]
         public Nullable<System.DateTime> UseTime { get; set; }
 
         [Display(Name = "实际使用设备")]
