@@ -27,6 +27,9 @@ namespace Volkswagen.DAL
         public DbSet<ShiftModels> Shifts { get; set; }
 
         public DbSet<EquipLogModels> EquipLogs { get; set; }
+
+        public DbSet<MaintainModels> Maintains { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<EquipLogModels>().Property(ov => ov.OriginValue).HasPrecision(18, 2);
