@@ -142,12 +142,11 @@
             <div class="panel-heading">
                 <h3 class="panel-title">查询</h3>
             </div>
-            <div class="panel-body" id="query_form">
-                @using (Html.BeginForm("Query", "SpareUser", FormMethod.Post))
-                {
+            <div class="panel-body">
+                <form action="/SpareUser/" id="query_form" method="post">
                     <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
                     <input type="submit" id="query" value="确定" class="btn btn-sm" />
-                }
+                </form>
             </div>
         </div>
     </div>
@@ -157,7 +156,7 @@
 
 <p>
     @Html.ActionLink("新建", "Create", "SpareUser", null, new { @class = "btn btn-default" })
-    @*@tml.ActionLink("Query", "Query")*@
+    @Html.ActionLink("导出", "ExportExcel", "SpareUser", null, new { @class = "btn btn-default" })
 </p>
 
 <!--

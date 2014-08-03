@@ -62,13 +62,10 @@
         var op = document.createElement("select");
         var operand = document.createElement("input");
 
-        //field.name = "field" + row;
-        //op.name = "op" + row;
-        //operand.name = "operand" + row;
-        field.name = "field0";
-        op.name = "op0";
-        operand.name = "operand0";
-
+        field.name = "field" + row;
+        op.name = "op" + row;
+        operand.name = "operand" + row;
+        
         //operand.className = "form-control"
 
         for (var i = 0; i < fieldMap.length; i++) {
@@ -92,10 +89,6 @@
 
         fm.appendChild(f);
         
-        var inp = document.createElement("input");
-        inp.type = "text";
-        inp.name = "haha";
-        fm.appendChild(inp);
         
 
         /*var input = document.createElement("input");

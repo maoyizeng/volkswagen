@@ -151,12 +151,11 @@
             <div class="panel-heading">
                 <h3 class="panel-title">查询</h3>
             </div>
-            <div class="panel-body" id="query_form">
-                @using (Html.BeginForm("Query", "Spare", FormMethod.Post))
-                {
+            <div class="panel-body">
+                <form action="/Spare/" id="query_form" method="post">
                     <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
                     <input type="submit" id="query" value="确定" class="btn btn-sm" />
-                }
+                </form>
             </div>
         </div>
     </div>
@@ -166,7 +165,7 @@
 
 <p>
     @Html.ActionLink("新建", "Create", "Spare", null, new { @class = "btn btn-default" })
-    @*@tml.ActionLink("Query", "Query")*@
+    @Html.ActionLink("导出", "ExportExcel", "Spare", null, new { @class = "btn btn-default" })
 </p>
 <!--
 <table class="table">
@@ -215,9 +214,6 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.KeyPart)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.File)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.ChangeTime)
@@ -282,9 +278,6 @@
             @Html.DisplayFor(modelItem => item.KeyPart)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.File)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.ChangeTime)
         </td>
         <td>
@@ -326,10 +319,6 @@
             column.For(p => p.Producer).Sortable(true);
             column.For(p => p.OrderNumber).Sortable(true);
             column.For(p => p.KeyPart).Sortable(true);
-            //column.For(p => p.TPMFile.IsEmpty() ? "无" : "有").Named("TPM文件").Sortable(true);
-            //column.For(p => p.Rules.IsEmpty() ? "无" : "有").Named("操作规程").Sortable(true);
-            //column.For(p => p.TechnicFile.IsEmpty() ? "无" : "有").Named("技术文件").Sortable(true);
-            //column.For(p => p.TrainingFile.IsEmpty() ? "无" : "有").Named("培训资料").Sortable(true);
             column.For(p => p.ChangeTime).Sortable(true);
             column.For(p => p.Changer).Sortable(true);
             column.For(p => p.CreateTime).Sortable(true);

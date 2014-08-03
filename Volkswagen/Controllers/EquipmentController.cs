@@ -444,7 +444,7 @@ namespace Volkswagen.Controllers
             byte[] fileContents = Encoding.UTF8.GetBytes(sbHtml.ToString());
             
             var fileStream = new MemoryStream(fileContents);
-            return File(fileStream, "application/ms-excel", "fileStream.xls");
+            return File(fileStream, "application/ms-excel", "设备履历.xls");
         }
     }
 }
