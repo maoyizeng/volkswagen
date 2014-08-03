@@ -229,8 +229,10 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\EquipLogModels.cs" />
     <Compile Include="Models\MaintainModels.cs" />
+    <Compile Include="Models\FileModels.cs" />
     <Compile Include="Models\ShiftModels.cs" />
     <Compile Include="Models\RepairModels.cs" />
+    <Compile Include="Models\ChangeModels.cs" />
     <Compile Include="Models\UserModels.cs" />
     <Compile Include="Models\SpareUserModels.cs" />
     <Compile Include="Models\SpareOrderModels.cs" />

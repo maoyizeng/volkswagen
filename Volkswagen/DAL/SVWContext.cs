@@ -32,6 +32,11 @@ namespace Volkswagen.DAL
 
         public DbSet<UserModels> Users { get; set; }
 
+        public DbSet<ChangeModels> Changes { get; set; }
+
+        public DbSet<FileModels> Files { get; set; }
+
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<EquipLogModels>().Property(ov => ov.OriginValue).HasPrecision(18, 2);
