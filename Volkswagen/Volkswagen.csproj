@@ -231,6 +231,7 @@
     <Compile Include="Models\MaintainModels.cs" />
     <Compile Include="Models\ShiftModels.cs" />
     <Compile Include="Models\RepairModels.cs" />
+    <Compile Include="Models\UserModels.cs" />
     <Compile Include="Models\SpareUserModels.cs" />
     <Compile Include="Models\SpareOrderModels.cs" />
     <Compile Include="Models\SpareModels.cs" />
