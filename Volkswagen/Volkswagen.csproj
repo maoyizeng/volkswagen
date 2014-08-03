@@ -228,12 +228,27 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Archived\ArChangeModels.cs" />
+    <Compile Include="Models\Archived\ArEquipLogModels.cs" />
+    <Compile Include="Models\Archived\ArEquipmentModels.cs" />
+    <Compile Include="Models\Archived\ArFileModels.cs" />
+    <Compile Include="Models\Archived\ArInspectionModels.cs" />
+    <Compile Include="Models\Archived\ArMaintainModels.cs" />
+    <Compile Include="Models\Archived\ArRepairModels.cs" />
+    <Compile Include="Models\Archived\ArShiftModels.cs" />
+    <Compile Include="Models\Archived\ArSpareModels.cs" />
+    <Compile Include="Models\Archived\ArSpareOrderModels.cs" />
+    <Compile Include="Models\Archived\ArSpareUserModels.cs" />
+    <Compile Include="Models\Archived\ArUserModels.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\EquipLogModels.cs" />
     <Compile Include="Models\MaintainModels.cs" />
+    <Compile Include="Models\FileModels.cs" />
     <Compile Include="Models\ShiftModels.cs" />
     <Compile Include="Models\RepairModels.cs" />
+    <Compile Include="Models\ChangeModels.cs" />
+    <Compile Include="Models\UserModels.cs" />
     <Compile Include="Models\SpareUserModels.cs" />
     <Compile Include="Models\SpareOrderModels.cs" />
     <Compile Include="Models\SpareModels.cs" />
