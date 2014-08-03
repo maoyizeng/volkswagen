@@ -13,6 +13,8 @@ using Volkswagen.DAL;
 using System.Linq.Expressions;
 using MvcContrib.UI.Grid;
 using System.IO;
+using MvcContrib.Sorting;
+using System.Text;
 
 namespace Volkswagen.Controllers
 {
@@ -67,7 +69,14 @@ namespace Volkswagen.Controllers
             IQueryable<EquipmentModels> list = db.Equipments.Where("1 = 1");
             if (!string.IsNullOrEmpty(model.Column))
             {
-                list = list.OrderBy(model.Column);
+                if (model.Direction == SortDirection.Descending)
+                {
+                    list = list.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    list = list.OrderBy(model.Column + " asc");
+                }
                 //list = list.OrderBy(model.Column, model.Direction);
             }
             else
@@ -324,6 +333,62 @@ namespace Volkswagen.Controllers
                 return RedirectToAction("Edit", new { id = 2 });
             }
             
+        }
+
+        // GET: /Equipment/ExportExcel
+        public FileResult ExportExcel()
+        {
+            var sbHtml = new StringBuilder();
+            List<EquipmentModels> list = db.Equipments.ToList();
+
+            sbHtml.Append("<table border='1' cellspacing='0' cellpadding='0'>");
+            sbHtml.Append("<tr>");
+            var lstTitle = new List<string> { 
+                "设备编号",
+                "设备名称",
+                "负责人",
+                "所在工段",
+                "车间生产线",
+                "点检",
+                "日常保养",
+                "巡检",
+                "需更新否",
+                "最后修改时间",
+                "修改人",
+                "创建时间",
+                "创建人",
+                "备注" };
+            foreach (var item in lstTitle)
+            {
+                sbHtml.AppendFormat("<td style='font-size: 14px;text-align:center;background-color: #DCE0E2; font-weight:bold;' height='25'>{0}</td>", item);
+            }
+            sbHtml.Append("</tr>");
+
+            foreach (var i in list)
+            {
+                sbHtml.Append("<tr>");
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.EquipmentID);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.EquipDes);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Person);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Section);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.WSArea);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.ItemInspect);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.RegularCare);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Check);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.RoutingInspect);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.ChangeTime);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Changer);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.CreateTime);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Creator);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Remark);
+                sbHtml.Append("</tr>");
+            }
+            sbHtml.Append("</table>");
+            
+            byte[] fileContents = Encoding.UTF8.GetBytes(sbHtml.ToString());
+            
+            var fileStream = new MemoryStream(fileContents);
+            return File(fileStream, "application/ms-excel", "fileStream.xls");
         }
     }
 }

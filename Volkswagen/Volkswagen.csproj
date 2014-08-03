@@ -107,6 +107,12 @@
     <Reference Include="MvcContrib">
       <HintPath>..\packages\MVCContrib.release\MvcContrib.dll</HintPath>
     </Reference>
+    <Reference Include="MvcContrib.FluentHtml">
+      <HintPath>..\packages\MVCContrib.release\MvcContrib.FluentHtml.dll</HintPath>
+    </Reference>
+    <Reference Include="MvcContrib.TestHelper">
+      <HintPath>..\packages\MVCContrib.release\MvcContrib.TestHelper.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <Private>True</Private>
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
