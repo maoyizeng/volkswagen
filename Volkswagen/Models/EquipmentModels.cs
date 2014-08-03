@@ -98,5 +98,6 @@ namespace Volkswagen.Models
         public virtual ICollection<InspectionModels> Inspections { get; set; }
         public virtual ICollection<SpareOrderModels> SpareOrders { get; set; }
         public virtual ICollection<RepairModels> Repairs { get; set; }
+        public virtual EquipLogModels EquipLogs { get; set; }
     }
 }

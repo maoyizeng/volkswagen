@@ -25,11 +25,15 @@ namespace Volkswagen.DAL
         public DbSet<RepairModels> Repairs { get; set; }
 
         public DbSet<ShiftModels> Shifts { get; set; }
-/*        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+
+        public DbSet<EquipLogModels> EquipLogs { get; set; }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            throw new UnintentionalCodeFirstException();
+            modelBuilder.Entity<EquipLogModels>().Property(ov => ov.OriginValue).HasPrecision(18, 2);
+            modelBuilder.Entity<EquipLogModels>().Property(d => d.Depreciation).HasPrecision(18, 2);
         }
- */
+ 
+   //     public DbSet<EquipmentModels> Equipments { get; set; }
     }
 }
 
