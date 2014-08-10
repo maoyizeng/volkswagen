@@ -3,6 +3,17 @@
 @{
     ViewBag.Title = "上海大众";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string col, dir;
+    if (ViewData["model"] == null)
+    {
+        col = "";
+        dir = "";
+    }
+    else
+    {
+        col = (ViewData["model"] as GridSortOptions).Column;
+        dir = ((ViewData["model"] as GridSortOptions).Direction == MvcContrib.Sorting.SortDirection.Ascending) ? "Asceding" : "Descending";
+    }
 }
 
 <h2>设备履历</h2>
@@ -150,6 +161,8 @@
         </div>
         <div class="panel-body">
            <form action="/Equipment/" id="query_form" method="post"> 
+               <input type="hidden" name="Colu" value=@col />
+               <input type="hidden" name="Direction" value=@dir />
                 <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
                 <input type="submit" id="query" value="确定" class="btn btn-sm" />
             </form>
@@ -274,11 +287,11 @@
 
     @using MvcContrib.UI.Grid
     @using MvcContrib
-    @using MvcContrib.FluentHtml.Html
+    
 
     @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
             {
-                column.For(p => Html.CheckBox("Checked" + p.EquipmentID)).Sortable(true);
+                //column.For(p => Html.CheckBox("Checked" + p.EquipmentID)).Sortable(false);
                 column.For(p => p.EquipmentID).Sortable(true);
                 column.For(p => p.EquipDes).Sortable(true);
                 column.For(p => p.Person).Sortable(true);
