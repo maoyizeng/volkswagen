@@ -33,26 +33,30 @@ Done:
 
 登陆	    3	2
 
+复选	    3	2
+
 
 
 
 To Do:
 
-复选	    3	2   毛  in progress
+搜索优化         2        2   毛
 
 批量编辑	    3	2   毛  in progress
+
+编辑/创建/查看排版   1    3   毛  in progress
 
 跨表搜索	    3	?
 
 主页             1        1
 
-创建backup表	    1	1
+创建backup表	    1	1   朱  
 
-添加提示/backup  1	2
+添加提示/backup  1	2   朱
 
-编辑提示/backup  1	2
+编辑提示/backup  1	2   朱
 
-删除backup	    1	2
+删除backup	    1	2   朱
 
 查询条件为字段   3	2
 
