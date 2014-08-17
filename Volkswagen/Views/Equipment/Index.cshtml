@@ -173,125 +173,130 @@
 
 <br />
 
-<p>
-    @Html.ActionLink("新建", "Create", "Equipment", null, new { @class = "btn btn-default" })
-    @Html.ActionLink("导出", "ExportExcel", "Equipment", null, new { @class = "btn btn-default" })
-    @*@tml.ActionLink("Query", "Query")*@
-</p>
-<!--
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.EquipDes)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Person)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Section)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.WSArea)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Photo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ItemInspect)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RegularCare)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Check)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.RoutingInspect)
-        </th>
-        
-        <th>
-            @Html.DisplayNameFor(model => model.ChangeTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Changer)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreateTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Creator)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Remark)
-        </th>
-        <th></th>
-    </tr>
+<form action="/Equipment/" id="grid_form" method="post">
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.EquipDes)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Person)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Section)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.WSArea)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Photo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ItemInspect)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RegularCare)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Check)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RoutingInspect)
-        </td>
-        
-        <td>
-            @Html.DisplayFor(modelItem => item.ChangeTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Changer)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreateTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Creator)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Remark)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.EquipmentID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.EquipmentID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.EquipmentID })
-        </td>
-    </tr>
-}
-    
-</table>
--->
+    <p>
+        @Html.ActionLink("新建", "Create", "Equipment", null, new { @class = "btn btn-default" })
+        @Html.ActionLink("导出", "ExportExcel", "Equipment", null, new { @class = "btn btn-default" })
+    </p>
+    <!--
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EquipDes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Person)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Section)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WSArea)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Photo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemInspect)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RegularCare)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Check)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RoutingInspect)
+            </th>
 
+            <th>
+                @Html.DisplayNameFor(model => model.ChangeTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Changer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Creator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Remark)
+            </th>
+            <th></th>
+        </tr>
 
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EquipDes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Person)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Section)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WSArea)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Photo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemInspect)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegularCare)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Check)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoutingInspect)
+            </td>
 
+            <td>
+                @Html.DisplayFor(modelItem => item.ChangeTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Changer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Creator)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Remark)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.EquipmentID }) |
+                @Html.ActionLink("Details", "Details", new { id=item.EquipmentID }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.EquipmentID })
+            </td>
+        </tr>
+    }
+
+    </table>
+    -->
+        @Html.ActionLink("全选", "Create", "Equipment", null, new { @class = "btn btn-default" })
+        @Html.ActionLink("批量修改", "EditMultiple", "Equipment", null, new { @class = "btn btn-default" })
+        @Html.ActionLink("批量删除", "DeleteMultiple", "Equipment", null, new { @class = "btn btn-default" })
+    <p>
+
+    </p>
     @using MvcContrib.UI.Grid
+
     @using MvcContrib
-    
+
 
     @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
             {
-                //column.For(p => Html.CheckBox("Checked" + p.EquipmentID)).Sortable(false);
+                column.For(p => Html.CheckBox("Checked" + p.EquipmentID)).Sortable(false);
                 column.For(p => p.EquipmentID).Sortable(true);
                 column.For(p => p.EquipDes).Sortable(true);
                 column.For(p => p.Person).Sortable(true);
@@ -302,10 +307,6 @@
                 column.For(p => p.RegularCare).Sortable(true);
                 column.For(p => p.Check).Sortable(true);
                 column.For(p => p.RoutingInspect).Sortable(true);
-                //column.For(p => p.TPMFile.IsEmpty() ? "无" : "有").Named("TPM文件").Sortable(true);
-                //column.For(p => p.Rules.IsEmpty() ? "无" : "有").Named("操作规程").Sortable(true);
-                //column.For(p => p.TechnicFile.IsEmpty() ? "无" : "有").Named("技术文件").Sortable(true);
-                //column.For(p => p.TrainingFile.IsEmpty() ? "无" : "有").Named("培训资料").Sortable(true);
                 column.For(p => p.ChangeTime).Sortable(true);
                 column.For(p => p.Changer).Sortable(true);
                 column.For(p => p.CreateTime).Sortable(true);
@@ -315,3 +316,5 @@
                 column.For(p => Html.ActionLink("查看", "Details", new { id = p.EquipmentID }));
                 column.For(p => Html.ActionLink("删除", "Delete", new { id = p.EquipmentID }));
             }).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse", @class => "table table-striped table-hover")
+
+</form>
