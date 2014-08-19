@@ -93,10 +93,15 @@ namespace Volkswagen.Models
         [Column(TypeName = "ntext")]
         public string Remark { get; set; }
 
-        //操作类型记录对原表的修改类型: Insert / Delete / Update
+        //操作类型记录对原表的修改类型: Insert / Delete / Update      默认为Default
         [Display(Name = "操作类型")]
         [StringLength(10)]
         public string Operator { get; set; }
+
+        //操作记录的时间
+        [Display(Name = "操作时间")]
+        public DateTime OperateTime { get; set; }
+
 /*
         public virtual ICollection<ArSpareModels> ArSpares { get; set; }
         public virtual ICollection<ArInspectionModels> ArInspections { get; set; }
@@ -105,5 +110,34 @@ namespace Volkswagen.Models
         public virtual ArEquipLogModels ArEquipLogs { get; set; }
         public virtual ICollection<ArMaintainModels> ArMaintains { get; set; }
  * */
+        public ArEquipmentModels()
+        {
+
+        }
+        public ArEquipmentModels(EquipmentModels eq)
+        {
+            EquipmentID = eq.EquipmentID;
+            EquipDes = eq.EquipDes;
+            Person = eq.Person;
+            Section = eq.Section;
+            WSArea = eq.WSArea;
+            Photo = eq.Photo;
+            ItemInspect = eq.ItemInspect;
+            RegularCare = eq.RegularCare;
+            Check = eq.Check;
+            RoutingInspect = eq.RoutingInspect;
+            ChangeTime = eq.ChangeTime;
+            Changer = eq.Changer;
+            CreateTime = eq.CreateTime;
+            Creator = eq.Creator;
+            Remark = eq.Remark;
+
+            Operator = "Default";
+            OperateTime = DateTime.Now;
+        }
+
+
+
+
     }
 }
