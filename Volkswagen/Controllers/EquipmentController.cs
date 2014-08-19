@@ -202,15 +202,14 @@ namespace Volkswagen.Controllers
                 equipmentmodels.Creator = User.Identity.Name;
                 equipmentmodels.CreateTime = DateTime.Now;
                 equipmentmodels.ChangeTime = DateTime.Now;
-                ArEquipmentModels arequipmentmodels = new ArEquipmentModels() ;
-                arequipmentmodels.Changer = equipmentmodels.Changer;
-                arequipmentmodels.Creator = equipmentmodels.Creator;
-
-
-
+                ArEquipmentModels arequipmentmodels = new ArEquipmentModels(equipmentmodels);
+                arequipmentmodels.Operator = "Create";
 
                 db.Equipments.Add(equipmentmodels);
+                db.ArEquipments.Add(arequipmentmodels);
+
                 await db.SaveChangesAsync();
+                
                 return RedirectToAction("Index");
             }
 
