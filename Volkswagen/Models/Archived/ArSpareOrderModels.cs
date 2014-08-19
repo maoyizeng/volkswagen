@@ -103,8 +103,14 @@ namespace Volkswagen.Models
         [StringLength(10)]
         public string Creator { get; set; }
 
+        //操作类型记录对原表的修改类型: Insert / Delete / Update
 
-        public virtual ArSpareModels ArSpares { get; set; }
-        public virtual ArEquipmentModels ArEquipments { get; set; }
+        [Display(Name = "操作类型")]
+        [StringLength(10)]
+        public string Operator { get; set; }
+
+
+ //       public virtual ArSpareModels ArSpares { get; set; }
+ //       public virtual ArEquipmentModels ArEquipments { get; set; }
     }
 }

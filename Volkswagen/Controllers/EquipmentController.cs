@@ -53,12 +53,15 @@ namespace Volkswagen.Controllers
             ">=",
             "<="
         };
+        
 
         // GET: /Equipment/
         public async Task<ActionResult> Index(GridSortOptions model)
         {
             //PrepareSelectItems();
             //return View(await db.Equipments.ToListAsync());
+
+            ViewData["model"] = model;
 
             IQueryable<EquipmentModels> list = db.Equipments.Where("1 = 1");
             if (!string.IsNullOrEmpty(model.Column))
@@ -85,13 +88,42 @@ namespace Volkswagen.Controllers
         {
             //IQueryable<EquipmentModels> list = ViewData.Model as IQueryable<EquipmentModels>;
             //IQueryable<EquipmentModels> list = db.Equipments.Where("1 = 1");
+
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+            ViewData["model"] = model;
+
+            IQueryable<EquipmentModels> list = getQuery();
+
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    list = list.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    list = list.OrderBy(model.Column + " asc");
+                }
+            }
+            
+            return View(list);
+        }
+
+        private IQueryable<EquipmentModels> getQuery()
+        {
             ParameterExpression param = Expression.Parameter(typeof(EquipmentModels), "p");
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
             {
                 string field = Request.Form["field" + n];
+                ViewData["field" + n] = field;
                 string op = Request.Form["op" + n];
+                ViewData["op" + n] = op;
                 string operand = Request.Form["operand" + n];
+                ViewData["operand" + n] = operand;
+
                 if (string.IsNullOrEmpty(field)) break;
 
                 Expression left = Expression.Property(param, typeof(EquipmentModels).GetProperty(field));
@@ -132,8 +164,7 @@ namespace Volkswagen.Controllers
 
             IQueryable<EquipmentModels> list = db.Equipments.AsQueryable().Provider.CreateQuery<EquipmentModels>(expr);
 
-            
-            return View(list);
+            return list;
         }
 
         // GET: /Equipment/Details/5
@@ -162,10 +193,22 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,RegularCare,Check,RoutingInspect,TPMFile,Rules,TechnicFile,TrainingFile,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
+        public async Task<ActionResult> Create([Bind(Include="EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,RegularCare,Check,RoutingInspect,Rules,TechnicFile,TrainingFile,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
         {
             if (ModelState.IsValid)
             {
+
+                equipmentmodels.Changer = User.Identity.Name;
+                equipmentmodels.Creator = User.Identity.Name;
+                equipmentmodels.CreateTime = DateTime.Now;
+                equipmentmodels.ChangeTime = DateTime.Now;
+                ArEquipmentModels arequipmentmodels = new ArEquipmentModels() ;
+                arequipmentmodels.Changer = equipmentmodels.Changer;
+                arequipmentmodels.Creator = equipmentmodels.Creator;
+
+
+
+
                 db.Equipments.Add(equipmentmodels);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");

@@ -11,7 +11,7 @@ namespace Volkswagen.Models
 
     [Table("ArEquipments")]
     // 表1 设备履历
-    public class ArEquipmentModels
+    public class ArEquipmentModels 
     {
         [Key]
         [Required]
@@ -93,12 +93,17 @@ namespace Volkswagen.Models
         [Column(TypeName = "ntext")]
         public string Remark { get; set; }
 
-
+        //操作类型记录对原表的修改类型: Insert / Delete / Update
+        [Display(Name = "操作类型")]
+        [StringLength(10)]
+        public string Operator { get; set; }
+/*
         public virtual ICollection<ArSpareModels> ArSpares { get; set; }
         public virtual ICollection<ArInspectionModels> ArInspections { get; set; }
         public virtual ICollection<ArSpareOrderModels> ArSpareOrders { get; set; }
         public virtual ICollection<ArRepairModels> ArRepairs { get; set; }
         public virtual ArEquipLogModels ArEquipLogs { get; set; }
         public virtual ICollection<ArMaintainModels> ArMaintains { get; set; }
+ * */
     }
 }

@@ -71,6 +71,20 @@ namespace Volkswagen.DAL
 
             modelBuilder.Entity<ArEquipLogModels>().Property(ov => ov.OriginValue).HasPrecision(18, 2);
             modelBuilder.Entity<ArEquipLogModels>().Property(d => d.Depreciation).HasPrecision(18, 2);
+
+            //Archive表的联合主键
+            modelBuilder.Entity<ArEquipLogModels>().HasKey(t => new { t.EquipmentID, t.Operator });
+            modelBuilder.Entity<ArEquipmentModels>().HasKey(t => new { t.EquipmentID, t.Operator });
+            modelBuilder.Entity<ArFileModels>().HasKey(t => new { t.FileName, t.Operator });
+            modelBuilder.Entity<ArInspectionModels>().HasKey(t => new { t.InspectionId, t.Operator });
+            modelBuilder.Entity<ArMaintainModels>().HasKey(t => new { t.MaintainId, t.Operator });
+            modelBuilder.Entity<ArRepairModels>().HasKey(t => new { t.SheetID, t.Operator });
+            modelBuilder.Entity<ArShiftModels>().HasKey(t => new { t.ShiftID, t.Operator });
+            modelBuilder.Entity<ArSpareModels>().HasKey(t => new { t.SpareID, t.Operator });
+            modelBuilder.Entity<ArSpareOrderModels>().HasKey(t => new { t.OrderID, t.Operator });
+            modelBuilder.Entity<ArSpareUserModels>().HasKey(t => new { t.UserID, t.Operator });
+            modelBuilder.Entity<ArUserModels>().HasKey(t => new { t.UserID, t.Operator });
+
         }
  
    //     public DbSet<EquipmentModels> Equipments { get; set; }

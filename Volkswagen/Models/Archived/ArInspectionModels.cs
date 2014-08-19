@@ -57,21 +57,7 @@ namespace Volkswagen.Models
  //       [StringLength(15)]
         public int InspectionId { get; set; }
 
-  //      [Display(Name = "年度保养文件")]
-  //      [StringLength(15)]
-  //      public string YInspectionFile { get; set; }
 
-  //      [Display(Name = "月度保养文件")]
-  //      [StringLength(15)]
-  //      public string MInspectionFile { get; set; }
-
-  //      [Display(Name = "委外保养文件")]
-  //      [StringLength(10)]
-  //      public string OInspectionFile { get; set; }
-
-  //      [Display(Name = "委外保养文件")]
-  //      [StringLength(10)]
-  //      public string OtherFile { get; set; }
 
         [Display(Name = "最后修改时间")]
   //      [StringLength(10)]
@@ -89,9 +75,13 @@ namespace Volkswagen.Models
         [StringLength(10)]
         public string Creator { get; set; }
 
+        //操作类型记录对原表的修改类型: Insert / Delete / Update
+        [Display(Name = "操作类型")]
+        [StringLength(10)]
+        public string Operator { get; set; }
 
         //      表连接关系
-        public virtual ArEquipmentModels ArEquipments { get; set; }
+     //   public virtual ArEquipmentModels ArEquipments { get; set; }
 
 
     }

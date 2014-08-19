@@ -14,7 +14,7 @@ namespace Volkswagen.Models
     public class ArEquipLogModels
     {
         [Key]
-        [ForeignKey("ArEquipments")]
+ //       [ForeignKey("ArEquipments")]
         [Required]
         [Display(Name = "设备编号")]
         [StringLength(15)]
@@ -80,9 +80,14 @@ namespace Volkswagen.Models
         [StringLength(10)]
         public string Creator { get; set; }
 
+        //操作类型记录对原表的修改类型: Insert / Delete / Update
+        [Display(Name = "操作类型")]
+        [StringLength(10)]
+        public string Operator { get; set; }
+
 
         //      表连接关系
-        public virtual ArEquipmentModels ArEquipments { get; set; }
+        //public virtual ArEquipmentModels ArEquipments { get; set; }
 
 
     }
