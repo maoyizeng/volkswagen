@@ -418,17 +418,17 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public ActionResult FileUpload()
         {
-            HttpPostedFileBase file = Request.Files["file"];
+            HttpPostedFileBase file = Request.Files["photos"];
             if (file != null)
             {
-                string filePath = Path.Combine( (AppDomain.CurrentDomain.BaseDirectory + @"uploads\"), Path.GetFileName(file.FileName));
+                string filePath = Path.Combine( (AppDomain.CurrentDomain.BaseDirectory + @"img\equipments\"), Path.GetFileName(file.FileName));
                 //file.SaveAs(Server.MapPath(@"UploadFile\" + file.FileName));
                 file.SaveAs(filePath);
-                return RedirectToAction("Index");
+                return RedirectToAction("Edit", new { id = Request.Form["key"] });
             }
             else
             {
-                return RedirectToAction("Edit", new { id = 2 });
+                return RedirectToAction("Edit", new { id = Request.Form["key"] });
             }
             
         }
@@ -462,23 +462,24 @@ namespace Volkswagen.Controllers
             }
             sbHtml.Append("</tr>");
 
+            string format = "<td style='font-size: 12px;height:20px;'>{0}</td>";
             foreach (var i in list)
             {
                 sbHtml.Append("<tr>");
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.EquipmentID);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.EquipDes);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Person);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Section);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.WSArea);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.ItemInspect);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.RegularCare);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Check);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.RoutingInspect);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.ChangeTime);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Changer);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.CreateTime);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Creator);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Remark);
+                sbHtml.AppendFormat(format, i.EquipmentID);
+                sbHtml.AppendFormat(format, i.EquipDes);
+                sbHtml.AppendFormat(format, i.Person);
+                sbHtml.AppendFormat(format, i.Section);
+                sbHtml.AppendFormat(format, i.WSArea);
+                sbHtml.AppendFormat(format, i.ItemInspect);
+                sbHtml.AppendFormat(format, i.RegularCare);
+                sbHtml.AppendFormat(format, i.Check);
+                sbHtml.AppendFormat(format, i.RoutingInspect);
+                sbHtml.AppendFormat(format, i.ChangeTime);
+                sbHtml.AppendFormat(format, i.Changer);
+                sbHtml.AppendFormat(format, i.CreateTime);
+                sbHtml.AppendFormat(format, i.Creator);
+                sbHtml.AppendFormat(format, i.Remark);
                 sbHtml.Append("</tr>");
             }
             sbHtml.Append("</table>");
