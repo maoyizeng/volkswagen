@@ -85,9 +85,37 @@ namespace Volkswagen.Models
         [StringLength(10)]
         public string Operator { get; set; }
 
-
+        [Display(Name = "操作时间")]
+        public DateTime OperateTime { get; set; }
         //      表连接关系
         //public virtual ArEquipmentModels ArEquipments { get; set; }
+
+        public ArEquipLogModels(EquipLogModels eq)
+        {
+            EquipmentID = eq.EquipmentID;
+            Department = eq.Department;
+            EquipDes = eq.EquipDes;
+            Type = eq.Type;
+            Spec = eq.Spec;
+            DocumentDate = eq.DocumentDate;
+            EnableDate = eq.EnableDate;
+            OriginValue = eq.OriginValue;
+            Depreciation = eq.Depreciation;
+            Spot1 = eq.Spot1;
+            Spot2 = eq.Spot2;
+            Spot3 = eq.Spot3;
+            Remark = eq.Remark;
+            ChangeTime = eq.ChangeTime;
+            Changer = eq.Changer;
+            CreateTime = eq.CreateTime;
+            Creator = eq.Creator;
+
+            Operator = "Default";
+            OperateTime = DateTime.Now;
+
+
+        }
+
 
 
     }

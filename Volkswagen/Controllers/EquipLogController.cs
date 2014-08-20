@@ -129,6 +129,15 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                equiplogmodels.Changer = User.Identity.Name;
+                equiplogmodels.Creator = User.Identity.Name;
+                equiplogmodels.CreateTime = DateTime.Now;
+                equiplogmodels.ChangeTime = DateTime.Now;
+                ArEquipLogModels ar = new ArEquipLogModels(equiplogmodels);
+                ar.Operator = "Create";
+
+                
+                db.ArEquipLogs.Add(ar);
                 db.EquipLogs.Add(equiplogmodels);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
