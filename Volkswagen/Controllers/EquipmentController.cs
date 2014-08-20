@@ -419,16 +419,21 @@ namespace Volkswagen.Controllers
         public ActionResult FileUpload()
         {
             HttpPostedFileBase file = Request.Files["photos"];
+            string key = Request.Form["key"];
             if (file != null)
             {
                 string filePath = Path.Combine( (AppDomain.CurrentDomain.BaseDirectory + @"img\equipments\"), Path.GetFileName(file.FileName));
                 //file.SaveAs(Server.MapPath(@"UploadFile\" + file.FileName));
                 file.SaveAs(filePath);
-                return RedirectToAction("Edit", new { id = Request.Form["key"] });
+                EquipmentModels e = db.Equipments.Find(key);
+                // TODO - check e;
+                e.Photo = file.FileName;
+                db.SaveChanges();
+                return RedirectToAction("Edit", new { id = key });
             }
             else
             {
-                return RedirectToAction("Edit", new { id = Request.Form["key"] });
+                return RedirectToAction("Edit", new { id = key });
             }
             
         }
@@ -475,6 +480,7 @@ namespace Volkswagen.Controllers
                 sbHtml.AppendFormat(format, i.RegularCare);
                 sbHtml.AppendFormat(format, i.Check);
                 sbHtml.AppendFormat(format, i.RoutingInspect);
+                // TODO - photo?
                 sbHtml.AppendFormat(format, i.ChangeTime);
                 sbHtml.AppendFormat(format, i.Changer);
                 sbHtml.AppendFormat(format, i.CreateTime);
