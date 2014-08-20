@@ -96,5 +96,34 @@ namespace Volkswagen.Models
         [StringLength(10)]
         public string Operator { get; set; }
 
+        [Display(Name = "操作时间")]
+        public DateTime OperateTime { get; set; }
+
+        public ArUserModels(UserModels md)
+        {
+            Breviary = md.Breviary;
+            Name = md.Name;
+            Number = md.Number;
+            Telephone = md.Telephone;
+            Mobile = md.Mobile;
+            Birthday = md.Birthday;
+            EntryDate = md.EntryDate;
+            Position = md.Position;
+            PoliticalStatus = md.PoliticalStatus;
+            Address = md.Address;
+            Skill = md.Skill;
+            Experence = md.Experence;
+            Remark = md.Remark;
+            Image = md.Image;
+            UserID = md.UserID;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
+
+            Operator = "Default";
+            OperateTime = DateTime.Now;
+        }
+
     }
 }

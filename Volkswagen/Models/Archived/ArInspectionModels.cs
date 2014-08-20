@@ -80,8 +80,31 @@ namespace Volkswagen.Models
         [StringLength(10)]
         public string Operator { get; set; }
 
+        [Display(Name = "操作时间")]
+        public DateTime OperateTime { get; set; }
         //      表连接关系
      //   public virtual ArEquipmentModels ArEquipments { get; set; }
+
+        public ArInspectionModels (InspectionModels md)
+        {
+            EquipmentID = md.EquipmentID;
+            EquipDes = md.EquipDes;
+            Class = md.Class;
+            Part = md.Part;
+            Position = md.Position;
+            Content = md.Content;
+            Period = md.Period;
+            Caution = md.Caution;
+            Remark = md.Remark;
+            InspectionId = md.InspectionId;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
+
+            Operator = "Default";
+            OperateTime = DateTime.Now;
+        }
 
 
     }

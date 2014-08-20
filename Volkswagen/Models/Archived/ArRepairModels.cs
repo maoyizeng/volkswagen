@@ -118,6 +118,42 @@ namespace Volkswagen.Models
         [StringLength(10)]
         public string Operator { get; set; }
 
+        [Display(Name = "操作时间")]
+        public DateTime OperateTime { get; set; }
   //      public virtual ArEquipmentModels ArEquipments { get; set; }
+
+        public ArRepairModels(RepairModels md)
+        {
+            SheetID = md.SheetID;
+            RepairID = md.RepairID;
+            EquipDes = md.EquipDes;
+            EquipmentID = md.EquipmentID;
+            StartTime = md.StartTime;
+            FinishTime = md.FinishTime;
+            RepairTime = md.RepairTime;
+            Class = md.Class;
+            Line = md.Line;
+            Section = md.Section;
+            FaultView = md.FaultView;
+            Repairman = md.Repairman;
+            Description = md.Description;
+            FaultType = md.FaultType;
+            Result = md.Result;
+            Problem = md.Problem;
+            Checker = md.Checker;
+            Remark = md.Remark;
+            StopTime = md.StopTime;
+            RepairNum = md.RepairNum;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
+
+            Operator = "Default";
+            OperateTime = DateTime.Now;
+
+
+        }
+
     }
 }

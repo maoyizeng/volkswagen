@@ -152,6 +152,14 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                inspectionmodels.Changer = User.Identity.Name;
+                inspectionmodels.Creator = User.Identity.Name;
+                inspectionmodels.CreateTime = DateTime.Now;
+                inspectionmodels.ChangeTime = DateTime.Now;
+                ArInspectionModels ar = new ArInspectionModels(inspectionmodels);
+                ar.Operator = "Create";
+
+                db.ArInspections.Add(ar);
                 db.Inspections.Add(inspectionmodels);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");

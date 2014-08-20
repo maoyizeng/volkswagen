@@ -39,7 +39,8 @@ namespace Volkswagen.Models
         [Display(Name = "维护内容")]
         [Column(TypeName = "ntext")]
         public string Content { get; set; }
-
+       
+        //该字段(保养周期)不在表清单中
         [Display(Name = "保养周期")]
         [StringLength(50)]
         public string Period { get; set; }
@@ -126,9 +127,44 @@ namespace Volkswagen.Models
         [StringLength(10)]
         public string Operator { get; set; }
 
+        [Display(Name = "操作时间")]
+        public DateTime OperateTime { get; set; }
         //      表连接关系
    //     public virtual ArEquipmentModels ArEquipments { get; set; }
 
+        public ArMaintainModels (MaintainModels md)
+        {
+            EquipmentID = md.EquipmentID;
+            EquipDes = md.EquipDes;
+            Line = md.Line;
+            MType = md.MType;
+            MPart = md.MPart;
+            Content = md.Content;
+            Period = md.Period;             //该字段不在数据库清单中
+            MStartTime = md.MStartTime;
+            MEndTime = md.MEndTime;
+            ResponseClass = md.ResponseClass;
+            CheckStatus = md.CheckStatus;
+            CheckDetail = md.CheckDetail;
+            EquipStatus = md.EquipStatus;
+            EquipDetail = md.EquipDetail;
+            CheckerType = md.CheckerType;
+            Checker = md.Checker;
+            CheckTime = md.CheckTime;
+            Problem = md.Problem;
+            Mark = md.Mark;
+            Grade = md.Grade;
+            ProblemStatus = md.ProblemStatus;
+            CheckNum = md.CheckNum;
+            MaintainId = md.MaintainId;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
 
+            Operator = "Default";
+            OperateTime = DateTime.Now;
+
+        }
     }
 }

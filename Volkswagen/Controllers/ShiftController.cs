@@ -129,6 +129,14 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                shiftmodels.Changer = User.Identity.Name;
+                shiftmodels.Creator = User.Identity.Name;
+                shiftmodels.CreateTime = DateTime.Now;
+                shiftmodels.ChangeTime = DateTime.Now;
+                ArShiftModels ar = new ArShiftModels(shiftmodels);
+                ar.Operator = "Create";
+
+                db.ArShifts.Add(ar);
                 db.Shifts.Add(shiftmodels);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");

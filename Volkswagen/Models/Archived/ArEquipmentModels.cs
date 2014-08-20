@@ -114,23 +114,23 @@ namespace Volkswagen.Models
         {
 
         }
-        public ArEquipmentModels(EquipmentModels eq)
+        public ArEquipmentModels(EquipmentModels md)
         {
-            EquipmentID = eq.EquipmentID;
-            EquipDes = eq.EquipDes;
-            Person = eq.Person;
-            Section = eq.Section;
-            WSArea = eq.WSArea;
-            Photo = eq.Photo;
-            ItemInspect = eq.ItemInspect;
-            RegularCare = eq.RegularCare;
-            Check = eq.Check;
-            RoutingInspect = eq.RoutingInspect;
-            ChangeTime = eq.ChangeTime;
-            Changer = eq.Changer;
-            CreateTime = eq.CreateTime;
-            Creator = eq.Creator;
-            Remark = eq.Remark;
+            EquipmentID = md.EquipmentID;
+            EquipDes = md.EquipDes;
+            Person = md.Person;
+            Section = md.Section;
+            WSArea = md.WSArea;
+            Photo = md.Photo;
+            ItemInspect = md.ItemInspect;
+            RegularCare = md.RegularCare;
+            Check = md.Check;
+            RoutingInspect = md.RoutingInspect;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
+            Remark = md.Remark;
 
             Operator = "Default";
             OperateTime = DateTime.Now;

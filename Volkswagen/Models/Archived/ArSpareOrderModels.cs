@@ -109,8 +109,37 @@ namespace Volkswagen.Models
         [StringLength(10)]
         public string Operator { get; set; }
 
-
+        [Display(Name = "操作时间")]
+        public DateTime OperateTime { get; set; }
  //       public virtual ArSpareModels ArSpares { get; set; }
  //       public virtual ArEquipmentModels ArEquipments { get; set; }
+
+        public ArSpareOrderModels(SpareOrderModels md)
+        {
+            SpareID = md.SpareID;
+            SpareDes = md.SpareDes;
+            Type = md.Type;
+            OrderValue = md.OrderValue;
+            Producer = md.Producer;
+            OrderNum = md.OrderNum;
+            Property = md.Property;
+            EquipmentID = md.EquipmentID;
+            Maker = md.Maker;
+            MakerNum = md.MakerNum;
+            Orderman = md.Orderman;
+            UseTime = md.UseTime;
+            UnitPrice = md.UnitPrice;
+            TotalPrice = md.TotalPrice;
+            Status = md.Status;
+            Mode = md.Mode;
+            OrderID = md.OrderID;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
+
+            Operator = "Default";
+            OperateTime = DateTime.Now;
+        }
     }
 }

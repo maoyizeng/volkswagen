@@ -128,6 +128,14 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                maintainmodels.Changer = User.Identity.Name;
+                maintainmodels.Creator = User.Identity.Name;
+                maintainmodels.CreateTime = DateTime.Now;
+                maintainmodels.ChangeTime = DateTime.Now;
+                ArMaintainModels ar = new ArMaintainModels(maintainmodels);
+                ar.Operator = "Create";
+
+                db.ArMaintains.Add(ar);
                 db.Maintains.Add(maintainmodels);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");

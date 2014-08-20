@@ -40,6 +40,7 @@ namespace Volkswagen.Models
         [Column(TypeName = "ntext")]
         public string Content { get; set; }
 
+        //该字段(保养周期)不在表清单中
         [Display(Name = "保养周期")]
         [StringLength(50)]
         public string Period { get; set; }

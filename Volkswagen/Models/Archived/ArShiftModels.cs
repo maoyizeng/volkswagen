@@ -71,6 +71,28 @@ namespace Volkswagen.Models
         [StringLength(10)]
         public string Operator { get; set; }
 
+        [Display(Name = "操作时间")]
+        public DateTime OperateTime { get; set; }
  //       public virtual EquipmentModels Equipments { get; set; }
+
+        public ArShiftModels (ShiftModels md)
+        {
+            ShiftID = md.ShiftID;
+            ShiftDate = md.ShiftDate;
+            ShiftTime = md.ShiftTime;
+            Class = md.Class;
+            Line = md.Line;
+            Charger = md.Charger;
+            Record = md.Record;
+            Urgency = md.Urgency;
+            Remark = md.Remark;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
+
+            Operator = "Default";
+            OperateTime = DateTime.Now;
+        }
     }
 }

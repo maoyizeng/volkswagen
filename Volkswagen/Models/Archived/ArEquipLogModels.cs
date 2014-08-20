@@ -90,25 +90,25 @@ namespace Volkswagen.Models
         //      表连接关系
         //public virtual ArEquipmentModels ArEquipments { get; set; }
 
-        public ArEquipLogModels(EquipLogModels eq)
+        public ArEquipLogModels(EquipLogModels md)
         {
-            EquipmentID = eq.EquipmentID;
-            Department = eq.Department;
-            EquipDes = eq.EquipDes;
-            Type = eq.Type;
-            Spec = eq.Spec;
-            DocumentDate = eq.DocumentDate;
-            EnableDate = eq.EnableDate;
-            OriginValue = eq.OriginValue;
-            Depreciation = eq.Depreciation;
-            Spot1 = eq.Spot1;
-            Spot2 = eq.Spot2;
-            Spot3 = eq.Spot3;
-            Remark = eq.Remark;
-            ChangeTime = eq.ChangeTime;
-            Changer = eq.Changer;
-            CreateTime = eq.CreateTime;
-            Creator = eq.Creator;
+            EquipmentID = md.EquipmentID;
+            Department = md.Department;
+            EquipDes = md.EquipDes;
+            Type = md.Type;
+            Spec = md.Spec;
+            DocumentDate = md.DocumentDate;
+            EnableDate = md.EnableDate;
+            OriginValue = md.OriginValue;
+            Depreciation = md.Depreciation;
+            Spot1 = md.Spot1;
+            Spot2 = md.Spot2;
+            Spot3 = md.Spot3;
+            Remark = md.Remark;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
 
             Operator = "Default";
             OperateTime = DateTime.Now;

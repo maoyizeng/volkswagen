@@ -147,6 +147,14 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                spareordermodels.Changer = User.Identity.Name;
+                spareordermodels.Creator = User.Identity.Name;
+                spareordermodels.CreateTime = DateTime.Now;
+                spareordermodels.ChangeTime = DateTime.Now;
+                ArSpareOrderModels ar = new ArSpareOrderModels(spareordermodels);
+                ar.Operator = "Create";
+
+                db.ArSpareOrders.Add(ar);
                 db.SpareOrders.Add(spareordermodels);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");

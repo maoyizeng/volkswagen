@@ -75,15 +75,15 @@ namespace Volkswagen.DAL
             //Archive表的联合主键
             modelBuilder.Entity<ArEquipLogModels>().HasKey(t => new { t.EquipmentID, t.Operator, t.OperateTime });
             modelBuilder.Entity<ArEquipmentModels>().HasKey(t => new { t.EquipmentID, t.Operator ,t.OperateTime});
-            modelBuilder.Entity<ArFileModels>().HasKey(t => new { t.FileName, t.Operator });
-            modelBuilder.Entity<ArInspectionModels>().HasKey(t => new { t.InspectionId, t.Operator });
-            modelBuilder.Entity<ArMaintainModels>().HasKey(t => new { t.MaintainId, t.Operator });
-            modelBuilder.Entity<ArRepairModels>().HasKey(t => new { t.SheetID, t.Operator });
-            modelBuilder.Entity<ArShiftModels>().HasKey(t => new { t.ShiftID, t.Operator });
-            modelBuilder.Entity<ArSpareModels>().HasKey(t => new { t.SpareID, t.Operator });
-            modelBuilder.Entity<ArSpareOrderModels>().HasKey(t => new { t.OrderID, t.Operator });
-            modelBuilder.Entity<ArSpareUserModels>().HasKey(t => new { t.UserID, t.Operator });
-            modelBuilder.Entity<ArUserModels>().HasKey(t => new { t.UserID, t.Operator });
+            modelBuilder.Entity<ArFileModels>().HasKey(t => new { t.FileName, t.Operator, t.OperateTime });
+            modelBuilder.Entity<ArInspectionModels>().HasKey(t => new { t.InspectionId, t.Operator, t.OperateTime });
+            modelBuilder.Entity<ArMaintainModels>().HasKey(t => new { t.MaintainId, t.Operator, t.OperateTime });
+            modelBuilder.Entity<ArRepairModels>().HasKey(t => new { t.SheetID, t.Operator, t.OperateTime });
+            modelBuilder.Entity<ArShiftModels>().HasKey(t => new { t.ShiftID, t.Operator, t.OperateTime });
+            modelBuilder.Entity<ArSpareModels>().HasKey(t => new { t.SpareID, t.Operator, t.OperateTime });
+            modelBuilder.Entity<ArSpareOrderModels>().HasKey(t => new { t.OrderID, t.Operator, t.OperateTime });
+            modelBuilder.Entity<ArSpareUserModels>().HasKey(t => new { t.UserID, t.Operator, t.OperateTime });
+            modelBuilder.Entity<ArUserModels>().HasKey(t => new { t.UserID, t.Operator, t.OperateTime });
 
         }
  
