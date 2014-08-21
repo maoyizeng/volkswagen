@@ -93,7 +93,7 @@
                 @Html.ValidationMessageFor(model => model.Changer)
             </div>
         </div>
-            -->
+            
 
         <div class="form-group">
             @Html.LabelFor(model => model.CreateTime, new { @class = "control-label col-md-2" })
@@ -105,6 +105,7 @@
                 @Html.DisplayFor(model => model.Creator, new { @class = "control-label" })
             </div>
         </div>
+            -->
 
         <div class="form-group">
             @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
@@ -151,14 +152,28 @@
         @using (Html.BeginForm("FileUpload", "Equipment", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             <div class="form-group col-md-6">
-                <input id="photo-input" type="file" class="file" name="photos" data-preview-file-type="any" data-overwrite-initial="true" multiple="true">
+                <input id="photo-input" type="file" class="file" data-overwrite-initial="true" name="photos" data-preview-file-type="any" multiple="true">
             </div>
             <input type="hidden" value=@Model.EquipmentID name="key" />
         }
     </div>
 </div>
 
+<script>
+    var init = "@Model.Photo";
+    var arr = new Array();
 
+    arr = init.split('$');
+    var init_arr = new Array();
+    for (var i = 0; i < arr.length; i++) {
+        init_arr[i] = "<img src='/img/equipments/" + arr[i] + "' class='file-preview-image'>";
+    }
+
+    $("#photo-input").fileinput({
+        initialPreview: init_arr,
+        maxFileSize: 100
+    });
+</script>
 
 <div>
     @Html.ActionLink("返回", "Index")
