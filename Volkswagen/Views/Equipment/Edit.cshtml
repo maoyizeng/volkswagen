@@ -31,7 +31,7 @@
                 @Html.ValidationMessageFor(model => model.Person)
             </div>
         </div>
-        
+
         <div class="form-group">
             @Html.LabelFor(model => model.Section, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
@@ -93,7 +93,7 @@
                 @Html.ValidationMessageFor(model => model.Changer)
             </div>
         </div>
-            
+
 
         <div class="form-group">
             @Html.LabelFor(model => model.CreateTime, new { @class = "control-label col-md-2" })
@@ -152,7 +152,7 @@
         @using (Html.BeginForm("FileUpload", "Equipment", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             <div class="form-group col-md-6">
-                <input id="photo-input" type="file" class="file" data-overwrite-initial="true" name="photos" data-preview-file-type="any" multiple="true">
+                <input id="photo-input" type="file" class="file" name="photos" data-preview-file-type="any" multiple="multiple">
             </div>
             <input type="hidden" value=@Model.EquipmentID name="key" />
         }
@@ -165,14 +165,20 @@
 
     arr = init.split('$');
     var init_arr = new Array();
-    for (var i = 0; i < arr.length; i++) {
-        init_arr[i] = "<img src='/img/equipments/" + arr[i] + "' class='file-preview-image'>";
+    for (var i = 1; i < arr.length; i++) {
+        init_arr[i - 1] = "<img src='/img/equipments/" + arr[i] + "' class='file-preview-image'>";
     }
 
     $("#photo-input").fileinput({
         initialPreview: init_arr,
-        maxFileSize: 100
+        overwriteInitial: true,
+        browseLabel: "浏览",
+        uploadLabel: "上传",
+        removeLabel: "移除",
+        showCaption: false
     });
+
+
 </script>
 
 <div>

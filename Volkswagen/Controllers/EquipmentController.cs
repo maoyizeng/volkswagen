@@ -416,25 +416,27 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public ActionResult FileUpload()
+        public ActionResult FileUpload(HttpPostedFileBase[] photos)
         {
-            HttpPostedFileBase file = Request.Files["photos"];
             string key = Request.Form["key"];
-            if (file != null)
+            string fullname = "";
+                
+            foreach (HttpPostedFileBase file in photos)
             {
-                string filePath = Path.Combine( (AppDomain.CurrentDomain.BaseDirectory + @"img\equipments\"), Path.GetFileName(file.FileName));
-                //file.SaveAs(Server.MapPath(@"UploadFile\" + file.FileName));
-                file.SaveAs(filePath);
-                EquipmentModels e = db.Equipments.Find(key);
-                // TODO - check e;
-                e.Photo = file.FileName;
-                db.SaveChanges();
-                return RedirectToAction("Edit", new { id = key });
+                if (file != null)
+                {
+                    string filePath = Path.Combine((AppDomain.CurrentDomain.BaseDirectory + @"img\equipments\"), Path.GetFileName(file.FileName));
+                    //file.SaveAs(Server.MapPath(@"UploadFile\" + file.FileName));
+                    file.SaveAs(filePath);
+                    fullname += "$" + file.FileName;
+                }
             }
-            else
-            {
-                return RedirectToAction("Edit", new { id = key });
-            }
+
+            EquipmentModels e = db.Equipments.Find(key);
+            // TODO - check e;
+            e.Photo = fullname;
+            db.SaveChanges();
+            return RedirectToAction("Edit", new { id = key });
             
         }
 
