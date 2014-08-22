@@ -215,6 +215,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\EquipLogController.cs" />
     <Compile Include="Controllers\EquipmentController.cs" />
+    <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InspectionController.cs" />
     <Compile Include="Controllers\MaintainController.cs" />
@@ -223,6 +224,7 @@
     <Compile Include="Controllers\SpareController.cs" />
     <Compile Include="Controllers\SpareOrderController.cs" />
     <Compile Include="Controllers\SpareUserController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DAL\SVWContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -377,6 +379,16 @@
     <Content Include="Views\Maintain\Details.cshtml" />
     <Content Include="Views\Maintain\Edit.cshtml" />
     <Content Include="Views\Maintain\Index.cshtml" />
+    <Content Include="Views\File\Create.cshtml" />
+    <Content Include="Views\File\Delete.cshtml" />
+    <Content Include="Views\File\Details.cshtml" />
+    <Content Include="Views\File\Edit.cshtml" />
+    <Content Include="Views\File\Index.cshtml" />
+    <Content Include="Views\User\Create.cshtml" />
+    <Content Include="Views\User\Delete.cshtml" />
+    <Content Include="Views\User\Details.cshtml" />
+    <Content Include="Views\User\Edit.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
