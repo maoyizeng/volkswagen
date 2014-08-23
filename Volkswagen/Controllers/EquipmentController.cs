@@ -273,7 +273,7 @@ namespace Volkswagen.Controllers
             return View(new EquipmentModels());
         }
 
-        // POST: /Equipment/EditMultiple/
+        // POST: /Equipment/ChangeMultiple/
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,RegularCare,Check,RoutingInspect,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
         {
             if (ModelState.IsValid)
