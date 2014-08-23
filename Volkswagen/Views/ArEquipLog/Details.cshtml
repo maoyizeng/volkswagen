@@ -1,0 +1,147 @@
+﻿@model Volkswagen.Models.ArEquipLogModels
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ArEquipLogModels</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Department)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Department)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EquipDes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EquipDes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Spec)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Spec)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DocumentDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DocumentDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EnableDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EnableDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OriginValue)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OriginValue)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Depreciation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Depreciation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Spot1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Spot1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Spot2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Spot2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Spot3)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Spot3)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ChangeTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ChangeTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Changer)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Changer)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Creator)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Creator)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
