@@ -133,7 +133,8 @@ namespace Volkswagen.Controllers
         // GET: /Repair/Create
         public ActionResult Create()
         {
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes");
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
+            ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes");
             return View();
         }
 
@@ -159,7 +160,8 @@ namespace Volkswagen.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes", repairmodels.EquipmentID);
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID", repairmodels.EquipmentID);
+            ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes", repairmodels.EquipDes);
             return View(repairmodels);
         }
 
@@ -175,7 +177,8 @@ namespace Volkswagen.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes", repairmodels.EquipmentID);
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID", repairmodels.EquipmentID);
+            ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes", repairmodels.EquipDes);
             return View(repairmodels);
         }
 
@@ -192,7 +195,8 @@ namespace Volkswagen.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes", repairmodels.EquipmentID);
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID", repairmodels.EquipmentID);
+            ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes", repairmodels.EquipDes);
             return View(repairmodels);
         }
 

@@ -133,7 +133,8 @@ namespace Volkswagen.Controllers
         // GET: /SpareUser/Create
         public ActionResult Create()
         {
-            ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareDes");
+            ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareID");
+            ViewBag.SpareDes = new SelectList(db.Spares, "SpareDes", "SpareDes");
             return View();
         }
 
@@ -159,7 +160,8 @@ namespace Volkswagen.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareDes", spareusermodels.SpareID);
+            ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareID", spareusermodels.SpareID);
+            ViewBag.SpareDes = new SelectList(db.Spares, "SpareDes", "SpareDes", spareusermodels.SpareDes);
             return View(spareusermodels);
         }
 
@@ -175,7 +177,8 @@ namespace Volkswagen.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareDes", spareusermodels.SpareID);
+            ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareID", spareusermodels.SpareID);
+            ViewBag.SpareDes = new SelectList(db.Spares, "SpareDes", "SpareDes", spareusermodels.SpareDes);
             return View(spareusermodels);
         }
 
@@ -192,7 +195,8 @@ namespace Volkswagen.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareDes", spareusermodels.SpareID);
+            ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareID", spareusermodels.SpareID);
+            ViewBag.SpareDes = new SelectList(db.Spares, "SpareDes", "SpareDes", spareusermodels.SpareDes);
             return View(spareusermodels);
         }
 

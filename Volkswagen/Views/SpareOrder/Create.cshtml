@@ -17,64 +17,52 @@
         @Html.ValidationSummary(true)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.SpareID, "SpareID", new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.LabelFor(model => model.SpareID, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
                 @Html.DropDownList("SpareID", String.Empty)
                 @Html.ValidationMessageFor(model => model.SpareID)
             </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.SpareDes, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SpareDes)
+            <div class="col-md-2">
+                @Html.DropDownList("SpareDes", String.Empty)
                 @Html.ValidationMessageFor(model => model.SpareDes)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Type, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Type)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Type, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Type)
             </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.OrderValue, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.OrderValue)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.OrderValue, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.OrderValue)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Producer, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Producer)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Producer, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Producer)
             </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.OrderNum, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.OrderNum)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.OrderNum, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.OrderNum)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Property, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Property)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Property, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Property)
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.EquipmentID, "EquipmentID", new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.LabelFor(model => model.EquipmentID, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
                 @Html.DropDownList("EquipmentID", String.Empty)
                 @Html.ValidationMessageFor(model => model.EquipmentID)
             </div>
@@ -82,64 +70,52 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.Maker, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Maker)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Maker, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Maker)
             </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.MakerNum, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.MakerNum)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.MakerNum, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.MakerNum)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Orderman, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Orderman)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Orderman, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Orderman)
             </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.UseTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UseTime)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.UseTime, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.UseTime)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.UnitPrice, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UnitPrice)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.UnitPrice, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.UnitPrice)
             </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.TotalPrice, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TotalPrice)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.TotalPrice, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.TotalPrice)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Status, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Status)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Status, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Status)
             </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.Mode, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Mode)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Mode, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Mode)
             </div>
         </div>
@@ -147,7 +123,7 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <button class="btn btn-default" data-toggle="modal" data-target="#myModal">
-                    Create
+                    新建
                 </button>
 
                 <!-- Modal -->
@@ -173,5 +149,5 @@
 }
 
 <div>
-    @Html.ActionLink("返回", "Index")
+    @Html.ActionLink("返回列表", "Index")
 </div>

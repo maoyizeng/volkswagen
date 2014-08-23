@@ -116,7 +116,8 @@ namespace Volkswagen.Controllers
         // GET: /EquipLog/Create
         public ActionResult Create()
         {
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes");
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
+            ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes");
             return View();
         }
 
@@ -143,7 +144,8 @@ namespace Volkswagen.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes", equiplogmodels.EquipmentID);
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID", equiplogmodels.EquipmentID);
+            ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes", equiplogmodels.EquipDes);
             return View(equiplogmodels);
         }
 
@@ -159,7 +161,8 @@ namespace Volkswagen.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes", equiplogmodels.EquipmentID);
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID", equiplogmodels.EquipmentID);
+            ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes", equiplogmodels.EquipDes); 
             return View(equiplogmodels);
         }
 
@@ -176,7 +179,8 @@ namespace Volkswagen.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes", equiplogmodels.EquipmentID);
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID", equiplogmodels.EquipmentID);
+            ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes", equiplogmodels.EquipDes); 
             return View(equiplogmodels);
         }
 

@@ -1,11 +1,11 @@
 ﻿@model Volkswagen.Models.MaintainModels
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "新建设备维护及状态跟踪";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>设备维护及状态跟踪 - 新建</h2>
+<h3>设备维护及状态跟踪 - 新建</h3>
 
 
 @using (Html.BeginForm()) 
@@ -13,222 +13,166 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>MaintainModels</h4>
+        <!--<h4>MaintainModels</h4>-->
         <hr />
         @Html.ValidationSummary(true)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.EquipmentID, "EquipmentID", new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.LabelFor(model => model.EquipmentID, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
                 @Html.DropDownList("EquipmentID", String.Empty)
                 @Html.ValidationMessageFor(model => model.EquipmentID)
             </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.EquipDes, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EquipDes)
+            <div class="col-md-2">
+                @Html.DropDownList("EquipDes", String.Empty)
                 @Html.ValidationMessageFor(model => model.EquipDes)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Line, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Line)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Line, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Line)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.MType, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.MType)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.MType, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.MType)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.MPart, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.MPart)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.MPart, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.MPart)
             </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.Content, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Content)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Content, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Content)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Period, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Period)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Period, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Period)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.MStartTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.MStartTime)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.MStartTime, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.MStartTime)
             </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.MEndTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.MEndTime)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.MEndTime, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.MEndTime)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.ResponseClass, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ResponseClass)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.ResponseClass, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.ResponseClass)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.CheckStatus, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CheckStatus)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.CheckStatus, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.CheckStatus)
             </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.CheckDetail, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CheckDetail)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.CheckDetail, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.CheckDetail)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.EquipStatus, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EquipStatus)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.EquipStatus, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.EquipStatus)
             </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.EquipDetail, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EquipDetail)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.EquipDetail, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.EquipDetail)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.CheckerType, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CheckerType)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.CheckerType, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.CheckerType)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Checker, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Checker)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Checker, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Checker)
             </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.CheckTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CheckTime)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.CheckTime, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.CheckTime)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Problem, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Problem)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Problem, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Problem)
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Mark, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Mark)
-                @Html.ValidationMessageFor(model => model.Mark)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Grade, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Grade)
-                @Html.ValidationMessageFor(model => model.Grade)
-            </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.ProblemStatus, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ProblemStatus)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.ProblemStatus, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.ProblemStatus)
             </div>
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.Mark, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Mark, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Mark)
+            </div>
+            @Html.LabelFor(model => model.Grade, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Grade, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Grade)
+            </div>
+        </div>
+        
+        <div class="form-group">
             @Html.LabelFor(model => model.CheckNum, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CheckNum)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.CheckNum, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.CheckNum)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ChangeTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ChangeTime)
-                @Html.ValidationMessageFor(model => model.ChangeTime)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Changer, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Changer)
-                @Html.ValidationMessageFor(model => model.Changer)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CreateTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CreateTime)
-                @Html.ValidationMessageFor(model => model.CreateTime)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Creator, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Creator)
-                @Html.ValidationMessageFor(model => model.Creator)
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <button class="btn btn-default" data-toggle="modal" data-target="#myModal">
-                    Create
+                    新建
                 </button>
 
                 <!-- Modal -->
@@ -255,7 +199,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("返回列表", "Index")
 </div>
 
 @section Scripts {
