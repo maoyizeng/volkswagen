@@ -159,7 +159,7 @@ namespace Volkswagen.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes", sparemodels.EquipmentID);
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID", sparemodels.EquipmentID);
             return View(sparemodels);
         }
 
@@ -175,7 +175,7 @@ namespace Volkswagen.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes", sparemodels.EquipmentID);
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID", sparemodels.EquipmentID);
             return View(sparemodels);
         }
 
@@ -192,7 +192,7 @@ namespace Volkswagen.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes", sparemodels.EquipmentID);
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID", sparemodels.EquipmentID);
             return View(sparemodels);
         }
 

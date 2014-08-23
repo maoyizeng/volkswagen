@@ -140,7 +140,7 @@ namespace Volkswagen.Controllers
         public ActionResult Create()
         {
             ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipDes", "EquipDes");
+            ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes");
             return View();
         }
 
@@ -149,7 +149,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="InspectionId,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
+        public async Task<ActionResult> Create([Bind(Include = "InspectionId,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
         {
             if (ModelState.IsValid)
             {
@@ -191,7 +191,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include="InspectionId,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
+        public async Task<ActionResult> Edit([Bind(Include = "InspectionId,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
         {
             if (ModelState.IsValid)
             {

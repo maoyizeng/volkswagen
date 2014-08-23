@@ -133,8 +133,9 @@ namespace Volkswagen.Controllers
         // GET: /SpareOrder/Create
         public ActionResult Create()
         {
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes");
-            ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareDes");
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
+            ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareID");
+            ViewBag.SpareDes = new SelectList(db.Spares, "SpareDes", "SpareDes");
             return View();
         }
 
@@ -160,8 +161,9 @@ namespace Volkswagen.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes", spareordermodels.EquipmentID);
-            ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareDes", spareordermodels.SpareID);
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID", spareordermodels.EquipmentID);
+            ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareID", spareordermodels.SpareID);
+            ViewBag.SpareDes = new SelectList(db.Spares, "SpareDes", "SpareDes", spareordermodels.SpareDes);
             return View(spareordermodels);
         }
 
@@ -177,8 +179,9 @@ namespace Volkswagen.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes", spareordermodels.EquipmentID);
-            ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareDes", spareordermodels.SpareID);
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID", spareordermodels.EquipmentID);
+            ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareID", spareordermodels.SpareID);
+            ViewBag.SpareDes = new SelectList(db.Spares, "SpareDes", "SpareDes", spareordermodels.SpareDes); 
             return View(spareordermodels);
         }
 
@@ -195,8 +198,9 @@ namespace Volkswagen.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes", spareordermodels.EquipmentID);
-            ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareDes", spareordermodels.SpareID);
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID", spareordermodels.EquipmentID);
+            ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareID", spareordermodels.SpareID);
+            ViewBag.SpareDes = new SelectList(db.Spares, "SpareDes", "SpareDes", spareordermodels.SpareDes);
             return View(spareordermodels);
         }
 

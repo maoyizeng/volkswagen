@@ -1,18 +1,18 @@
 ﻿@model Volkswagen.Models.SpareOrderModels
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "新建备件订购信息";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>备件订购信息 - 新建</h2>
+<h3>备件订购信息 - 新建</h3>
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>SpareOrderModels</h4>
+        <!--<h4>SpareOrderModels</h4>-->
         <hr />
         @Html.ValidationSummary(true)
 
