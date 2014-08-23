@@ -167,6 +167,21 @@ namespace Volkswagen.Controllers
             return list;
         }
 
+        private List<EquipmentModels> getSelected(IQueryable<EquipmentModels> l)
+        {
+            List<EquipmentModels> list = new List<EquipmentModels>();
+            List<EquipmentModels> list_origin = l.ToList();
+            foreach (EquipmentModels e in list_origin)
+            {
+                if (Request.Form["Checked" + e.EquipmentID] != "false")
+                {
+                    list.Add(e);
+                }
+            }
+            
+            return list;
+        }
+
         // GET: /Equipment/Details/5
         public async Task<ActionResult> Details(string id)
         {
@@ -229,6 +244,76 @@ namespace Volkswagen.Controllers
                 return HttpNotFound();
             }
             return View(equipmentmodels);
+        }
+
+        // POST: /Equipment/Edit/5
+        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
+        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit([Bind(Include = "EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,RegularCare,Check,RoutingInspect,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(equipmentmodels).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return View(equipmentmodels);
+        }
+
+        // POST: /Equipment/EditMultiple/
+        public async Task<ActionResult> EditMultiple()
+        {
+            IQueryable<EquipmentModels> l = getQuery();
+            List<EquipmentModels> list = getSelected(l);
+            ViewData["list"] = list;
+            //string key = list.First().EquipmentID;
+            //return RedirectToAction("Edit", new { id = key });
+            return View(new EquipmentModels());
+        }
+
+        // POST: /Equipment/ChangeMultiple/
+        public async Task<ActionResult> ChangeMultiple([Bind(Include = "EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,RegularCare,Check,RoutingInspect,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
+        {
+            if (ModelState.IsValid)
+            {
+                for (int i = 0; ; i++)
+                {
+                    string id = Request.Form["item" + i];
+                    if (Request.Form["item" + i] == null) break;
+                    EquipmentModels e = db.Equipments.Find(id);
+                    if (equipmentmodels.EquipDes != null) e.EquipDes = equipmentmodels.EquipDes;
+                    if (equipmentmodels.Person != null) e.Person = equipmentmodels.Person;
+                    if (equipmentmodels.Section != null) e.Section = equipmentmodels.Section;
+                    if (equipmentmodels.WSArea != null) e.WSArea = equipmentmodels.WSArea;
+                    if (equipmentmodels.ItemInspect != null) e.ItemInspect = equipmentmodels.ItemInspect;
+                    if (equipmentmodels.RegularCare != null) e.RegularCare = equipmentmodels.RegularCare;
+                    if (equipmentmodels.Check != null) e.Check = equipmentmodels.Check;
+                    if (equipmentmodels.RoutingInspect != null) e.RoutingInspect = equipmentmodels.RoutingInspect;
+                    if (equipmentmodels.Remark != null) e.Remark = equipmentmodels.Remark;
+                    if (db.Entry(e).State == EntityState.Modified)
+                    {
+                        e.Changer = User.Identity.Name;
+                        e.Creator = User.Identity.Name;
+                        e.CreateTime = DateTime.Now;
+                        e.ChangeTime = DateTime.Now;
+                        ArEquipmentModels arequipmentmodels = new ArEquipmentModels(e);
+                        arequipmentmodels.Operator = "Edit";
+
+                        db.ArEquipments.Add(arequipmentmodels);
+
+                        await db.SaveChangesAsync();
+                    }
+                }
+                return RedirectToAction("Index");
+            }
+            /*IQueryable<EquipmentModels> l = getQuery();
+            IQueryable<EquipmentModels> list = getSelected(l);
+            ViewData["list"] = list;
+            string key = list.First().EquipmentID;
+            //return RedirectToAction("Edit", new { id = key });*/
+            return View(new EquipmentModels());
         }
 
         // POST: /Equipment/Query
@@ -328,21 +413,7 @@ namespace Volkswagen.Controllers
             return View();
         }
 
-        // POST: /Equipment/Edit/5
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include="EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,RegularCare,Check,RoutingInspect,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(equipmentmodels).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            return View(equipmentmodels);
-        }
+        
 
         // GET: /Equipment/Delete/5
         public async Task<ActionResult> Delete(string id)
@@ -367,6 +438,14 @@ namespace Volkswagen.Controllers
             EquipmentModels equipmentmodels = await db.Equipments.FindAsync(id);
             db.Equipments.Remove(equipmentmodels);
             await db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        // POST: /Equipment/DeleteMultiple/
+        public async Task<ActionResult> DeleteMultiple()
+        {
+            IQueryable<EquipmentModels> l = getQuery();
+            List<EquipmentModels> list = getSelected(l);
             return RedirectToAction("Index");
         }
 

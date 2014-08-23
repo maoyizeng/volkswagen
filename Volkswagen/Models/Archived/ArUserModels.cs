@@ -61,7 +61,7 @@ namespace Volkswagen.Models
 
         [Display(Name = "工作经验")]
         [StringLength(1000)]
-        public string Experence { get; set; }
+        public string Experience { get; set; }
 
         [Display(Name = "备注")]
         [Column(TypeName = "ntext")]
@@ -112,7 +112,7 @@ namespace Volkswagen.Models
             PoliticalStatus = md.PoliticalStatus;
             Address = md.Address;
             Skill = md.Skill;
-            Experence = md.Experience;
+            Experience = md.Experience;
             Remark = md.Remark;
             Image = md.Image;
             UserID = md.UserID;
