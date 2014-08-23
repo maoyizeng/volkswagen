@@ -217,13 +217,16 @@ namespace Volkswagen.Controllers
                 equipmentmodels.Creator = User.Identity.Name;
                 equipmentmodels.CreateTime = DateTime.Now;
                 equipmentmodels.ChangeTime = DateTime.Now;
-                ArEquipmentModels arequipmentmodels = new ArEquipmentModels(equipmentmodels);
-                arequipmentmodels.Operator = "Create";
-
                 db.Equipments.Add(equipmentmodels);
-                db.ArEquipments.Add(arequipmentmodels);
 
-                await db.SaveChangesAsync();
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArEquipmentModels arequipmentmodels = new ArEquipmentModels(equipmentmodels);
+                    arequipmentmodels.Operator = "Create";
+                    db.ArEquipments.Add(arequipmentmodels);
+                    await db.SaveChangesAsync();
+                }               
                 
                 return RedirectToAction("Index");
             }
@@ -255,8 +258,28 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                var equip = db.Equipments.Find(equipmentmodels.EquipmentID);
+
+                equipmentmodels.Changer = User.Identity.Name;
+                equipmentmodels.ChangeTime = DateTime.Now;
+                equipmentmodels.Creator = equip.Creator;
+                equipmentmodels.CreateTime = equip.CreateTime;
+
+                
+                db.Entry(equip).State = EntityState.Detached;
                 db.Entry(equipmentmodels).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+
+                int x = await db.SaveChangesAsync();
+
+                if (x != 0)
+                {
+                    ArEquipmentModels arequipmentmodels = new ArEquipmentModels(equip);
+                    arequipmentmodels.Operator = "Update";
+                    db.ArEquipments.Add(arequipmentmodels);
+                    await db.SaveChangesAsync();
+                }
+                
+                
                 return RedirectToAction("Index");
             }
             return View(equipmentmodels);
