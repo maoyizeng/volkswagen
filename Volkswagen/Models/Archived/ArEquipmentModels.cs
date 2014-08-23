@@ -29,32 +29,34 @@ namespace Volkswagen.Models
         public string Person { get; set; }
 
         [Display(Name = "所在工段")]
-        [StringLength(30)]
-        public string Section { get; set; }
+//        [StringLength(30)]
+//        [Column(TypeName = "nvarchar")]
+        public EquipmentModels.SectionNames Section { get; set; }
 
         [Display(Name = "车间生产线")]
-        [StringLength(15)]
-        public string WSArea { get; set; }
+  //      [StringLength(15)]
+        public EquipmentModels.WSNames WSArea { get; set; }
 
         [Display(Name = "设备照片")]
  //       [StringLength(10)]
         public string Photo { get; set; }
 
         [Display(Name = "点检")]
-        [StringLength(15)]
-        public string ItemInspect { get; set; }
+ //       [StringLength(15)]
+        public EquipmentModels.ThereBe ItemInspect { get; set; }
 
         [Display(Name = "日常保养")]
-        [StringLength(15)]
-        public string RegularCare { get; set; }
+ //       [StringLength(15)]
+        public EquipmentModels.ThereBe RegularCare { get; set; }
 
         [Display(Name = "巡检")]
-        [StringLength(15)]
-        public string Check { get; set; }
+ //       [StringLength(15)]
+        public EquipmentModels.ThereBe Check { get; set; }
+
 
         [Display(Name = "需更新否")]
-        [StringLength(15)]
-        public string RoutingInspect { get; set; }
+  //      [StringLength(15)]
+        public EquipmentModels.YesNo RoutingInspect { get; set; }
 
   //      [Display(Name = "TPM文件")]
   //      [StringLength(10)]
@@ -93,7 +95,7 @@ namespace Volkswagen.Models
         [Column(TypeName = "ntext")]
         public string Remark { get; set; }
 
-        //操作类型记录对原表的修改类型: Insert / Delete / Update      默认为Default
+        //操作类型记录对原表的修改类型: Create / Delete / Update      默认为Default
         [Display(Name = "操作类型")]
         [StringLength(10)]
         public string Operator { get; set; }

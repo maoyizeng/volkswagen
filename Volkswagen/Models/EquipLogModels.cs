@@ -17,7 +17,7 @@ namespace Volkswagen.Models
         [ForeignKey ("Equipments")]
         [Required]
         [Display(Name = "设备编号")]
-        [StringLength(15)]
+        [StringLength(15, MinimumLength=7)]
         public string EquipmentID { get; set; }
 
         [Display(Name = "使用部门")]

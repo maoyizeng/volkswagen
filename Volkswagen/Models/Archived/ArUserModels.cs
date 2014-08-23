@@ -112,7 +112,7 @@ namespace Volkswagen.Models
             PoliticalStatus = md.PoliticalStatus;
             Address = md.Address;
             Skill = md.Skill;
-            Experence = md.Experence;
+            Experence = md.Experience;
             Remark = md.Remark;
             Image = md.Image;
             UserID = md.UserID;
