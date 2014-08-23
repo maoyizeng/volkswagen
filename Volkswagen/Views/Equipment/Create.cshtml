@@ -1,11 +1,11 @@
 ﻿@model Volkswagen.Models.EquipmentModels
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "新建设备履历";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>设备履历 - 新建</h2>
+<h3>设备履历 - 新建</h3>
 
 
 @using (Html.BeginForm()) 
@@ -13,86 +13,72 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>EquipmentModels</h4>
+        <!--<h4>EquipmentModels</h4>-->
         <hr />
         @Html.ValidationSummary(true)
 
         <div class="form-group">
             @Html.LabelFor(model => model.EquipmentID, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EquipmentID)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.EquipmentID, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.EquipmentID)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.EquipDes, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EquipDes)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.EquipDes, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.EquipDes)
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Person, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Person)
+            @Html.LabelFor(model => model.Person, new { @class = "control-label col-md-1" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Person, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Person)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Section, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Section)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Section, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Section)
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.WSArea, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.WSArea)
+            @Html.LabelFor(model => model.WSArea, new { @class = "control-label col-md-1" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.WSArea, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.WSArea)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Photo, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Photo)
-                @Html.ValidationMessageFor(model => model.Photo)
-            </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.ItemInspect, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ItemInspect)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.ItemInspect, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.ItemInspect)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.RegularCare, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.RegularCare)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.RegularCare, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.RegularCare)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Check, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Check)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Check, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Check)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.RoutingInspect, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.RoutingInspect)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.RoutingInspect, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.RoutingInspect)
             </div>
         </div>
@@ -100,7 +86,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Remark)
+                @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Remark)
             </div>
         </div>
@@ -108,7 +94,7 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <button class="btn btn-default" data-toggle="modal" data-target="#myModal">
-                    Create
+                    新建
                 </button>
 
                 <!-- Modal -->
@@ -138,7 +124,7 @@
 }
 
 <div>
-    @Html.ActionLink("返回", "Index")
+    @Html.ActionLink("返回列表", "Index")
 </div>
 
 @section Scripts {

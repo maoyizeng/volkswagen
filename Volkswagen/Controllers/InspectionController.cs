@@ -139,7 +139,8 @@ namespace Volkswagen.Controllers
         // GET: /Inspection/Create
         public ActionResult Create()
         {
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes");
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipDes", "EquipDes");
             return View();
         }
 

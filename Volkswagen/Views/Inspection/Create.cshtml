@@ -1,11 +1,11 @@
 ﻿@model Volkswagen.Models.InspectionModels
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "新建保养计划";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>设备保养计划 - 新建</h2>
+<h3>设备保养计划 - 新建</h3>
 
 
 @using (Html.BeginForm()) 
@@ -13,123 +13,120 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>InspectionModels</h4>
+        <!--<h4>InspectionModels</h4>-->
         <hr />
         @Html.ValidationSummary(true)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.EquipmentID, "EquipmentID", new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.LabelFor(model => model.EquipmentID, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
                 @Html.DropDownList("EquipmentID", String.Empty)
                 @Html.ValidationMessageFor(model => model.EquipmentID)
+                </div>
+                @Html.LabelFor(model => model.EquipDes, new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    @Html.DropDownList("EquipDes", String.Empty)
+                    @Html.ValidationMessageFor(model => model.EquipDes)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.EquipDes, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EquipDes)
-                @Html.ValidationMessageFor(model => model.EquipDes)
+            <div class="form-group">
+                @Html.LabelFor(model => model.Class, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Class, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Class)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Class, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Class)
-                @Html.ValidationMessageFor(model => model.Class)
+            <div class="form-group">
+                @Html.LabelFor(model => model.Part, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Part, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Part)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Part, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Part)
-                @Html.ValidationMessageFor(model => model.Part)
+            <div class="form-group">
+                @Html.LabelFor(model => model.Position, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Position, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Position)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Position, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Position)
-                @Html.ValidationMessageFor(model => model.Position)
+            <div class="form-group">
+                @Html.LabelFor(model => model.Content, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Content, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Content)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Content, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Content)
-                @Html.ValidationMessageFor(model => model.Content)
+            <div class="form-group">
+                @Html.LabelFor(model => model.Period, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Period, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Period)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Period, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Period)
-                @Html.ValidationMessageFor(model => model.Period)
+            <div class="form-group">
+                @Html.LabelFor(model => model.Caution, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Caution, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Caution)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Caution, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Caution)
-                @Html.ValidationMessageFor(model => model.Caution)
+            <div class="form-group">
+                @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Remark)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Remark)
-                @Html.ValidationMessageFor(model => model.Remark)
+            <div class="form-group">
+                @Html.LabelFor(model => model.InspectionId, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.InspectionId, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.InspectionId)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.InspectionId, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.InspectionId)
-                @Html.ValidationMessageFor(model => model.InspectionId)
-            </div>
-        </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button class="btn btn-default" data-toggle="modal" data-target="#myModal">
+                        Create
+                    </button>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <button class="btn btn-default" data-toggle="modal" data-target="#myModal">
-                    Create
-                </button>
-
-                <!-- Modal -->
-                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                <h4 class="modal-title" id="myModalLabel">新建确认</h4>
-                            </div>
-                            <div class="modal-body">
-                                是否新建该条记录?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                <input type="submit" value="新建" class="btn btn-primary" />
+                    <!-- Modal -->
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">新建确认</h4>
+                                </div>
+                                <div class="modal-body">
+                                    是否新建该条记录?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                    <input type="submit" value="新建" class="btn btn-primary" />
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    }
+
+    <div>
+        @Html.ActionLink("返回", "Index")
     </div>
-}
 
-<div>
-    @Html.ActionLink("返回", "Index")
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }

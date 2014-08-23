@@ -1,7 +1,7 @@
 ﻿@model Volkswagen.Models.EquipmentModels
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "编辑设备履历 - " + Model.EquipmentID;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -182,7 +182,7 @@
 </script>
 
 <div>
-    @Html.ActionLink("返回", "Index")
+    @Html.ActionLink("返回列表", "Index")
 </div>
 
 @section Scripts {
