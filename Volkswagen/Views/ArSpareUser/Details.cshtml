@@ -1,0 +1,115 @@
+﻿@model Volkswagen.Models.ArSpareUserModels
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ArSpareUserModels</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SpareID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SpareID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SpareDes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SpareDes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InValue)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InValue)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OutValue)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OutValue)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UseTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UseTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ActualUse)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ActualUse)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ChangeTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ChangeTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Changer)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Changer)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Creator)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Creator)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

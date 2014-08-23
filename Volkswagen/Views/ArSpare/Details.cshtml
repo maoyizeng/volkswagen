@@ -1,0 +1,171 @@
+﻿@model Volkswagen.Models.ArSpareModels
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ArSpareModels</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SpareDes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SpareDes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Picture1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Picture1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Picture2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Picture2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Mark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mark)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PresentValue)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PresentValue)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SafeValue)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SafeValue)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DCMinValue)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DCMinValue)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DCMaxValue)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DCMaxValue)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Property)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Property)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EquipmentID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EquipmentID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Producer)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Producer)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OrderNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OrderNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.KeyPart)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.KeyPart)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ChangeTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ChangeTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Changer)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Changer)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Creator)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Creator)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

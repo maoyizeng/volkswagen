@@ -1,0 +1,203 @@
+﻿@model Volkswagen.Models.ArRepairModels
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ArRepairModels</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.RepairID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RepairID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EquipmentID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EquipmentID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EquipDes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EquipDes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StartTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StartTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FinishTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FinishTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RepairTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RepairTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Class)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Class)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Line)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Line)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Section)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Section)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FaultView)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FaultView)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Repairman)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Repairman)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FaultType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FaultType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Result)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Result)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Problem)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Problem)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Checker)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Checker)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StopTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StopTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RepairNum)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RepairNum)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ChangeTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ChangeTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Changer)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Changer)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Creator)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Creator)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

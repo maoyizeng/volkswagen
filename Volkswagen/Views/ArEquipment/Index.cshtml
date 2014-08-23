@@ -1,0 +1,112 @@
+﻿@model IEnumerable<Volkswagen.Models.ArEquipmentModels>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.EquipDes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Person)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Section)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WSArea)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Photo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ItemInspect)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RegularCare)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Check)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RoutingInspect)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChangeTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Changer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreateTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Creator)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remark)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.EquipDes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Person)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Section)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WSArea)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Photo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ItemInspect)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RegularCare)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Check)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RoutingInspect)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChangeTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Changer)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreateTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Creator)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Remark)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+    </tr>
+}
+
+</table>
