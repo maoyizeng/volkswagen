@@ -1,0 +1,109 @@
+﻿@model Volkswagen.Models.EquipmentModels
+
+@{
+    ViewBag.Title = "EditMultiple";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>设备履历 - 批量编辑</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true)
+        @{
+            int n = 0;
+            List<Volkswagen.Models.EquipmentModels> l = ViewData["list"] as List<Volkswagen.Models.EquipmentModels>;
+    foreach (Volkswagen.Models.EquipmentModels e in l)
+    {
+        string name = "item" + n;
+        <input type="hidden" name="@name" value=@e.EquipmentID />
+        n++;
+    }
+}
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EquipDes, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.EquipDes, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.EquipDes)
+            </div>
+            @Html.LabelFor(model => model.Person, new { @class = "control-label col-md-1" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Person, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Person)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Section, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Section, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Section)
+            </div>
+            @Html.LabelFor(model => model.WSArea, new { @class = "control-label col-md-1" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.WSArea, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.WSArea)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ItemInspect, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.ItemInspect, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ItemInspect)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RegularCare, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.RegularCare, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.RegularCare)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Check, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Check, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Check)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RoutingInspect, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.RoutingInspect, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.RoutingInspect)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Remark)
+                @Html.ValidationMessageFor(model => model.Remark)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="保存" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("返回", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

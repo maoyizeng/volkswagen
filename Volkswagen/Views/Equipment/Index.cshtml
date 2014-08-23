@@ -63,11 +63,11 @@
     "Remark");
 
     function append_input() {
-        
-        var fm = document.getElementById("query_form");
+
+        var fm = document.getElementById("query_panel");
         var f = document.createElement("div");
         f.className = "form-group";
-        
+
 
         var field = document.createElement("select");
         var op = document.createElement("select");
@@ -76,7 +76,7 @@
         field.name = "field" + row;
         op.name = "op" + row;
         operand.name = "operand" + row;
-        
+
         //operand.className = "form-control"
 
         for (var i = 0; i < fieldMap.length; i++) {
@@ -92,15 +92,15 @@
             ooption.value = i;
             op.add(ooption);
         }
-       
+
 
         f.appendChild(field);
         f.appendChild(op);
         f.appendChild(operand);
 
         fm.appendChild(f);
-        
-        
+
+
 
         /*var input = document.createElement("input");
         input.type = "button";
@@ -150,30 +150,40 @@
 
         row++;
     }
+
+    function select_all() {
+        var inputs = document.getElementById("grid_form").getElementsByTagName("input");
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].type == "checkbox")
+            {
+                inputs[i].checked = true;
+            }
+        }
+    }
 </script>
 
+<form action="/Equipment/" id="query_form" method="post">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">查询</h3>
+                </div>
+                <div id="query_panel" class="panel-body">
 
-<div class="row">
-<div class="col-sm-6" >
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">查询</h3>
-        </div>
-        <div class="panel-body">
-           <form action="/Equipment/" id="query_form" method="post"> 
-               <input type="hidden" name="Colu" value=@col />
-               <input type="hidden" name="Direction" value=@dir />
-                <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
-                <input type="submit" id="query" value="确定" class="btn btn-sm" />
-            </form>
+                    <input type="hidden" name="Colu" value=@col />
+                    <input type="hidden" name="Direction" value=@dir />
+                    <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
+                    <input type="submit" id="query" value="确定" class="btn btn-sm" />
+                    <!-- </form> -->
+                </div>
+            </div>
         </div>
     </div>
-</div>
-</div>
 
-<br />
+    <br />
 
-<form action="/Equipment/" id="grid_form" method="post">
+    <!-- <form action="/Equipment/" id="grid_form" method="post"> -->
 
     <p>
         @Html.ActionLink("新建", "Create", "Equipment", null, new { @class = "btn btn-default" })
@@ -283,9 +293,9 @@
 
     </table>
     -->
-        @Html.ActionLink("全选", "Create", "Equipment", null, new { @class = "btn btn-default" })
-        @Html.ActionLink("批量修改", "EditMultiple", "Equipment", null, new { @class = "btn btn-default" })
-        @Html.ActionLink("批量删除", "DeleteMultiple", "Equipment", null, new { @class = "btn btn-default" })
+    <input type="button" value="全选" onclick="select_all()" class="btn btn-default" />
+    @Html.ActionLink("批量修改", "EditMultiple", "Equipment", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("批量删除", "DeleteMultiple", "Equipment", null, new { @class = "btn btn-default" })
     <p>
 
     </p>
