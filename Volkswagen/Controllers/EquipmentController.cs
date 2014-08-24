@@ -295,12 +295,12 @@ namespace Volkswagen.Controllers
             if (ViewData["list"] == null) ViewData["list"] = list;
             //string key = list.First().EquipmentID;
             //return RedirectToAction("Edit", new { id = key });
-            return View(new EquipmentModels());
+            return RedirectToAction("ChangeMultiple", new { equipmentmodels = new EquipmentModels() });
         }
 
         // POST: /Equipment/ChangeMultiple/
         //[HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,RegularCare,Check,RoutingInspect,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
         {
             bool changed = false;
@@ -344,7 +344,7 @@ namespace Volkswagen.Controllers
             else
             {
                 ViewData["list"] = l;
-                return RedirectToAction("EditMultiple");
+                return View(new EquipmentModels());
             }
                 
            
@@ -484,7 +484,7 @@ namespace Volkswagen.Controllers
 
         // POST: /Equipment/DeleteMultiple/
         //[HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteMultiple()
         {
             IQueryable<EquipmentModels> l = getQuery();
