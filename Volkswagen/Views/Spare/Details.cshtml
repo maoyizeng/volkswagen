@@ -213,8 +213,8 @@
 </div>
 <p>
     @using Volkswagen.Controllers
-    @Html.ActionLink("领用记录", "Details", "SpareUser", new { id = Volkswagen.Controllers.EquipmentController.db.SpareUsers.Where(p => p.SpareID == Model.SpareID).ToList().First().UserID }) |
-    @Html.ActionLink("订购信息", "Details", "SpareOrder", new { id = Volkswagen.Controllers.EquipmentController.db.SpareOrders.Where(p => p.SpareID == Model.SpareID).ToList().First().OrderID }) 
+    @*@Html.ActionLink("领用记录", "Details", "SpareUser", new { id = Volkswagen.Controllers.EquipmentController.db.SpareUsers.Where(p => p.SpareID == Model.SpareID).ToList().First().UserID }) |
+    @Html.ActionLink("订购信息", "Details", "SpareOrder", new { id = Volkswagen.Controllers.EquipmentController.db.SpareOrders.Where(p => p.SpareID == Model.SpareID).ToList().First().OrderID }) *@
 </p>
 <p>
     @Html.ActionLink("编辑", "Edit", new { id = Model.SpareID }) |
