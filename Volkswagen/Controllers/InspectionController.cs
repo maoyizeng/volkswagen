@@ -157,12 +157,15 @@ namespace Volkswagen.Controllers
                 inspectionmodels.Creator = User.Identity.Name;
                 inspectionmodels.CreateTime = DateTime.Now;
                 inspectionmodels.ChangeTime = DateTime.Now;
-                ArInspectionModels ar = new ArInspectionModels(inspectionmodels);
-                ar.Operator = "Create";
-
-                db.ArInspections.Add(ar);
                 db.Inspections.Add(inspectionmodels);
-                await db.SaveChangesAsync();
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArInspectionModels ar = new ArInspectionModels(inspectionmodels);
+                    ar.Operator = "Create";
+                    db.ArInspections.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
 
@@ -195,8 +198,25 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                var toUpdate = db.Inspections.Find(inspectionmodels.InspectionId);
+
+                inspectionmodels.Changer = User.Identity.Name;
+                inspectionmodels.ChangeTime = DateTime.Now;
+                inspectionmodels.Creator = toUpdate.Creator;
+                inspectionmodels.CreateTime = toUpdate.CreateTime;
+
+                db.Entry(toUpdate).State = EntityState.Detached;
                 db.Entry(inspectionmodels).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+
+                int x = await db.SaveChangesAsync();
+
+                if (x != 0)
+                {
+                    ArInspectionModels ar = new ArInspectionModels(toUpdate);
+                    ar.Operator = "Update";
+                    db.ArInspections.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
             ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes", inspectionmodels.EquipmentID);

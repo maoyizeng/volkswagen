@@ -164,8 +164,20 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                filemodels.Changer = User.Identity.Name;
+                filemodels.Creator = User.Identity.Name;
+                filemodels.CreateTime = DateTime.Now;
+                filemodels.ChangeTime = DateTime.Now;
                 db.Files.Add(filemodels);
-                await db.SaveChangesAsync();
+                 
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArFileModels ar = new ArFileModels(filemodels);
+                    ar.Operator = "Create";
+                    db.ArFiles.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
 
@@ -196,8 +208,26 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                var toUpdate = db.Files.Find(filemodels.FileName);
+
+                filemodels.Changer = User.Identity.Name;
+                filemodels.ChangeTime = DateTime.Now;
+                filemodels.Creator = toUpdate.Creator;
+                filemodels.CreateTime = toUpdate.CreateTime;
+
+
+                db.Entry(toUpdate).State = EntityState.Detached;
                 db.Entry(filemodels).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+
+                int x = await db.SaveChangesAsync();
+
+                if (x != 0)
+                {
+                    ArFileModels ar = new ArFileModels(toUpdate);
+                    ar.Operator = "Update";
+                    db.ArFiles.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
             return View(filemodels);

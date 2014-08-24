@@ -258,22 +258,22 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
-                var equip = db.Equipments.Find(equipmentmodels.EquipmentID);
+                var toUpdate = db.Equipments.Find(equipmentmodels.EquipmentID);
 
                 equipmentmodels.Changer = User.Identity.Name;
                 equipmentmodels.ChangeTime = DateTime.Now;
-                equipmentmodels.Creator = equip.Creator;
-                equipmentmodels.CreateTime = equip.CreateTime;
+                equipmentmodels.Creator = toUpdate.Creator;
+                equipmentmodels.CreateTime = toUpdate.CreateTime;
 
                 
-                db.Entry(equip).State = EntityState.Detached;
+                db.Entry(toUpdate).State = EntityState.Detached;
                 db.Entry(equipmentmodels).State = EntityState.Modified;
 
                 int x = await db.SaveChangesAsync();
 
                 if (x != 0)
                 {
-                    ArEquipmentModels arequipmentmodels = new ArEquipmentModels(equip);
+                    ArEquipmentModels arequipmentmodels = new ArEquipmentModels(toUpdate);
                     arequipmentmodels.Operator = "Update";
                     db.ArEquipments.Add(arequipmentmodels);
                     await db.SaveChangesAsync();
