@@ -434,7 +434,6 @@
     <Content Include="Views\ArUser\Delete.cshtml" />
     <Content Include="Views\ArUser\Details.cshtml" />
     <Content Include="Views\ArUser\Index.cshtml" />
-    <Content Include="Views\Equipment\ChangeMultiple.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

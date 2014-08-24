@@ -292,7 +292,7 @@ namespace Volkswagen.Controllers
         {
             IQueryable<EquipmentModels> l = getQuery();
             List<EquipmentModels> list = getSelected(l);
-            ViewData["list"] = list;
+            if (ViewData["list"] == null) ViewData["list"] = list;
             //string key = list.First().EquipmentID;
             //return RedirectToAction("Edit", new { id = key });
             return View(new EquipmentModels());
@@ -303,24 +303,25 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,RegularCare,Check,RoutingInspect,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
         {
-            if (ModelState.IsValid)
-            {
-                for (int i = 0; ; i++)
+            bool changed = false;
+            List<EquipmentModels> l = new List<EquipmentModels>();
+            for (int i = 0; ; i++)
                 {
                     string id = Request.Form["item" + i];
                     if (Request.Form["item" + i] == null) break;
                     EquipmentModels e = db.Equipments.Find(id);
+                    l.Add(e);
                     ArEquipmentModels ar = new ArEquipmentModels(e);
-                    if (equipmentmodels.EquipDes != null) e.EquipDes = equipmentmodels.EquipDes;
-                    if (equipmentmodels.Person != null) e.Person = equipmentmodels.Person;
-                    if (equipmentmodels.Section != null) e.Section = equipmentmodels.Section;
-                    if (equipmentmodels.WSArea != null) e.WSArea = equipmentmodels.WSArea;
-                    if (equipmentmodels.ItemInspect != null) e.ItemInspect = equipmentmodels.ItemInspect;
-                    if (equipmentmodels.RegularCare != null) e.RegularCare = equipmentmodels.RegularCare;
-                    if (equipmentmodels.Check != null) e.Check = equipmentmodels.Check;
-                    if (equipmentmodels.RoutingInspect != null) e.RoutingInspect = equipmentmodels.RoutingInspect;
-                    if (equipmentmodels.Remark != null) e.Remark = equipmentmodels.Remark;
-                    if (db.Entry(e).State == EntityState.Modified)
+                    if (equipmentmodels.EquipDes != null && ModelState.IsValidField("EquipDes")) e.EquipDes = equipmentmodels.EquipDes;
+                    if (equipmentmodels.Person != null  && ModelState.IsValidField("Person")) e.Person = equipmentmodels.Person;
+                    if (equipmentmodels.Section != null  && ModelState.IsValidField("Section")) e.Section = equipmentmodels.Section;
+                    if (equipmentmodels.WSArea != null  && ModelState.IsValidField("WSArea")) e.WSArea = equipmentmodels.WSArea;
+                    if (equipmentmodels.ItemInspect != null  && ModelState.IsValidField("ItemInspect")) e.ItemInspect = equipmentmodels.ItemInspect;
+                    if (equipmentmodels.RegularCare != null  && ModelState.IsValidField("RegularCare")) e.RegularCare = equipmentmodels.RegularCare;
+                    if (equipmentmodels.Check != null  && ModelState.IsValidField("Check")) e.Check = equipmentmodels.Check;
+                    if (equipmentmodels.RoutingInspect != null  && ModelState.IsValidField("RoutingInspect")) e.RoutingInspect = equipmentmodels.RoutingInspect;
+                    if (equipmentmodels.Remark != null  && ModelState.IsValidField("Remark")) e.Remark = equipmentmodels.Remark;
+                    if (db.Entry(e).State == EntityState.Modified )
                     {
                         e.Changer = User.Identity.Name;
 //                      e.Creator = User.Identity.Name;
@@ -328,21 +329,25 @@ namespace Volkswagen.Controllers
                         e.ChangeTime = DateTime.Now;
                         int x = await db.SaveChangesAsync();
                         if (x != 0)
-                        {                         
+                        {      
+                            changed = true;
                             ar.Operator = "Update";
                             db.ArEquipments.Add(ar);
                             await db.SaveChangesAsync();
                         }                       
                     }
                 }
+            if (changed)
+            {
                 return RedirectToAction("Index");
             }
-            /*IQueryable<EquipmentModels> l = getQuery();
-            IQueryable<EquipmentModels> list = getSelected(l);
-            ViewData["list"] = list;
-            string key = list.First().EquipmentID;
-            //return RedirectToAction("Edit", new { id = key });*/
-            return RedirectToAction("Index");
+            else
+            {
+                ViewData["list"] = l;
+                return RedirectToAction("EditMultiple");
+            }
+                
+           
         }
 
         // POST: /Equipment/Query
