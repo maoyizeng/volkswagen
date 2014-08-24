@@ -479,6 +479,19 @@ namespace Volkswagen.Controllers
         {
             IQueryable<EquipmentModels> l = getQuery();
             List<EquipmentModels> list = getSelected(l);
+            foreach (EquipmentModels e in list)
+            {
+                db.Equipments.Remove(e);
+
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArEquipmentModels ar = new ArEquipmentModels(e);
+                    ar.Operator = "Delete";
+                    db.ArEquipments.Add(ar);
+                    await db.SaveChangesAsync();
+                }
+            }
             return RedirectToAction("Index");
         }
 
