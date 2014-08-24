@@ -133,12 +133,15 @@ namespace Volkswagen.Controllers
                 shiftmodels.Creator = User.Identity.Name;
                 shiftmodels.CreateTime = DateTime.Now;
                 shiftmodels.ChangeTime = DateTime.Now;
-                ArShiftModels ar = new ArShiftModels(shiftmodels);
-                ar.Operator = "Create";
-
-                db.ArShifts.Add(ar);
                 db.Shifts.Add(shiftmodels);
-                await db.SaveChangesAsync();
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArShiftModels ar = new ArShiftModels(shiftmodels);
+                    ar.Operator = "Create";
+                    db.ArShifts.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
 
@@ -169,8 +172,25 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                var toUpdate = db.Shifts.Find(shiftmodels.ShiftID);
+
+                shiftmodels.Changer = User.Identity.Name;
+                shiftmodels.ChangeTime = DateTime.Now;
+                shiftmodels.Creator = toUpdate.Creator;
+                shiftmodels.CreateTime = toUpdate.CreateTime;
+
+                db.Entry(toUpdate).State = EntityState.Detached;
                 db.Entry(shiftmodels).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+
+                int x = await db.SaveChangesAsync();
+
+                if (x != 0)
+                {
+                    ArShiftModels ar = new ArShiftModels(toUpdate);
+                    ar.Operator = "Update";
+                    db.ArShifts.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
             return View(shiftmodels);
@@ -196,9 +216,16 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
-            ShiftModels shiftmodels = await db.Shifts.FindAsync(id);
-            db.Shifts.Remove(shiftmodels);
-            await db.SaveChangesAsync();
+            ShiftModels toDelete = await db.Shifts.FindAsync(id);
+            db.Shifts.Remove(toDelete);
+            int x = await db.SaveChangesAsync();
+            if (x != 0)
+            {
+                ArShiftModels ar = new ArShiftModels(toDelete);
+                ar.Operator = "Delete";
+                db.ArShifts.Add(ar);
+                await db.SaveChangesAsync();
+            }
             return RedirectToAction("Index");
         }
 

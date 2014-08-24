@@ -151,12 +151,15 @@ namespace Volkswagen.Controllers
                 spareusermodels.Creator = User.Identity.Name;
                 spareusermodels.CreateTime = DateTime.Now;
                 spareusermodels.ChangeTime = DateTime.Now;
-                ArSpareUserModels ar = new ArSpareUserModels(spareusermodels);
-                ar.Operator = "Create";
-
-                db.ArSpareUsers.Add(ar);
                 db.SpareUsers.Add(spareusermodels);
-                await db.SaveChangesAsync();
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArSpareUserModels ar = new ArSpareUserModels(spareusermodels);
+                    ar.Operator = "Create";
+                    db.ArSpareUsers.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
 
@@ -191,8 +194,25 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                var toUpdate = db.SpareUsers.Find(spareusermodels.UserID);
+
+                spareusermodels.Changer = User.Identity.Name;
+                spareusermodels.ChangeTime = DateTime.Now;
+                spareusermodels.Creator = toUpdate.Creator;
+                spareusermodels.CreateTime = toUpdate.CreateTime;
+
+                db.Entry(toUpdate).State = EntityState.Detached;
                 db.Entry(spareusermodels).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+
+                int x = await db.SaveChangesAsync();
+
+                if (x != 0)
+                {
+                    ArSpareUserModels ar = new ArSpareUserModels(toUpdate);
+                    ar.Operator = "Update";
+                    db.ArSpareUsers.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
             ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareID", spareusermodels.SpareID);
@@ -220,9 +240,16 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            SpareUserModels spareusermodels = await db.SpareUsers.FindAsync(id);
-            db.SpareUsers.Remove(spareusermodels);
-            await db.SaveChangesAsync();
+            SpareUserModels toDelete = await db.SpareUsers.FindAsync(id);
+            db.SpareUsers.Remove(toDelete);
+            int x = await db.SaveChangesAsync();
+            if (x != 0)
+            {
+                ArSpareUserModels ar = new ArSpareUserModels(toDelete);
+                ar.Operator = "Delete";
+                db.ArSpareUsers.Add(ar);
+                await db.SaveChangesAsync();
+            }
             return RedirectToAction("Index");
         }
 

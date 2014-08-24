@@ -151,12 +151,16 @@ namespace Volkswagen.Controllers
                 repairmodels.Creator = User.Identity.Name;
                 repairmodels.CreateTime = DateTime.Now;
                 repairmodels.ChangeTime = DateTime.Now;
-                ArRepairModels ar = new ArRepairModels(repairmodels);
-                ar.Operator = "Create";
-
-                db.ArRepairs.Add(ar);
                 db.Repairs.Add(repairmodels);
-                await db.SaveChangesAsync();
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+
+                    ArRepairModels ar = new ArRepairModels(repairmodels);
+                    ar.Operator = "Create";
+                    db.ArRepairs.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
 
@@ -191,8 +195,25 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                var toUpdate = db.Repairs.Find(repairmodels.SheetID);
+
+                repairmodels.Changer = User.Identity.Name;
+                repairmodels.ChangeTime = DateTime.Now;
+                repairmodels.Creator = toUpdate.Creator;
+                repairmodels.CreateTime = toUpdate.CreateTime;
+
+                db.Entry(toUpdate).State = EntityState.Detached;
                 db.Entry(repairmodels).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+
+                int x = await db.SaveChangesAsync();
+
+                if (x != 0)
+                {
+                    ArRepairModels ar = new ArRepairModels(toUpdate);
+                    ar.Operator = "Update";
+                    db.ArRepairs.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
             ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID", repairmodels.EquipmentID);
@@ -277,9 +298,16 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
-            RepairModels repairmodels = await db.Repairs.FindAsync(id);
-            db.Repairs.Remove(repairmodels);
-            await db.SaveChangesAsync();
+            RepairModels toDelete = await db.Repairs.FindAsync(id);
+            db.Repairs.Remove(toDelete);
+            int x = await db.SaveChangesAsync();
+            if (x != 0)
+            {
+                ArRepairModels ar = new ArRepairModels(toDelete);
+                ar.Operator = "Delete";
+                db.ArRepairs.Add(ar);
+                await db.SaveChangesAsync();
+            }
             return RedirectToAction("Index");
         }
 

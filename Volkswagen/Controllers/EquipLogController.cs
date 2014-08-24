@@ -134,13 +134,17 @@ namespace Volkswagen.Controllers
                 equiplogmodels.Creator = User.Identity.Name;
                 equiplogmodels.CreateTime = DateTime.Now;
                 equiplogmodels.ChangeTime = DateTime.Now;
-                ArEquipLogModels ar = new ArEquipLogModels(equiplogmodels);
-                ar.Operator = "Create";
-
-                
-                db.ArEquipLogs.Add(ar);
                 db.EquipLogs.Add(equiplogmodels);
-                await db.SaveChangesAsync();
+
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArEquipLogModels ar = new ArEquipLogModels(equiplogmodels);
+                    ar.Operator = "Create";
+                    db.ArEquipLogs.Add(ar);
+                    await db.SaveChangesAsync();
+                }
+             
                 return RedirectToAction("Index");
             }
 
@@ -175,8 +179,26 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                var toUpdate = db.EquipLogs.Find(equiplogmodels.EquipmentID);
+
+                equiplogmodels.Changer = User.Identity.Name;
+                equiplogmodels.ChangeTime = DateTime.Now;
+                equiplogmodels.Creator = toUpdate.Creator;
+                equiplogmodels.CreateTime = toUpdate.CreateTime;
+
+
+                db.Entry(toUpdate).State = EntityState.Detached;
                 db.Entry(equiplogmodels).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+
+                int x = await db.SaveChangesAsync();
+
+                if (x != 0)
+                {
+                    ArEquipLogModels ar = new ArEquipLogModels(toUpdate);
+                    ar.Operator = "Update";
+                    db.ArEquipLogs.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
             ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID", equiplogmodels.EquipmentID);
@@ -204,9 +226,16 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
-            EquipLogModels equiplogmodels = await db.EquipLogs.FindAsync(id);
-            db.EquipLogs.Remove(equiplogmodels);
-            await db.SaveChangesAsync();
+            EquipLogModels toDelete = await db.EquipLogs.FindAsync(id);
+            db.EquipLogs.Remove(toDelete);
+            int x = await db.SaveChangesAsync();
+            if (x != 0)
+            {
+                ArEquipLogModels ar = new ArEquipLogModels(toDelete);
+                ar.Operator = "Delete";
+                db.ArEquipLogs.Add(ar);
+                await db.SaveChangesAsync();
+            }
             return RedirectToAction("Index");
         }
 

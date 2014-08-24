@@ -222,9 +222,9 @@ namespace Volkswagen.Controllers
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArEquipmentModels arequipmentmodels = new ArEquipmentModels(equipmentmodels);
-                    arequipmentmodels.Operator = "Create";
-                    db.ArEquipments.Add(arequipmentmodels);
+                    ArEquipmentModels ar = new ArEquipmentModels(equipmentmodels);
+                    ar.Operator = "Create";
+                    db.ArEquipments.Add(ar);
                     await db.SaveChangesAsync();
                 }               
                 
@@ -258,24 +258,24 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
-                var equip = db.Equipments.Find(equipmentmodels.EquipmentID);
+                var toUpdate = db.Equipments.Find(equipmentmodels.EquipmentID);
 
                 equipmentmodels.Changer = User.Identity.Name;
                 equipmentmodels.ChangeTime = DateTime.Now;
-                equipmentmodels.Creator = equip.Creator;
-                equipmentmodels.CreateTime = equip.CreateTime;
+                equipmentmodels.Creator = toUpdate.Creator;
+                equipmentmodels.CreateTime = toUpdate.CreateTime;
 
                 
-                db.Entry(equip).State = EntityState.Detached;
+                db.Entry(toUpdate).State = EntityState.Detached;
                 db.Entry(equipmentmodels).State = EntityState.Modified;
 
                 int x = await db.SaveChangesAsync();
 
                 if (x != 0)
                 {
-                    ArEquipmentModels arequipmentmodels = new ArEquipmentModels(equip);
-                    arequipmentmodels.Operator = "Update";
-                    db.ArEquipments.Add(arequipmentmodels);
+                    ArEquipmentModels ar = new ArEquipmentModels(toUpdate);
+                    ar.Operator = "Update";
+                    db.ArEquipments.Add(ar);
                     await db.SaveChangesAsync();
                 }
                 
@@ -306,6 +306,7 @@ namespace Volkswagen.Controllers
                     string id = Request.Form["item" + i];
                     if (Request.Form["item" + i] == null) break;
                     EquipmentModels e = db.Equipments.Find(id);
+                    ArEquipmentModels ar = new ArEquipmentModels(e);
                     if (equipmentmodels.EquipDes != null) e.EquipDes = equipmentmodels.EquipDes;
                     if (equipmentmodels.Person != null) e.Person = equipmentmodels.Person;
                     if (equipmentmodels.Section != null) e.Section = equipmentmodels.Section;
@@ -318,15 +319,16 @@ namespace Volkswagen.Controllers
                     if (db.Entry(e).State == EntityState.Modified)
                     {
                         e.Changer = User.Identity.Name;
-                        e.Creator = User.Identity.Name;
-                        e.CreateTime = DateTime.Now;
+//                      e.Creator = User.Identity.Name;
+//                      e.CreateTime = DateTime.Now;
                         e.ChangeTime = DateTime.Now;
-                        ArEquipmentModels arequipmentmodels = new ArEquipmentModels(e);
-                        arequipmentmodels.Operator = "Edit";
-
-                        db.ArEquipments.Add(arequipmentmodels);
-
-                        await db.SaveChangesAsync();
+                        int x = await db.SaveChangesAsync();
+                        if (x != 0)
+                        {                         
+                            ar.Operator = "Update";
+                            db.ArEquipments.Add(ar);
+                            await db.SaveChangesAsync();
+                        }                       
                     }
                 }
                 return RedirectToAction("Index");
@@ -458,9 +460,16 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
-            EquipmentModels equipmentmodels = await db.Equipments.FindAsync(id);
-            db.Equipments.Remove(equipmentmodels);
-            await db.SaveChangesAsync();
+            EquipmentModels toDelete = await db.Equipments.FindAsync(id);
+            db.Equipments.Remove(toDelete);
+            
+            int x = await db.SaveChangesAsync();
+            if (x != 0){
+                ArEquipmentModels ar = new ArEquipmentModels(toDelete);
+                ar.Operator = "Delete";
+                db.ArEquipments.Add(ar);
+                await db.SaveChangesAsync();
+            }
             return RedirectToAction("Index");
         }
 

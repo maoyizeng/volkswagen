@@ -152,12 +152,15 @@ namespace Volkswagen.Controllers
                 spareordermodels.Creator = User.Identity.Name;
                 spareordermodels.CreateTime = DateTime.Now;
                 spareordermodels.ChangeTime = DateTime.Now;
-                ArSpareOrderModels ar = new ArSpareOrderModels(spareordermodels);
-                ar.Operator = "Create";
-
-                db.ArSpareOrders.Add(ar);
                 db.SpareOrders.Add(spareordermodels);
-                await db.SaveChangesAsync();
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArSpareOrderModels ar = new ArSpareOrderModels(spareordermodels);
+                    ar.Operator = "Create";
+                    db.ArSpareOrders.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
 
@@ -194,8 +197,25 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                var toUpdate = db.SpareOrders.Find(spareordermodels.OrderID);
+
+                spareordermodels.Changer = User.Identity.Name;
+                spareordermodels.ChangeTime = DateTime.Now;
+                spareordermodels.Creator = toUpdate.Creator;
+                spareordermodels.CreateTime = toUpdate.CreateTime;
+
+                db.Entry(toUpdate).State = EntityState.Detached;
                 db.Entry(spareordermodels).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+
+                int x = await db.SaveChangesAsync();
+
+                if (x != 0)
+                {
+                    ArSpareOrderModels ar = new ArSpareOrderModels(toUpdate);
+                    ar.Operator = "Update";
+                    db.ArSpareOrders.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
             ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID", spareordermodels.EquipmentID);
@@ -224,9 +244,16 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            SpareOrderModels spareordermodels = await db.SpareOrders.FindAsync(id);
-            db.SpareOrders.Remove(spareordermodels);
-            await db.SaveChangesAsync();
+            SpareOrderModels toDelete = await db.SpareOrders.FindAsync(id);
+            db.SpareOrders.Remove(toDelete);
+            int x = await db.SaveChangesAsync();
+            if (x != 0)
+            {
+                ArSpareOrderModels ar = new ArSpareOrderModels(toDelete);
+                ar.Operator = "Delete";
+                db.ArSpareOrders.Add(ar);
+                await db.SaveChangesAsync();
+            }
             return RedirectToAction("Index");
         }
 

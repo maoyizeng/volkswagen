@@ -150,12 +150,15 @@ namespace Volkswagen.Controllers
                 sparemodels.Creator = User.Identity.Name;
                 sparemodels.CreateTime = DateTime.Now;
                 sparemodels.ChangeTime = DateTime.Now;
-                ArSpareModels ar = new ArSpareModels(sparemodels);
-                ar.Operator = "Create";
-
-                db.ArSpares.Add(ar);
                 db.Spares.Add(sparemodels);
-                await db.SaveChangesAsync();
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArSpareModels ar = new ArSpareModels(sparemodels);
+                    ar.Operator = "Create";
+                    db.ArSpares.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
 
@@ -188,8 +191,25 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                var toUpdate = db.Spares.Find(sparemodels.SpareID);
+
+                sparemodels.Changer = User.Identity.Name;
+                sparemodels.ChangeTime = DateTime.Now;
+                sparemodels.Creator = toUpdate.Creator;
+                sparemodels.CreateTime = toUpdate.CreateTime;
+
+                db.Entry(toUpdate).State = EntityState.Detached;
                 db.Entry(sparemodels).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+
+                int x = await db.SaveChangesAsync();
+
+                if (x != 0)
+                {
+                    ArSpareModels ar = new ArSpareModels(toUpdate);
+                    ar.Operator = "Update";
+                    db.ArSpares.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
             ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID", sparemodels.EquipmentID);
@@ -216,9 +236,16 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
-            SpareModels sparemodels = await db.Spares.FindAsync(id);
-            db.Spares.Remove(sparemodels);
-            await db.SaveChangesAsync();
+            SpareModels toDelete = await db.Spares.FindAsync(id);
+            db.Spares.Remove(toDelete);
+            int x = await db.SaveChangesAsync();
+            if (x != 0)
+            {
+                ArSpareModels ar = new ArSpareModels(toDelete);
+                ar.Operator = "Delete";
+                db.ArSpares.Add(ar);
+                await db.SaveChangesAsync();
+            }
             return RedirectToAction("Index");
         }
 
