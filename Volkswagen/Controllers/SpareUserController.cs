@@ -240,9 +240,16 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            SpareUserModels spareusermodels = await db.SpareUsers.FindAsync(id);
-            db.SpareUsers.Remove(spareusermodels);
-            await db.SaveChangesAsync();
+            SpareUserModels toDelete = await db.SpareUsers.FindAsync(id);
+            db.SpareUsers.Remove(toDelete);
+            int x = await db.SaveChangesAsync();
+            if (x != 0)
+            {
+                ArSpareUserModels ar = new ArSpareUserModels(toDelete);
+                ar.Operator = "Delete";
+                db.ArSpareUsers.Add(ar);
+                await db.SaveChangesAsync();
+            }
             return RedirectToAction("Index");
         }
 
