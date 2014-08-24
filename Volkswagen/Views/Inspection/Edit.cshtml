@@ -1,11 +1,11 @@
 ﻿@model Volkswagen.Models.InspectionModels
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "编辑保养计划 - " + @Model.InspectionId;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>编辑</h2>
+<h3>设备保养计划 - 编辑</h3>
 
 
 @using (Html.BeginForm())
@@ -19,57 +19,48 @@
         @Html.HiddenFor(model => model.InspectionId)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.EquipmentID, "EquipmentID", new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("EquipmentID", String.Empty)
-                @Html.ValidationMessageFor(model => model.EquipmentID)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.EquipDes, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EquipDes)
+            @Html.LabelFor(model => model.EquipDes, new { @class = "control-label col-md-1" })
+            <div class="col-md-2">
+                @Html.DropDownList("EquipDes", String.Empty)
                 @Html.ValidationMessageFor(model => model.EquipDes)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Class, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Class)
+            @Html.LabelFor(model => model.InspectionId, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.InspectionId, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.InspectionId)
+            </div>
+            @Html.LabelFor(model => model.Class, new { @class = "control-label col-md-1" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Class, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Class)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Part, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Part)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Part, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Part)
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Position, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Position)
+            @Html.LabelFor(model => model.Position, new { @class = "control-label col-md-1" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Position, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Position)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Content, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Content)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Content, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Content)
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Period, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Period)
+            @Html.LabelFor(model => model.Period, new { @class = "control-label col-md-1" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Period, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Period)
             </div>
         </div>
@@ -77,15 +68,15 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Caution, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Caution)
+                @Html.TextBoxFor(model => model.Caution, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Caution)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Remark)
+            <div class="col-md-3">
+                @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Remark)
             </div>
         </div>
