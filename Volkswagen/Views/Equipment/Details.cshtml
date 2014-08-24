@@ -149,6 +149,14 @@ for (var i = 1; i < sArray.Length; i++)
     </dl>
 </div>
 <p>
+    @using Volkswagen.Controllers
+    @Html.ActionLink("保养计划", "Details", "Inspection", new { id = Volkswagen.Controllers.EquipmentController.db.Inspections.Where(p => p.EquipmentID == Model.EquipmentID).ToList().First().InspectionId }) |
+    @Html.ActionLink("备件库存", "Details", "Spare", new { id = Volkswagen.Controllers.EquipmentController.db.Spares.Where(p => p.EquipmentID == Model.EquipmentID).ToList().First().SpareID }) |
+    @Html.ActionLink("报修单", "Details", "Repair", new { id = Volkswagen.Controllers.EquipmentController.db.Repairs.Where(p => p.EquipmentID == Model.EquipmentID).ToList().First().RepairID }) |
+    @Html.ActionLink("台账", "Details", "EquipLog", new { id = Model.EquipmentID }) |
+    @Html.ActionLink("维护及状态跟踪", "Details", "Maintain", new { id = Volkswagen.Controllers.EquipmentController.db.Maintains.Where(p => p.EquipmentID == Model.EquipmentID).ToList().First().MaintainId }) 
+</p>
+<p>
     @Html.ActionLink("编辑", "Edit", new { id = Model.EquipmentID }) |
     @Html.ActionLink("返回列表", "Index")
 </p>
