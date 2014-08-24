@@ -1,11 +1,11 @@
 ﻿@model Volkswagen.Models.FileModels
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "编辑文件 - " + Model.FileName;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit</h2>
+<h3>文件 - 编辑</h3>
 
 
 @using (Html.BeginForm())
@@ -13,80 +13,42 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>FileModels</h4>
+        <h4>@Model.FileName</h4>
         <hr />
         @Html.ValidationSummary(true)
         @Html.HiddenFor(model => model.FileName)
 
         <div class="form-group">
+            @Html.LabelFor(model => model.FileName, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.FileName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FileName)
+            </div>
             @Html.LabelFor(model => model.Class, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Class)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Class, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Class)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.EquipmentID, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EquipmentID)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.EquipmentID, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.EquipmentID)
             </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.EquipDes, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EquipDes)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.EquipDes, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.EquipDes)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Charger, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Charger)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Charger, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Charger)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.File, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.File)
-                @Html.ValidationMessageFor(model => model.File)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ChangeTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ChangeTime)
-                @Html.ValidationMessageFor(model => model.ChangeTime)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Changer, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Changer)
-                @Html.ValidationMessageFor(model => model.Changer)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CreateTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CreateTime)
-                @Html.ValidationMessageFor(model => model.CreateTime)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Creator, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Creator)
-                @Html.ValidationMessageFor(model => model.Creator)
             </div>
         </div>
 
@@ -118,10 +80,42 @@
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
+<div class="form-horizontal">
+    <div class="row">
+        @Html.LabelFor(model => model.File, new { @class = "control-label  col-md-2" })
+        @using (Html.BeginForm("FileUpload", "File", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="form-group col-md-6">
+                <input id="photo-input" type="file" class="file" name="files" data-preview-file-type="any" multiple="multiple">
+            </div>
+            <input type="hidden" value=@Model.FileName name="key" />
+        }
+    </div>
 </div>
+<script>
+    var init = "@Model.FileName";
+    var arr = new Array();
 
+    arr = init.split('$');
+    var init_arr = new Array();
+    for (var i = 1; i < arr.length; i++) {
+        init_arr[i - 1] = "<img src='/file/" + arr[i] + "' class='file-preview-image'>";
+    }
+
+    $("#photo-input").fileinput({
+        initialPreview: init_arr,
+        overwriteInitial: true,
+        browseLabel: "浏览",
+        uploadLabel: "上传",
+        removeLabel: "移除",
+        showCaption: false
+    });
+
+
+</script>
+<div>
+    @Html.ActionLink("返回列表", "Index")
+</div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

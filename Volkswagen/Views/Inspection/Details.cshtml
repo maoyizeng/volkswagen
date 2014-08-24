@@ -1,7 +1,7 @@
 ﻿@model Volkswagen.Models.InspectionModels
 
 @{
-    ViewBag.Title = "编辑保养计划 - " + @Model.InspectionId;
+    ViewBag.Title = "保养计划 - " + @Model.InspectionId;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -12,11 +12,11 @@
 	<hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Equipments.EquipDes)
+            @Html.DisplayNameFor(model => model.EquipmentID)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Equipments.EquipDes)
+            @Html.DisplayFor(model => model.EquipmentID)
         </dd>
 
         <dt>

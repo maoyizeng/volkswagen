@@ -1,22 +1,22 @@
 ﻿@model Volkswagen.Models.EquipLogModels
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "设备台账 - " + Model.EquipmentID;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+<h3>设备台账 - 详细</h3>
 
 <div>
-    <h4>EquipLogModels</h4>
+    <h4>@Model.EquipmentID</h4>
 	<hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Equipments.EquipDes)
+            @Html.DisplayNameFor(model => model.EquipmentID)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Equipments.EquipDes)
+            @Html.DisplayFor(model => model.EquipmentID)
         </dd>
 
         <dt>
@@ -150,6 +150,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.EquipmentID }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("编辑", "Edit", new { id = Model.EquipmentID }) |
+    @Html.ActionLink("返回列表", "Index")
 </p>
