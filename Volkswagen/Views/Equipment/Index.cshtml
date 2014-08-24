@@ -73,6 +73,7 @@
         var op = document.createElement("select");
         var operand = document.createElement("input");
 
+        f.name = "fgroup" + row;
         field.name = "field" + row;
         op.name = "op" + row;
         operand.name = "operand" + row;
@@ -93,10 +94,18 @@
             op.add(ooption);
         }
 
+        var cancel = document.createElement("input");
+        cancel.type = "button";
+        cancel.value = "x";
+        cancel.onclick = function () {
+            this.parentElement.hidden = true;
+            this.parentElement.getElementsByTagName("input").value = null;
+        };
 
         f.appendChild(field);
         f.appendChild(op);
         f.appendChild(operand);
+        f.appendChild(cancel);
 
         fm.appendChild(f);
 
@@ -152,7 +161,7 @@
     }
 
     function select_all() {
-        var inputs = document.getElementById("grid_form").getElementsByTagName("input");
+        var inputs = document.getElementById("query_form").getElementsByTagName("input");
         for (var i = 0; i < inputs.length; i++) {
             if (inputs[i].type == "checkbox")
             {
@@ -160,6 +169,15 @@
             }
         }
     }
+    function toggle_all() {
+        var inputs = document.getElementById("query_form").getElementsByTagName("input");
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].type == "checkbox") {
+                inputs[i].checked = !inputs[i].checked;
+            }
+        }
+    }
+
 </script>
 
 <form action="/Equipment/" id="query_form" method="post">
@@ -293,7 +311,10 @@
 
     </table>
     -->
-    <input type="button" value="全选" onclick="select_all()" class="btn btn-default" />
+    <div class="btn-group">
+        <input type="button" id="select_button" value="全选" onclick="select_all()" class="btn btn-default" />
+        <input type="button" id="select_button" value="反选" onclick="toggle_all()" class="btn btn-default" />
+    </div>
     @Html.ActionLink("批量修改", "EditMultiple", "Equipment", null, new { @class = "btn btn-default" })
     @Html.ActionLink("批量删除", "DeleteMultiple", "Equipment", null, new { @class = "btn btn-default" })
     <p>

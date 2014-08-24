@@ -125,6 +125,7 @@ namespace Volkswagen.Controllers
                 ViewData["operand" + n] = operand;
 
                 if (string.IsNullOrEmpty(field)) break;
+                if (string.IsNullOrEmpty(operand)) continue;
 
                 Expression left = Expression.Property(param, typeof(EquipmentModels).GetProperty(field));
                 Expression right = Expression.Constant(operand);
