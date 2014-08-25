@@ -440,6 +440,9 @@
     <Content Include="Views\Repair\ChangeMultiple.cshtml" />
     <Content Include="Views\Maintain\ChangeMultiple.cshtml" />
     <Content Include="Views\EquipLog\ChangeMultiple.cshtml" />
+    <Content Include="Views\User\ChangeMultiple.cshtml" />
+    <Content Include="Views\File\ChangeMultiple.cshtml" />
+    <Content Include="Views\Shift\ChangeMultiple.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

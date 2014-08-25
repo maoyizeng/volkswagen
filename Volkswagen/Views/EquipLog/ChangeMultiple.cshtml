@@ -1,8 +1,147 @@
-﻿
+﻿@model Volkswagen.Models.EquipLogModels
+
 @{
-    ViewBag.Title = "ChangeMultiple";
+    ViewBag.Title = "批量编辑设备台账";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>ChangeMultiple</h2>
+<h3>设备台账 - 批量编辑</h3>
 
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true)
+@{
+    int n = 0;
+    List<Volkswagen.Models.EquipLogModels> l = ViewData["list"] as List<Volkswagen.Models.EquipLogModels>;
+    foreach (Volkswagen.Models.EquipLogModels e in l)
+    {
+        string name = "item" + n;
+        <input type="hidden" name="@name" value=@e.EquipmentID />
+        n++;
+    }
+}
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EquipDes, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.DropDownList("EquipDes", String.Empty)
+                @Html.ValidationMessageFor(model => model.EquipDes)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Department, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Department, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Department)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Type, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Type, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Type)
+            </div>
+            @Html.LabelFor(model => model.Spec, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Spec, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Spec)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DocumentDate, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.DocumentDate, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DocumentDate)
+            </div>
+            @Html.LabelFor(model => model.EnableDate, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.EnableDate, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.EnableDate)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OriginValue, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.OriginValue, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.OriginValue)
+            </div>
+            @Html.LabelFor(model => model.Depreciation, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Depreciation, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Depreciation)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Spot1, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Spot1, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Spot1)
+            </div>
+            @Html.LabelFor(model => model.Spot2, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Spot2, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Spot2)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Spot3, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Spot3, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Spot3)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Remark)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button class="btn btn-default" data-toggle="modal" data-target="#myModal">
+                    保存
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">修改确认</h4>
+                            </div>
+                            <div class="modal-body">
+                                是否修改该条记录?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                <input type="submit" value="确定" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("返回列表", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
