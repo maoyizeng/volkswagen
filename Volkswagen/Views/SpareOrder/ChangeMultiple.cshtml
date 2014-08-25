@@ -1,0 +1,159 @@
+﻿@model Volkswagen.Models.SpareOrderModels
+
+@{
+    ViewBag.Title = "批量编辑备件订购信息";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>备件订购信息 - 批量编辑</h3>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true)
+@{
+    int n = 0;
+    List<Volkswagen.Models.SpareOrderModels> l = ViewData["list"] as List<Volkswagen.Models.SpareOrderModels>;
+    foreach (Volkswagen.Models.SpareOrderModels e in l)
+    {
+        string name = "item" + n;
+        <input type="hidden" name="@name" value=@e.OrderID />
+        n++;
+    }
+}
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SpareID, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.DropDownList("SpareID", String.Empty)
+                @Html.ValidationMessageFor(model => model.SpareID)
+            </div>
+            @Html.LabelFor(model => model.SpareDes, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.DropDownList("SpareDes", String.Empty)
+                @Html.ValidationMessageFor(model => model.SpareDes)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Type, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Type, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Type)
+            </div>
+            @Html.LabelFor(model => model.OrderValue, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.OrderValue, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.OrderValue)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Producer, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Producer, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Producer)
+            </div>
+            @Html.LabelFor(model => model.OrderNum, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.OrderNum, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.OrderNum)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Property, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Property, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Property)
+            </div>
+            @Html.LabelFor(model => model.EquipmentID, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.DropDownList("EquipmentID", String.Empty)
+                @Html.ValidationMessageFor(model => model.EquipmentID)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Maker, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Maker, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Maker)
+            </div>
+            @Html.LabelFor(model => model.MakerNum, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.MakerNum, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MakerNum)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Orderman, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Orderman, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Orderman)
+            </div>
+            @Html.LabelFor(model => model.UseTime, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.UseTime, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.UseTime)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.UnitPrice, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.UnitPrice, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.UnitPrice)
+            </div>
+            @Html.LabelFor(model => model.TotalPrice, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.TotalPrice, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TotalPrice)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Status, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Status, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Status)
+            </div>
+            @Html.LabelFor(model => model.Mode, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Mode, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Mode)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button class="btn btn-default" data-toggle="modal" data-target="#myModal">
+                    保存
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">修改确认</h4>
+                            </div>
+                            <div class="modal-body">
+                                是否修改该条记录?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                <input type="submit" value="确定" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("返回列表", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

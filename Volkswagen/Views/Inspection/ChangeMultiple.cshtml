@@ -1,22 +1,30 @@
 ﻿@model Volkswagen.Models.InspectionModels
 
 @{
-    ViewBag.Title = "编辑保养计划 - " + @Model.InspectionId;
+    ViewBag.Title = "批量编辑保养计划";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h3>设备保养计划 - 编辑</h3>
+<h3>设备保养计划 - 批量编辑</h3>
 
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>InspectionModels</h4>
         <hr />
         @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.InspectionId)
+@{
+    int n = 0;
+    List<Volkswagen.Models.InspectionModels> l = ViewData["list"] as List<Volkswagen.Models.InspectionModels>;
+    foreach (Volkswagen.Models.InspectionModels e in l)
+    {
+        string name = "item" + n;
+        <input type="hidden" name="@name" value=@e.InspectionId />
+        n++;
+    }
+}
 
         <div class="form-group">
             @Html.LabelFor(model => model.EquipDes, new { @class = "control-label col-md-1" })
@@ -27,11 +35,6 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.InspectionId, new { @class = "control-label col-md-2" })
-            <div class="col-md-2">
-                @Html.TextBoxFor(model => model.InspectionId, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.InspectionId)
-            </div>
             @Html.LabelFor(model => model.Class, new { @class = "control-label col-md-1" })
             <div class="col-md-2">
                 @Html.TextBoxFor(model => model.Class, new { @class = "form-control" })

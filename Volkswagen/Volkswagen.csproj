@@ -433,6 +433,13 @@
     <Content Include="Views\ArUser\Delete.cshtml" />
     <Content Include="Views\ArUser\Details.cshtml" />
     <Content Include="Views\ArUser\Index.cshtml" />
+    <Content Include="Views\Inspection\ChangeMultiple.cshtml" />
+    <Content Include="Views\Spare\ChangeMultiple.cshtml" />
+    <Content Include="Views\SpareUser\ChangeMultiple.cshtml" />
+    <Content Include="Views\SpareOrder\ChangeMultiple.cshtml" />
+    <Content Include="Views\Repair\ChangeMultiple.cshtml" />
+    <Content Include="Views\Maintain\ChangeMultiple.cshtml" />
+    <Content Include="Views\EquipLog\ChangeMultiple.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
