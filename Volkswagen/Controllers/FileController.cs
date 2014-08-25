@@ -25,9 +25,6 @@ namespace Volkswagen.Controllers
         // GET: /File/
         public async Task<ActionResult> Index(GridSortOptions model)
         {
-            //PrepareSelectItems();
-            //return View(await db.Files.ToListAsync());
-
             ViewData["model"] = model;
 
             IQueryable<FileModels> list = db.Files.Where("1 = 1");
@@ -46,16 +43,12 @@ namespace Volkswagen.Controllers
             {
                 return View(await db.Files.ToListAsync());
             }
-            //list = list.AsPagination(page ?? 1, 5);
             return View(list);
         }
 
         [HttpPost]
         public async Task<ActionResult> Index()
         {
-            //IQueryable<FileModels> list = ViewData.Model as IQueryable<FileModels>;
-            //IQueryable<FileModels> list = db.Files.Where("1 = 1");
-
             GridSortOptions model = new GridSortOptions();
             model.Column = Request.Form["Column"];
             model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
@@ -80,6 +73,7 @@ namespace Volkswagen.Controllers
 
         private IQueryable<FileModels> getQuery()
         {
+            //p
             ParameterExpression param = Expression.Parameter(typeof(FileModels), "p");
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
@@ -92,8 +86,11 @@ namespace Volkswagen.Controllers
                 ViewData["operand" + n] = operand;
 
                 if (string.IsNullOrEmpty(field)) break;
+                if (string.IsNullOrEmpty(operand)) continue;
 
+                //p.[filedn]
                 Expression left = Expression.Property(param, typeof(FileModels).GetProperty(field));
+                //[operandn]
                 Expression right = Expression.Constant(operand);
                 Expression result;
 
@@ -117,6 +114,9 @@ namespace Volkswagen.Controllers
                     case "5":
                         result = Expression.NotEqual(left, right);
                         break;
+                    case "6": //Contain
+                        result = Expression.Call(left, typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), right);
+                        break;
                     default:
                         result = Expression.Equal(left, right);
                         break;
@@ -124,12 +124,29 @@ namespace Volkswagen.Controllers
                 filter = Expression.And(filter, result);
             }
 
+            // p => p.[filedn] [opn] [operandn] && ...
             Expression pred = Expression.Lambda(filter, param);
 
+            // where(p => p.[filedn] [opn] [operandn] && ...)
             var e = db.Files;
             Expression expr = Expression.Call(typeof(Queryable), "Where", new Type[] { typeof(FileModels) }, Expression.Constant(e), pred);
 
             IQueryable<FileModels> list = db.Files.AsQueryable().Provider.CreateQuery<FileModels>(expr);
+
+            return list;
+        }
+
+        private List<FileModels> getSelected(IQueryable<FileModels> l)
+        {
+            List<FileModels> list = new List<FileModels>();
+            List<FileModels> list_origin = l.ToList();
+            foreach (FileModels e in list_origin)
+            {
+                if (Request.Form["Checked" + e.FileName] != "false")
+                {
+                    list.Add(e);
+                }
+            }
 
             return list;
         }
@@ -233,6 +250,63 @@ namespace Volkswagen.Controllers
             return View(filemodels);
         }
 
+        // POST: /File/EditMultiple/
+        //[HttpPost]
+        public async Task<ActionResult> EditMultiple()
+        {
+            IQueryable<FileModels> l = getQuery();
+            List<FileModels> list = getSelected(l);
+            if (ViewData["list"] == null) ViewData["list"] = list;
+            //string key = list.First().FileID;
+            //return RedirectToAction("Edit", new { id = key });
+            return RedirectToAction("ChangeMultiple", new { Filemodels = new FileModels() });
+        }
+
+        // POST: /File/ChangeMultiple/
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeMultiple([Bind(Include = "FileName,Class,EquipmentID,EquipDes,Charger,File,ChangeTime,Changer,CreateTime,Creator")] FileModels filemodels)
+        {
+            bool changed = false;
+            List<FileModels> l = new List<FileModels>();
+            for (int i = 0; ; i++)
+            {
+                string id = Request.Form["item" + i];
+                if (Request.Form["item" + i] == null) break;
+                FileModels e = db.Files.Find(id);
+                l.Add(e);
+                ArFileModels ar = new ArFileModels(e);
+                if (filemodels.EquipmentID != null && ModelState.IsValidField("EquipmentID")) e.EquipmentID = filemodels.EquipmentID;
+                if (filemodels.EquipDes != null && ModelState.IsValidField("EquipDes")) e.EquipDes = filemodels.EquipDes;
+                if (filemodels.Class != null && ModelState.IsValidField("Class")) e.Class = filemodels.Class;
+                if (filemodels.Charger != null && ModelState.IsValidField("Charger")) e.Charger = filemodels.Charger;
+
+                if (db.Entry(e).State == EntityState.Modified)
+                {
+                    e.Changer = User.Identity.Name;
+                    e.ChangeTime = DateTime.Now;
+                    int x = await db.SaveChangesAsync();
+                    if (x != 0)
+                    {
+                        changed = true;
+                        ar.Operator = "Update";
+                        db.ArFiles.Add(ar);
+                        await db.SaveChangesAsync();
+                    }
+                }
+            }
+            if (changed)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ViewData["list"] = l;
+                return View(new FileModels());
+            }
+        }
+
+
         // GET: /File/Delete/5
         public async Task<ActionResult> Delete(string id)
         {
@@ -262,6 +336,28 @@ namespace Volkswagen.Controllers
                 ar.Operator = "Delete";
                 db.ArFiles.Add(ar);
                 await db.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");
+        }
+
+        // POST: /File/DeleteMultiple/
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteMultiple()
+        {
+            IQueryable<FileModels> l = getQuery();
+            List<FileModels> list = getSelected(l);
+            foreach (FileModels e in list)
+            {
+                db.Files.Remove(e);
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArFileModels ar = new ArFileModels(e);
+                    ar.Operator = "Delete";
+                    db.ArFiles.Add(ar);
+                    await db.SaveChangesAsync();
+                }
             }
             return RedirectToAction("Index");
         }

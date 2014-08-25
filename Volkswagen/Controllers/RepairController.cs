@@ -23,25 +23,10 @@ namespace Volkswagen.Controllers
         private SVWContext db = new SVWContext();
 
         // GET: /Repair/
-        /*public async Task<ActionResult> Index(GridSortOptions model)
+        public async Task<ActionResult> Index(GridSortOptions model)
         {
             ViewData["model"] = model;
 
-            IQueryable<RepairModels> list = db.Repairs.Where("1 = 1");
-            if (!string.IsNullOrEmpty(model.Column))
-            {
-                list = list.OrderBy(model.Column);
-            }
-            else
-            {
-                return View(await db.Repairs.ToListAsync());
-            }
-            return View(list);
-        }*/
-
-        // GET: /Repair/
-        public async Task<ActionResult> Index(GridSortOptions model)
-        {
             IQueryable<RepairModels> list = db.Repairs.Where("1 = 1");
             if (!string.IsNullOrEmpty(model.Column))
             {
@@ -64,16 +49,48 @@ namespace Volkswagen.Controllers
         [HttpPost]
         public async Task<ActionResult> Index()
         {
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+            ViewData["model"] = model;
+
+            IQueryable<RepairModels> list = getQuery();
+
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    list = list.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    list = list.OrderBy(model.Column + " asc");
+                }
+            }
+
+            return View(list);
+        }
+
+        private IQueryable<RepairModels> getQuery()
+        {
+            //p
             ParameterExpression param = Expression.Parameter(typeof(RepairModels), "p");
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
             {
                 string field = Request.Form["field" + n];
+                ViewData["field" + n] = field;
                 string op = Request.Form["op" + n];
+                ViewData["op" + n] = op;
                 string operand = Request.Form["operand" + n];
-                if (string.IsNullOrEmpty(field)) break;
+                ViewData["operand" + n] = operand;
 
+                if (string.IsNullOrEmpty(field)) break;
+                if (string.IsNullOrEmpty(operand)) continue;
+
+                //p.[filedn]
                 Expression left = Expression.Property(param, typeof(RepairModels).GetProperty(field));
+                //[operandn]
                 Expression right = Expression.Constant(operand);
                 Expression result;
 
@@ -97,6 +114,9 @@ namespace Volkswagen.Controllers
                     case "5":
                         result = Expression.NotEqual(left, right);
                         break;
+                    case "6": //Contain
+                        result = Expression.Call(left, typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), right);
+                        break;
                     default:
                         result = Expression.Equal(left, right);
                         break;
@@ -104,15 +124,31 @@ namespace Volkswagen.Controllers
                 filter = Expression.And(filter, result);
             }
 
+            // p => p.[filedn] [opn] [operandn] && ...
             Expression pred = Expression.Lambda(filter, param);
 
+            // where(p => p.[filedn] [opn] [operandn] && ...)
             var e = db.Repairs;
             Expression expr = Expression.Call(typeof(Queryable), "Where", new Type[] { typeof(RepairModels) }, Expression.Constant(e), pred);
 
             IQueryable<RepairModels> list = db.Repairs.AsQueryable().Provider.CreateQuery<RepairModels>(expr);
 
+            return list;
+        }
 
-            return View(list);
+        private List<RepairModels> getSelected(IQueryable<RepairModels> l)
+        {
+            List<RepairModels> list = new List<RepairModels>();
+            List<RepairModels> list_origin = l.ToList();
+            foreach (RepairModels e in list_origin)
+            {
+                if (Request.Form["Checked" + e.SheetID] != "false")
+                {
+                    list.Add(e);
+                }
+            }
+
+            return list;
         }
 
         // GET: /Repair/Details/5
@@ -221,62 +257,82 @@ namespace Volkswagen.Controllers
             return View(repairmodels);
         }
 
-        // POST: /Repair/Query
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> Query()
+        // POST: /Repair/EditMultiple/
+        //[HttpPost]
+        public async Task<ActionResult> EditMultiple()
         {
-
-            ParameterExpression param = Expression.Parameter(typeof(RepairModels), "p");
-            Expression filter = Expression.Constant(true);
-            for (int n = 0; ; n++)
-            {
-                string field = Request.Form["field" + n];
-                string op = Request.Form["op" + n];
-                string operand = Request.Form["operand" + n];
-                if (string.IsNullOrEmpty(field)) break;
-
-                Expression left = Expression.Property(param, typeof(RepairModels).GetProperty(field));
-                Expression right = Expression.Constant(operand);
-                Expression result;
-
-                switch (Convert.ToByte(op))
-                {
-                    case 0:
-                        result = Expression.Equal(left, right);
-                        break;
-                    case 1:
-                        result = Expression.GreaterThan(left, right);
-                        break;
-                    case 2:
-                        result = Expression.LessThan(left, right);
-                        break;
-                    case 3:
-                        result = Expression.GreaterThanOrEqual(left, right);
-                        break;
-                    case 4:
-                        result = Expression.LessThanOrEqual(left, right);
-                        break;
-                    case 5:
-                        result = Expression.Equal(left, right);
-                        break;
-                    default:
-                        result = Expression.Equal(left, right);
-                        break;
-                }
-                filter = Expression.And(filter, result);
-            }
-
-            Expression pred = Expression.Lambda(filter, param);
-
-            var e = db.Repairs;
-            Expression expr = Expression.Call(typeof(Queryable), "Where", new Type[] { typeof(RepairModels) }, Expression.Constant(e), pred);
-
-            ViewData.Model = db.Repairs.AsQueryable().Provider.CreateQuery<RepairModels>(expr).ToList();
-            return RedirectToAction("Index");
+            IQueryable<RepairModels> l = getQuery();
+            List<RepairModels> list = getSelected(l);
+            if (ViewData["list"] == null) ViewData["list"] = list;
+            //string key = list.First().RepairID;
+            //return RedirectToAction("Edit", new { id = key });
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
+            ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes");
+            return RedirectToAction("ChangeMultiple", new { Repairmodels = new RepairModels() });
         }
+
+        // POST: /Repair/ChangeMultiple/
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeMultiple([Bind(Include = "SheetID,RepairID,EquipmentID,EquipDes,StartTime,FinishTime,RepairTime,Class,Line,Section,FaultView,Repairman,Description,FaultType,Result,Problem,Checker,Remark,StopTime,File,RepairNum,ChangeTime,Changer,CreateTime,Creator")] RepairModels repairmodels)
+        {
+            bool changed = false;
+            List<RepairModels> l = new List<RepairModels>();
+            for (int i = 0; ; i++)
+            {
+                string id = Request.Form["item" + i];
+                if (Request.Form["item" + i] == null) break;
+                RepairModels e = db.Repairs.Find(id);
+                l.Add(e);
+                ArRepairModels ar = new ArRepairModels(e);
+                if (repairmodels.EquipmentID != null && ModelState.IsValidField("EquipmentID")) e.EquipmentID = repairmodels.EquipmentID;
+                if (repairmodels.EquipDes != null && ModelState.IsValidField("EquipDes")) e.EquipDes = repairmodels.EquipDes;
+                if (repairmodels.Class != null && ModelState.IsValidField("Class")) e.Class = repairmodels.Class;
+                if (repairmodels.RepairID != null && ModelState.IsValidField("RepairID")) e.RepairID = repairmodels.RepairID;
+                if (repairmodels.StartTime != null && ModelState.IsValidField("StartTime")) e.StartTime = repairmodels.StartTime;
+                if (repairmodels.FinishTime != null && ModelState.IsValidField("FinishTime")) e.FinishTime = repairmodels.FinishTime;
+                if (repairmodels.RepairTime != null && ModelState.IsValidField("RepairTime")) e.RepairTime = repairmodels.RepairTime;
+                if (repairmodels.Line != null && ModelState.IsValidField("Line")) e.Line = repairmodels.Line;
+                if (repairmodels.Section != null && ModelState.IsValidField("Section")) e.Section = repairmodels.Section;
+                if (repairmodels.FaultView != null && ModelState.IsValidField("FaultView")) e.FaultView = repairmodels.FaultView;
+                if (repairmodels.Repairman != null && ModelState.IsValidField("Repairman")) e.Repairman = repairmodels.Repairman;
+                if (repairmodels.Description != null && ModelState.IsValidField("Description")) e.Description = repairmodels.Description;
+                if (repairmodels.FaultType != null && ModelState.IsValidField("FaultType")) e.FaultType = repairmodels.FaultType;
+                if (repairmodels.EquipDes != null && ModelState.IsValidField("EquipDes")) e.EquipDes = repairmodels.EquipDes;
+                if (repairmodels.Result != null && ModelState.IsValidField("Result")) e.Result = repairmodels.Result;
+                if (repairmodels.Problem != null && ModelState.IsValidField("Problem")) e.Problem = repairmodels.Problem;
+                if (repairmodels.Checker != null && ModelState.IsValidField("Checker")) e.Checker = repairmodels.Checker;
+                if (repairmodels.Remark != null && ModelState.IsValidField("Remark")) e.Remark = repairmodels.Remark;
+                if (repairmodels.StopTime != null && ModelState.IsValidField("StopTime")) e.StopTime = repairmodels.StopTime;
+                if (repairmodels.RepairNum != null && ModelState.IsValidField("RepairNum")) e.RepairNum = repairmodels.RepairNum;
+
+                if (db.Entry(e).State == EntityState.Modified)
+                {
+                    e.Changer = User.Identity.Name;
+                    e.ChangeTime = DateTime.Now;
+                    int x = await db.SaveChangesAsync();
+                    if (x != 0)
+                    {
+                        changed = true;
+                        ar.Operator = "Update";
+                        db.ArRepairs.Add(ar);
+                        await db.SaveChangesAsync();
+                    }
+                }
+            }
+            if (changed)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ViewData["list"] = l;
+                ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
+                ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes");
+                return View(new RepairModels());
+            }
+        }
+
 
         // GET: /Repair/Delete/5
         public async Task<ActionResult> Delete(string id)
@@ -307,6 +363,28 @@ namespace Volkswagen.Controllers
                 ar.Operator = "Delete";
                 db.ArRepairs.Add(ar);
                 await db.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");
+        }
+
+        // POST: /Repair/DeleteMultiple/
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteMultiple()
+        {
+            IQueryable<RepairModels> l = getQuery();
+            List<RepairModels> list = getSelected(l);
+            foreach (RepairModels e in list)
+            {
+                db.Repairs.Remove(e);
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArRepairModels ar = new ArRepairModels(e);
+                    ar.Operator = "Delete";
+                    db.ArRepairs.Add(ar);
+                    await db.SaveChangesAsync();
+                }
             }
             return RedirectToAction("Index");
         }

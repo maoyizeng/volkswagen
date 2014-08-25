@@ -25,6 +25,8 @@ namespace Volkswagen.Controllers
         // GET: /EquipLog/
         public async Task<ActionResult> Index(GridSortOptions model)
         {
+            ViewData["model"] = model;
+
             IQueryable<EquipLogModels> list = db.EquipLogs.Where("1 = 1");
             if (!string.IsNullOrEmpty(model.Column))
             {
@@ -47,16 +49,48 @@ namespace Volkswagen.Controllers
         [HttpPost]
         public async Task<ActionResult> Index()
         {
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+            ViewData["model"] = model;
+
+            IQueryable<EquipLogModels> list = getQuery();
+
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    list = list.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    list = list.OrderBy(model.Column + " asc");
+                }
+            }
+
+            return View(list);
+        }
+
+        private IQueryable<EquipLogModels> getQuery()
+        {
+            //p
             ParameterExpression param = Expression.Parameter(typeof(EquipLogModels), "p");
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
             {
                 string field = Request.Form["field" + n];
+                ViewData["field" + n] = field;
                 string op = Request.Form["op" + n];
+                ViewData["op" + n] = op;
                 string operand = Request.Form["operand" + n];
-                if (string.IsNullOrEmpty(field)) break;
+                ViewData["operand" + n] = operand;
 
+                if (string.IsNullOrEmpty(field)) break;
+                if (string.IsNullOrEmpty(operand)) continue;
+
+                //p.[filedn]
                 Expression left = Expression.Property(param, typeof(EquipLogModels).GetProperty(field));
+                //[operandn]
                 Expression right = Expression.Constant(operand);
                 Expression result;
 
@@ -80,6 +114,9 @@ namespace Volkswagen.Controllers
                     case "5":
                         result = Expression.NotEqual(left, right);
                         break;
+                    case "6": //Contain
+                        result = Expression.Call(left, typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), right);
+                        break;
                     default:
                         result = Expression.Equal(left, right);
                         break;
@@ -87,15 +124,31 @@ namespace Volkswagen.Controllers
                 filter = Expression.And(filter, result);
             }
 
+            // p => p.[filedn] [opn] [operandn] && ...
             Expression pred = Expression.Lambda(filter, param);
 
+            // where(p => p.[filedn] [opn] [operandn] && ...)
             var e = db.EquipLogs;
             Expression expr = Expression.Call(typeof(Queryable), "Where", new Type[] { typeof(EquipLogModels) }, Expression.Constant(e), pred);
 
             IQueryable<EquipLogModels> list = db.EquipLogs.AsQueryable().Provider.CreateQuery<EquipLogModels>(expr);
 
+            return list;
+        }
 
-            return View(list);
+        private List<EquipLogModels> getSelected(IQueryable<EquipLogModels> l)
+        {
+            List<EquipLogModels> list = new List<EquipLogModels>();
+            List<EquipLogModels> list_origin = l.ToList();
+            foreach (EquipLogModels e in list_origin)
+            {
+                if (Request.Form["Checked" + e.EquipmentID] != "false")
+                {
+                    list.Add(e);
+                }
+            }
+
+            return list;
         }
 
         // GET: /EquipLog/Details/5
@@ -206,6 +259,76 @@ namespace Volkswagen.Controllers
             return View(equiplogmodels);
         }
 
+        // POST: /EquipLog/EditMultiple/
+        //[HttpPost]
+        public async Task<ActionResult> EditMultiple()
+        {
+            IQueryable<EquipLogModels> l = getQuery();
+            List<EquipLogModels> list = getSelected(l);
+            if (ViewData["list"] == null) ViewData["list"] = list;
+            //string key = list.First().EquipLogID;
+            //return RedirectToAction("Edit", new { id = key });
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
+            ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes");
+            return RedirectToAction("ChangeMultiple", new { EquipLogmodels = new EquipLogModels() });
+        }
+
+        // POST: /EquipLog/ChangeMultiple/
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeMultiple([Bind(Include = "EquipmentID,Department,EquipDes,Type,Spec,DocumentDate,EnableDate,OriginValue,Depreciation,Spot1,Spot2,Spot3,Remark,ChangeTime,Changer,CreateTime,Creator")] EquipLogModels equiplogmodels)
+        {
+            bool changed = false;
+            List<EquipLogModels> l = new List<EquipLogModels>();
+            for (int i = 0; ; i++)
+            {
+                string id = Request.Form["item" + i];
+                if (Request.Form["item" + i] == null) break;
+                EquipLogModels e = db.EquipLogs.Find(id);
+                l.Add(e);
+                ArEquipLogModels ar = new ArEquipLogModels(e);
+                if (equiplogmodels.EquipmentID != null && ModelState.IsValidField("EquipmentID")) e.EquipmentID = equiplogmodels.EquipmentID;
+                if (equiplogmodels.EquipDes != null && ModelState.IsValidField("EquipDes")) e.EquipDes = equiplogmodels.EquipDes;
+                if (equiplogmodels.Department != null && ModelState.IsValidField("Department")) e.Department = equiplogmodels.Department;
+                if (equiplogmodels.Type != null && ModelState.IsValidField("Type")) e.Type = equiplogmodels.Type;
+                if (equiplogmodels.Spec != null && ModelState.IsValidField("Spec")) e.Spec = equiplogmodels.Spec;
+                if (equiplogmodels.DocumentDate != null && ModelState.IsValidField("DocumentDate")) e.DocumentDate = equiplogmodels.DocumentDate;
+                if (equiplogmodels.EnableDate != null && ModelState.IsValidField("EnableDate")) e.EnableDate = equiplogmodels.EnableDate;
+                if (equiplogmodels.OriginValue != null && ModelState.IsValidField("OriginValue")) e.OriginValue = equiplogmodels.OriginValue;
+                if (equiplogmodels.Depreciation != null && ModelState.IsValidField("Depreciation")) e.Depreciation = equiplogmodels.Depreciation;
+                if (equiplogmodels.Spot1 != null && ModelState.IsValidField("Spot1")) e.Spot1 = equiplogmodels.Spot1;
+                if (equiplogmodels.Spot2 != null && ModelState.IsValidField("Spot2")) e.Spot2 = equiplogmodels.Spot2;
+                if (equiplogmodels.Spot3 != null && ModelState.IsValidField("Spot3")) e.Spot3 = equiplogmodels.Spot3;
+                if (equiplogmodels.Remark != null && ModelState.IsValidField("Remark")) e.Remark = equiplogmodels.Remark;
+
+                if (db.Entry(e).State == EntityState.Modified)
+                {
+                    e.Changer = User.Identity.Name;
+                    e.ChangeTime = DateTime.Now;
+                    int x = await db.SaveChangesAsync();
+                    if (x != 0)
+                    {
+                        changed = true;
+                        ar.Operator = "Update";
+                        db.ArEquipLogs.Add(ar);
+                        await db.SaveChangesAsync();
+                    }
+                }
+            }
+            if (changed)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ViewData["list"] = l;
+                ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
+                ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes");
+                return View(new EquipLogModels());
+            }
+        }
+
+
         // GET: /EquipLog/Delete/5
         public async Task<ActionResult> Delete(string id)
         {
@@ -235,6 +358,28 @@ namespace Volkswagen.Controllers
                 ar.Operator = "Delete";
                 db.ArEquipLogs.Add(ar);
                 await db.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");
+        }
+
+        // POST: /EquipLog/DeleteMultiple/
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteMultiple()
+        {
+            IQueryable<EquipLogModels> l = getQuery();
+            List<EquipLogModels> list = getSelected(l);
+            foreach (EquipLogModels e in list)
+            {
+                db.EquipLogs.Remove(e);
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArEquipLogModels ar = new ArEquipLogModels(e);
+                    ar.Operator = "Delete";
+                    db.ArEquipLogs.Add(ar);
+                    await db.SaveChangesAsync();
+                }
             }
             return RedirectToAction("Index");
         }

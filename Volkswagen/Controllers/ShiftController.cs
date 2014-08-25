@@ -25,6 +25,8 @@ namespace Volkswagen.Controllers
         // GET: /Shift/
         public async Task<ActionResult> Index(GridSortOptions model)
         {
+            ViewData["model"] = model;
+
             IQueryable<ShiftModels> list = db.Shifts.Where("1 = 1");
             if (!string.IsNullOrEmpty(model.Column))
             {
@@ -47,16 +49,48 @@ namespace Volkswagen.Controllers
         [HttpPost]
         public async Task<ActionResult> Index()
         {
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+            ViewData["model"] = model;
+
+            IQueryable<ShiftModels> list = getQuery();
+
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    list = list.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    list = list.OrderBy(model.Column + " asc");
+                }
+            }
+
+            return View(list);
+        }
+
+        private IQueryable<ShiftModels> getQuery()
+        {
+            //p
             ParameterExpression param = Expression.Parameter(typeof(ShiftModels), "p");
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
             {
                 string field = Request.Form["field" + n];
+                ViewData["field" + n] = field;
                 string op = Request.Form["op" + n];
+                ViewData["op" + n] = op;
                 string operand = Request.Form["operand" + n];
-                if (string.IsNullOrEmpty(field)) break;
+                ViewData["operand" + n] = operand;
 
+                if (string.IsNullOrEmpty(field)) break;
+                if (string.IsNullOrEmpty(operand)) continue;
+
+                //p.[filedn]
                 Expression left = Expression.Property(param, typeof(ShiftModels).GetProperty(field));
+                //[operandn]
                 Expression right = Expression.Constant(operand);
                 Expression result;
 
@@ -80,6 +114,9 @@ namespace Volkswagen.Controllers
                     case "5":
                         result = Expression.NotEqual(left, right);
                         break;
+                    case "6": //Contain
+                        result = Expression.Call(left, typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), right);
+                        break;
                     default:
                         result = Expression.Equal(left, right);
                         break;
@@ -87,31 +124,31 @@ namespace Volkswagen.Controllers
                 filter = Expression.And(filter, result);
             }
 
+            // p => p.[filedn] [opn] [operandn] && ...
             Expression pred = Expression.Lambda(filter, param);
 
+            // where(p => p.[filedn] [opn] [operandn] && ...)
             var e = db.Shifts;
             Expression expr = Expression.Call(typeof(Queryable), "Where", new Type[] { typeof(ShiftModels) }, Expression.Constant(e), pred);
 
             IQueryable<ShiftModels> list = db.Shifts.AsQueryable().Provider.CreateQuery<ShiftModels>(expr);
 
-
-            return View(list);
+            return list;
         }
-        
 
-        // GET: /Shift/Details/5
-        public async Task<ActionResult> Details(string id)
+        private List<ShiftModels> getSelected(IQueryable<ShiftModels> l)
         {
-            if (id == null)
+            List<ShiftModels> list = new List<ShiftModels>();
+            List<ShiftModels> list_origin = l.ToList();
+            foreach (ShiftModels e in list_origin)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (Request.Form["Checked" + e.ShiftID] != "false")
+                {
+                    list.Add(e);
+                }
             }
-            ShiftModels shiftmodels = await db.Shifts.FindAsync(id);
-            if (shiftmodels == null)
-            {
-                return HttpNotFound();
-            }
-            return View(shiftmodels);
+
+            return list;
         }
 
         // GET: /Shift/Create
@@ -196,6 +233,67 @@ namespace Volkswagen.Controllers
             return View(shiftmodels);
         }
 
+        // POST: /Shift/EditMultiple/
+        //[HttpPost]
+        public async Task<ActionResult> EditMultiple()
+        {
+            IQueryable<ShiftModels> l = getQuery();
+            List<ShiftModels> list = getSelected(l);
+            if (ViewData["list"] == null) ViewData["list"] = list;
+            //string key = list.First().ShiftID;
+            //return RedirectToAction("Edit", new { id = key });
+            return RedirectToAction("ChangeMultiple", new { Shiftmodels = new ShiftModels() });
+        }
+
+        // POST: /Shift/ChangeMultiple/
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeMultiple([Bind(Include = "ShiftID,ShiftDate,ShiftTime,Class,Line,Charger,Record,Urgency,Remark,ChangeTime,Changer,CreateTime,Creator")] ShiftModels shiftmodels)
+        {
+            bool changed = false;
+            List<ShiftModels> l = new List<ShiftModels>();
+            for (int i = 0; ; i++)
+            {
+                string id = Request.Form["item" + i];
+                if (Request.Form["item" + i] == null) break;
+                ShiftModels e = db.Shifts.Find(id);
+                l.Add(e);
+                ArShiftModels ar = new ArShiftModels(e);
+                if (shiftmodels.ShiftDate != null && ModelState.IsValidField("ShiftDate")) e.ShiftDate = shiftmodels.ShiftDate;
+                if (shiftmodels.ShiftTime != null && ModelState.IsValidField("ShiftTime")) e.ShiftTime = shiftmodels.ShiftTime;
+                if (shiftmodels.Class != null && ModelState.IsValidField("Class")) e.Class = shiftmodels.Class;
+                if (shiftmodels.Line != null && ModelState.IsValidField("Line")) e.Line = shiftmodels.Line;
+                if (shiftmodels.Charger != null && ModelState.IsValidField("Charger")) e.Charger = shiftmodels.Charger;
+                if (shiftmodels.Record != null && ModelState.IsValidField("Record")) e.Record = shiftmodels.Record;
+                if (shiftmodels.Urgency != null && ModelState.IsValidField("Urgency")) e.Urgency = shiftmodels.Urgency;
+                if (shiftmodels.Remark != null && ModelState.IsValidField("Remark")) e.Remark = shiftmodels.Remark;
+
+                if (db.Entry(e).State == EntityState.Modified)
+                {
+                    e.Changer = User.Identity.Name;
+                    e.ChangeTime = DateTime.Now;
+                    int x = await db.SaveChangesAsync();
+                    if (x != 0)
+                    {
+                        changed = true;
+                        ar.Operator = "Update";
+                        db.ArShifts.Add(ar);
+                        await db.SaveChangesAsync();
+                    }
+                }
+            }
+            if (changed)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ViewData["list"] = l;
+                return View(new ShiftModels());
+            }
+        }
+
+
         // GET: /Shift/Delete/5
         public async Task<ActionResult> Delete(string id)
         {
@@ -225,6 +323,28 @@ namespace Volkswagen.Controllers
                 ar.Operator = "Delete";
                 db.ArShifts.Add(ar);
                 await db.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");
+        }
+
+        // POST: /Shift/DeleteMultiple/
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteMultiple()
+        {
+            IQueryable<ShiftModels> l = getQuery();
+            List<ShiftModels> list = getSelected(l);
+            foreach (ShiftModels e in list)
+            {
+                db.Shifts.Remove(e);
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArShiftModels ar = new ArShiftModels(e);
+                    ar.Operator = "Delete";
+                    db.ArShifts.Add(ar);
+                    await db.SaveChangesAsync();
+                }
             }
             return RedirectToAction("Index");
         }

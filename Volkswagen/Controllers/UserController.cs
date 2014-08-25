@@ -25,9 +25,6 @@ namespace Volkswagen.Controllers
         // GET: /User/
         public async Task<ActionResult> Index(GridSortOptions model)
         {
-            //PrepareSelectItems();
-            //return View(await db.Users.ToListAsync());
-
             ViewData["model"] = model;
 
             IQueryable<UserModels> list = db.Users.Where("1 = 1");
@@ -46,16 +43,12 @@ namespace Volkswagen.Controllers
             {
                 return View(await db.Users.ToListAsync());
             }
-            //list = list.AsPagination(page ?? 1, 5);
             return View(list);
         }
 
         [HttpPost]
         public async Task<ActionResult> Index()
         {
-            //IQueryable<UserModels> list = ViewData.Model as IQueryable<UserModels>;
-            //IQueryable<UserModels> list = db.Users.Where("1 = 1");
-
             GridSortOptions model = new GridSortOptions();
             model.Column = Request.Form["Column"];
             model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
@@ -80,6 +73,7 @@ namespace Volkswagen.Controllers
 
         private IQueryable<UserModels> getQuery()
         {
+            //p
             ParameterExpression param = Expression.Parameter(typeof(UserModels), "p");
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
@@ -92,8 +86,11 @@ namespace Volkswagen.Controllers
                 ViewData["operand" + n] = operand;
 
                 if (string.IsNullOrEmpty(field)) break;
+                if (string.IsNullOrEmpty(operand)) continue;
 
+                //p.[filedn]
                 Expression left = Expression.Property(param, typeof(UserModels).GetProperty(field));
+                //[operandn]
                 Expression right = Expression.Constant(operand);
                 Expression result;
 
@@ -117,6 +114,9 @@ namespace Volkswagen.Controllers
                     case "5":
                         result = Expression.NotEqual(left, right);
                         break;
+                    case "6": //Contain
+                        result = Expression.Call(left, typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), right);
+                        break;
                     default:
                         result = Expression.Equal(left, right);
                         break;
@@ -124,12 +124,29 @@ namespace Volkswagen.Controllers
                 filter = Expression.And(filter, result);
             }
 
+            // p => p.[filedn] [opn] [operandn] && ...
             Expression pred = Expression.Lambda(filter, param);
 
+            // where(p => p.[filedn] [opn] [operandn] && ...)
             var e = db.Users;
             Expression expr = Expression.Call(typeof(Queryable), "Where", new Type[] { typeof(UserModels) }, Expression.Constant(e), pred);
 
             IQueryable<UserModels> list = db.Users.AsQueryable().Provider.CreateQuery<UserModels>(expr);
+
+            return list;
+        }
+
+        private List<UserModels> getSelected(IQueryable<UserModels> l)
+        {
+            List<UserModels> list = new List<UserModels>();
+            List<UserModels> list_origin = l.ToList();
+            foreach (UserModels e in list_origin)
+            {
+                if (Request.Form["Checked" + e.UserID] != "false")
+                {
+                    list.Add(e);
+                }
+            }
 
             return list;
         }
@@ -164,8 +181,19 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                usermodels.Changer = User.Identity.Name;
+                usermodels.Creator = User.Identity.Name;
+                usermodels.CreateTime = DateTime.Now;
+                usermodels.ChangeTime = DateTime.Now;
                 db.Users.Add(usermodels);
-                await db.SaveChangesAsync();
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArUserModels ar = new ArUserModels(usermodels);
+                    ar.Operator = "Create";
+                    db.ArUsers.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
 
@@ -196,12 +224,95 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                var toUpdate = db.Users.Find(usermodels.UserID);
+
+                usermodels.Changer = User.Identity.Name;
+                usermodels.ChangeTime = DateTime.Now;
+                usermodels.Creator = toUpdate.Creator;
+                usermodels.CreateTime = toUpdate.CreateTime;
+
+                db.Entry(toUpdate).State = EntityState.Detached;
                 db.Entry(usermodels).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+
+                int x = await db.SaveChangesAsync();
+
+                if (x != 0)
+                {
+                    ArUserModels ar = new ArUserModels(toUpdate);
+                    ar.Operator = "Update";
+                    db.ArUsers.Add(ar);
+                    await db.SaveChangesAsync();
+                }
                 return RedirectToAction("Index");
             }
             return View(usermodels);
         }
+
+        // POST: /User/EditMultiple/
+        //[HttpPost]
+        public async Task<ActionResult> EditMultiple()
+        {
+            IQueryable<UserModels> l = getQuery();
+            List<UserModels> list = getSelected(l);
+            if (ViewData["list"] == null) ViewData["list"] = list;
+            //string key = list.First().UserID;
+            //return RedirectToAction("Edit", new { id = key });
+            return RedirectToAction("ChangeMultiple", new { Usermodels = new UserModels() });
+        }
+
+        // POST: /User/ChangeMultiple/
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeMultiple([Bind(Include = "UserID,Breviary,Name,Number,Telephone,Mobile,Birthday,EntryDate,Position,PoliticalStatus,Address,Skill,Experience,Remark,Image,ChangeTime,Changer,CreateTime,Creator")] UserModels usermodels)
+        {
+            bool changed = false;
+            List<UserModels> l = new List<UserModels>();
+            for (int i = 0; ; i++)
+            {
+                string id = Request.Form["item" + i];
+                if (Request.Form["item" + i] == null) break;
+                UserModels e = db.Users.Find(id);
+                l.Add(e);
+                ArUserModels ar = new ArUserModels(e);
+                if (usermodels.Breviary != null && ModelState.IsValidField("Breviary")) e.Breviary = usermodels.Breviary;
+                if (usermodels.Name != null && ModelState.IsValidField("Name")) e.Name = usermodels.Name;
+                if (usermodels.Number != null && ModelState.IsValidField("Number")) e.Number = usermodels.Number;
+                if (usermodels.Telephone != null && ModelState.IsValidField("Telephone")) e.Telephone = usermodels.Telephone;
+                if (usermodels.Mobile != null && ModelState.IsValidField("Mobile")) e.Mobile = usermodels.Mobile;
+                if (usermodels.Birthday != null && ModelState.IsValidField("Birthday")) e.Birthday = usermodels.Birthday;
+                if (usermodels.EntryDate != null && ModelState.IsValidField("EntryDate")) e.EntryDate = usermodels.EntryDate;
+                if (usermodels.Position != null && ModelState.IsValidField("Position")) e.Position = usermodels.Position;
+                if (usermodels.PoliticalStatus != null && ModelState.IsValidField("PoliticalStatus")) e.PoliticalStatus = usermodels.PoliticalStatus;
+                if (usermodels.Address != null && ModelState.IsValidField("Address")) e.Address = usermodels.Address;
+                if (usermodels.Skill != null && ModelState.IsValidField("Skill")) e.Skill = usermodels.Skill;
+                if (usermodels.Experience != null && ModelState.IsValidField("Experience")) e.Experience = usermodels.Experience;
+                if (usermodels.Remark != null && ModelState.IsValidField("Remark")) e.Remark = usermodels.Remark;
+
+                if (db.Entry(e).State == EntityState.Modified)
+                {
+                    e.Changer = User.Identity.Name;
+                    e.ChangeTime = DateTime.Now;
+                    int x = await db.SaveChangesAsync();
+                    if (x != 0)
+                    {
+                        changed = true;
+                        ar.Operator = "Update";
+                        db.ArUsers.Add(ar);
+                        await db.SaveChangesAsync();
+                    }
+                }
+            }
+            if (changed)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ViewData["list"] = l;
+                return View(new UserModels());
+            }
+        }
+
 
         // GET: /User/Delete/5
         public async Task<ActionResult> Delete(int? id)
@@ -232,6 +343,28 @@ namespace Volkswagen.Controllers
                 ar.Operator = "Delete";
                 db.ArUsers.Add(ar);
                 await db.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");
+        }
+
+        // POST: /User/DeleteMultiple/
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteMultiple()
+        {
+            IQueryable<UserModels> l = getQuery();
+            List<UserModels> list = getSelected(l);
+            foreach (UserModels e in list)
+            {
+                db.Users.Remove(e);
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArUserModels ar = new ArUserModels(e);
+                    ar.Operator = "Delete";
+                    db.ArUsers.Add(ar);
+                    await db.SaveChangesAsync();
+                }
             }
             return RedirectToAction("Index");
         }

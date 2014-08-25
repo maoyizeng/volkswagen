@@ -23,40 +23,10 @@ namespace Volkswagen.Controllers
         private SVWContext db = new SVWContext();
 
         // GET: /Spare/
-        /*public async Task<ActionResult> Index(GridSortOptions model)
+        public async Task<ActionResult> Index(GridSortOptions model)
         {
             ViewData["model"] = model;
 
-            IQueryable<SpareModels> list = db.Spares.Where("1 = 1");
-            if (!string.IsNullOrEmpty(model.Column))
-            {
-                list = list.OrderBy(model.Column);
-            }
-            else
-            {
-                return View(await db.Spares.ToListAsync());
-            }
-            return View(list);
-        }*/
-
-        // GET: /Spare/Details/5
-        public async Task<ActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            SpareModels sparemodels = await db.Spares.FindAsync(id);
-            if (sparemodels == null)
-            {
-                return HttpNotFound();
-            }
-            return View(sparemodels);
-        }
-
-        // GET: /Spare/
-        public async Task<ActionResult> Index(GridSortOptions model)
-        {
             IQueryable<SpareModels> list = db.Spares.Where("1 = 1");
             if (!string.IsNullOrEmpty(model.Column))
             {
@@ -79,16 +49,48 @@ namespace Volkswagen.Controllers
         [HttpPost]
         public async Task<ActionResult> Index()
         {
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+            ViewData["model"] = model;
+
+            IQueryable<SpareModels> list = getQuery();
+
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    list = list.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    list = list.OrderBy(model.Column + " asc");
+                }
+            }
+
+            return View(list);
+        }
+
+        private IQueryable<SpareModels> getQuery()
+        {
+            //p
             ParameterExpression param = Expression.Parameter(typeof(SpareModels), "p");
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
             {
                 string field = Request.Form["field" + n];
+                ViewData["field" + n] = field;
                 string op = Request.Form["op" + n];
+                ViewData["op" + n] = op;
                 string operand = Request.Form["operand" + n];
-                if (string.IsNullOrEmpty(field)) break;
+                ViewData["operand" + n] = operand;
 
+                if (string.IsNullOrEmpty(field)) break;
+                if (string.IsNullOrEmpty(operand)) continue;
+
+                //p.[filedn]
                 Expression left = Expression.Property(param, typeof(SpareModels).GetProperty(field));
+                //[operandn]
                 Expression right = Expression.Constant(operand);
                 Expression result;
 
@@ -112,6 +114,9 @@ namespace Volkswagen.Controllers
                     case "5":
                         result = Expression.NotEqual(left, right);
                         break;
+                    case "6": //Contain
+                        result = Expression.Call(left, typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), right);
+                        break;
                     default:
                         result = Expression.Equal(left, right);
                         break;
@@ -119,15 +124,46 @@ namespace Volkswagen.Controllers
                 filter = Expression.And(filter, result);
             }
 
+            // p => p.[filedn] [opn] [operandn] && ...
             Expression pred = Expression.Lambda(filter, param);
 
+            // where(p => p.[filedn] [opn] [operandn] && ...)
             var e = db.Spares;
             Expression expr = Expression.Call(typeof(Queryable), "Where", new Type[] { typeof(SpareModels) }, Expression.Constant(e), pred);
 
             IQueryable<SpareModels> list = db.Spares.AsQueryable().Provider.CreateQuery<SpareModels>(expr);
 
+            return list;
+        }
 
-            return View(list);
+        private List<SpareModels> getSelected(IQueryable<SpareModels> l)
+        {
+            List<SpareModels> list = new List<SpareModels>();
+            List<SpareModels> list_origin = l.ToList();
+            foreach (SpareModels e in list_origin)
+            {
+                if (Request.Form["Checked" + e.SpareID] != "false")
+                {
+                    list.Add(e);
+                }
+            }
+
+            return list;
+        }
+
+        // GET: /Spare/Details/5
+        public async Task<ActionResult> Details(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            SpareModels sparemodels = await db.Spares.FindAsync(id);
+            if (sparemodels == null)
+            {
+                return HttpNotFound();
+            }
+            return View(sparemodels);
         }
 
         // GET: /Spare/Create
@@ -216,6 +252,75 @@ namespace Volkswagen.Controllers
             return View(sparemodels);
         }
 
+        // POST: /Spare/EditMultiple/
+        //[HttpPost]
+        public async Task<ActionResult> EditMultiple()
+        {
+            IQueryable<SpareModels> l = getQuery();
+            List<SpareModels> list = getSelected(l);
+            if (ViewData["list"] == null) ViewData["list"] = list;
+            //string key = list.First().SpareID;
+            //return RedirectToAction("Edit", new { id = key });
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
+            
+            return RedirectToAction("ChangeMultiple", new { Sparemodels = new SpareModels() });
+        }
+
+        // POST: /Spare/ChangeMultiple/
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeMultiple([Bind(Include = "SpareID,SpareDes,Type,Picture1,Picture2,Mark,PresentValue,SafeValue,DCMinValue,DCMaxValue,Property,EquipmentID,Producer,OrderNumber,Remark,KeyPart,File,ChangeTime,Changer,CreateTime,Creator")] SpareModels sparemodels)
+        {
+            bool changed = false;
+            List<SpareModels> l = new List<SpareModels>();
+            for (int i = 0; ; i++)
+            {
+                string id = Request.Form["item" + i];
+                if (Request.Form["item" + i] == null) break;
+                SpareModels e = db.Spares.Find(id);
+                l.Add(e);
+                ArSpareModels ar = new ArSpareModels(e);
+                if (sparemodels.SpareDes != null && ModelState.IsValidField("SpareDes")) e.SpareDes = sparemodels.SpareDes;
+                if (sparemodels.Type != null && ModelState.IsValidField("Type")) e.Type = sparemodels.Type;
+                if (sparemodels.Mark != null && ModelState.IsValidField("Mark")) e.Mark = sparemodels.Mark;
+                if (sparemodels.PresentValue != null && ModelState.IsValidField("PresentValue")) e.PresentValue = sparemodels.PresentValue;
+                if (sparemodels.SafeValue != null && ModelState.IsValidField("SafeValue")) e.SafeValue = sparemodels.SafeValue;
+                if (sparemodels.DCMinValue != null && ModelState.IsValidField("DCMinValue")) e.DCMinValue = sparemodels.DCMinValue;
+                if (sparemodels.DCMaxValue != null && ModelState.IsValidField("DCMaxValue")) e.DCMaxValue = sparemodels.DCMaxValue;
+                if (sparemodels.Property != null && ModelState.IsValidField("Property")) e.Property = sparemodels.Property;
+                if (sparemodels.EquipmentID != null && ModelState.IsValidField("EquipmentID")) e.EquipmentID = sparemodels.EquipmentID;
+                if (sparemodels.Producer != null && ModelState.IsValidField("Producer")) e.Producer = sparemodels.Producer;
+                if (sparemodels.OrderNumber != null && ModelState.IsValidField("OrderNumber")) e.OrderNumber = sparemodels.OrderNumber;
+                if (sparemodels.KeyPart != null && ModelState.IsValidField("KeyPart")) e.KeyPart = sparemodels.KeyPart;
+                if (sparemodels.Remark != null && ModelState.IsValidField("Remark")) e.Remark = sparemodels.Remark;
+
+                if (db.Entry(e).State == EntityState.Modified)
+                {
+                    e.Changer = User.Identity.Name;
+                    e.ChangeTime = DateTime.Now;
+                    int x = await db.SaveChangesAsync();
+                    if (x != 0)
+                    {
+                        changed = true;
+                        ar.Operator = "Update";
+                        db.ArSpares.Add(ar);
+                        await db.SaveChangesAsync();
+                    }
+                }
+            }
+            if (changed)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ViewData["list"] = l;
+                ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
+                return View(new SpareModels());
+            }
+        }
+
+
         // GET: /Spare/Delete/5
         public async Task<ActionResult> Delete(string id)
         {
@@ -245,6 +350,28 @@ namespace Volkswagen.Controllers
                 ar.Operator = "Delete";
                 db.ArSpares.Add(ar);
                 await db.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");
+        }
+
+        // POST: /Spare/DeleteMultiple/
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteMultiple()
+        {
+            IQueryable<SpareModels> l = getQuery();
+            List<SpareModels> list = getSelected(l);
+            foreach (SpareModels e in list)
+            {
+                db.Spares.Remove(e);
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArSpareModels ar = new ArSpareModels(e);
+                    ar.Operator = "Delete";
+                    db.ArSpares.Add(ar);
+                    await db.SaveChangesAsync();
+                }
             }
             return RedirectToAction("Index");
         }

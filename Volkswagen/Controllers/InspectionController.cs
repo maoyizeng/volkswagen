@@ -23,31 +23,10 @@ namespace Volkswagen.Controllers
         private SVWContext db = new SVWContext();
 
         // GET: /Inspection/
-        /*public async Task<ActionResult> Index()
-        {
-            var inspections = db.Inspections.Include(i => i.Equipments);
-            return View(await inspections.ToListAsync());
-        }
-
         public async Task<ActionResult> Index(GridSortOptions model)
         {
             ViewData["model"] = model;
 
-            IQueryable<InspectionModels> list = db.Inspections.Where("1 = 1");
-            if (!string.IsNullOrEmpty(model.Column))
-            {
-                list = list.OrderBy(model.Column);
-                }
-            else
-            {
-                return View(await db.Inspections.ToListAsync());
-            }
-            return View(list);
-        }*/
-
-        // GET: /Inspection/
-        public async Task<ActionResult> Index(GridSortOptions model)
-        {
             IQueryable<InspectionModels> list = db.Inspections.Where("1 = 1");
             if (!string.IsNullOrEmpty(model.Column))
             {
@@ -70,16 +49,48 @@ namespace Volkswagen.Controllers
         [HttpPost]
         public async Task<ActionResult> Index()
         {
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+            ViewData["model"] = model;
+
+            IQueryable<InspectionModels> list = getQuery();
+
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    list = list.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    list = list.OrderBy(model.Column + " asc");
+                }
+            }
+
+            return View(list);
+        }
+
+        private IQueryable<InspectionModels> getQuery()
+        {
+            //p
             ParameterExpression param = Expression.Parameter(typeof(InspectionModels), "p");
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
             {
                 string field = Request.Form["field" + n];
+                ViewData["field" + n] = field;
                 string op = Request.Form["op" + n];
+                ViewData["op" + n] = op;
                 string operand = Request.Form["operand" + n];
-                if (string.IsNullOrEmpty(field)) break;
+                ViewData["operand" + n] = operand;
 
+                if (string.IsNullOrEmpty(field)) break;
+                if (string.IsNullOrEmpty(operand)) continue;
+
+                //p.[filedn]
                 Expression left = Expression.Property(param, typeof(InspectionModels).GetProperty(field));
+                //[operandn]
                 Expression right = Expression.Constant(operand);
                 Expression result;
 
@@ -103,6 +114,9 @@ namespace Volkswagen.Controllers
                     case "5":
                         result = Expression.NotEqual(left, right);
                         break;
+                    case "6": //Contain
+                        result = Expression.Call(left, typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), right);
+                        break;
                     default:
                         result = Expression.Equal(left, right);
                         break;
@@ -110,15 +124,31 @@ namespace Volkswagen.Controllers
                 filter = Expression.And(filter, result);
             }
 
+            // p => p.[filedn] [opn] [operandn] && ...
             Expression pred = Expression.Lambda(filter, param);
 
+            // where(p => p.[filedn] [opn] [operandn] && ...)
             var e = db.Inspections;
             Expression expr = Expression.Call(typeof(Queryable), "Where", new Type[] { typeof(InspectionModels) }, Expression.Constant(e), pred);
 
             IQueryable<InspectionModels> list = db.Inspections.AsQueryable().Provider.CreateQuery<InspectionModels>(expr);
 
+            return list;
+        }
 
-            return View(list);
+        private List<InspectionModels> getSelected(IQueryable<InspectionModels> l)
+        {
+            List<InspectionModels> list = new List<InspectionModels>();
+            List<InspectionModels> list_origin = l.ToList();
+            foreach (InspectionModels e in list_origin)
+            {
+                if (Request.Form["Checked" + e.InspectionId] != "false")
+                {
+                    list.Add(e);
+                }
+            }
+
+            return list;
         }
 
         // GET: /Inspection/Details/5
@@ -226,6 +256,71 @@ namespace Volkswagen.Controllers
             return View(inspectionmodels);
         }
 
+        // POST: /Inspection/EditMultiple/
+        //[HttpPost]
+        public async Task<ActionResult> EditMultiple()
+        {
+            IQueryable<InspectionModels> l = getQuery();
+            List<InspectionModels> list = getSelected(l);
+            if (ViewData["list"] == null) ViewData["list"] = list;
+            //string key = list.First().InspectionID;
+            //return RedirectToAction("Edit", new { id = key });
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
+            ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes");
+            return RedirectToAction("ChangeMultiple", new { Inspectionmodels = new InspectionModels() });
+        }
+
+        // POST: /Inspection/ChangeMultiple/
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeMultiple([Bind(Include = "InspectionId,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
+        {
+            bool changed = false;
+            List<InspectionModels> l = new List<InspectionModels>();
+            for (int i = 0; ; i++)
+            {
+                string id = Request.Form["item" + i];
+                if (Request.Form["item" + i] == null) break;
+                InspectionModels e = db.Inspections.Find(id);
+                l.Add(e);
+                ArInspectionModels ar = new ArInspectionModels(e);
+                if (inspectionmodels.EquipmentID != null && ModelState.IsValidField("EquipmentID")) e.EquipmentID = inspectionmodels.EquipmentID;
+                if (inspectionmodels.EquipDes != null && ModelState.IsValidField("EquipDes")) e.EquipDes = inspectionmodels.EquipDes;
+                if (inspectionmodels.Class != null && ModelState.IsValidField("Class")) e.Class = inspectionmodels.Class;
+                if (inspectionmodels.Part != null && ModelState.IsValidField("Part")) e.Part = inspectionmodels.Part;
+                if (inspectionmodels.Position != null && ModelState.IsValidField("Position")) e.Position = inspectionmodels.Position;
+                if (inspectionmodels.EquipDes != null && ModelState.IsValidField("EquipDes")) e.EquipDes = inspectionmodels.EquipDes;
+                if (inspectionmodels.Content != null && ModelState.IsValidField("Content")) e.Content = inspectionmodels.Content;
+                if (inspectionmodels.Period != null && ModelState.IsValidField("Period")) e.Period = inspectionmodels.Period;
+                if (inspectionmodels.Caution != null && ModelState.IsValidField("Caution")) e.Caution = inspectionmodels.Caution;
+                if (inspectionmodels.Remark != null && ModelState.IsValidField("Remark")) e.Remark = inspectionmodels.Remark;
+
+                if (db.Entry(e).State == EntityState.Modified)
+                {
+                    e.Changer = User.Identity.Name;
+                    e.ChangeTime = DateTime.Now;
+                    int x = await db.SaveChangesAsync();
+                    if (x != 0)
+                    {
+                        changed = true;
+                        ar.Operator = "Update";
+                        db.ArInspections.Add(ar);
+                        await db.SaveChangesAsync();
+                    }
+                }
+            }
+            if (changed)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ViewData["list"] = l;
+                ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
+                ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes");
+                return View(new InspectionModels());
+            }
+        }
 
         // GET: /Inspection/Delete/5
         public async Task<ActionResult> Delete(int? id)
@@ -256,6 +351,28 @@ namespace Volkswagen.Controllers
                 ar.Operator = "Delete";
                 db.ArInspections.Add(ar);
                 await db.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");
+        }
+
+        // POST: /Inspection/DeleteMultiple/
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteMultiple()
+        {
+            IQueryable<InspectionModels> l = getQuery();
+            List<InspectionModels> list = getSelected(l);
+            foreach (InspectionModels e in list)
+            {
+                db.Inspections.Remove(e);
+                int x = await db.SaveChangesAsync();
+                if (x != 0)
+                {
+                    ArInspectionModels ar = new ArInspectionModels(e);
+                    ar.Operator = "Delete";
+                    db.ArInspections.Add(ar);
+                    await db.SaveChangesAsync();
+                }
             }
             return RedirectToAction("Index");
         }
