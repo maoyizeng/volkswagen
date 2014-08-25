@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Volkswagen.Models.FileModels>
 
 @{
-    ViewBag.Title = "上海大众";
+    ViewBag.Title = "文件库";
     Layout = "~/Views/Shared/_Layout.cshtml";
     string col, dir;
     if (ViewData["model"] == null)
@@ -16,7 +16,7 @@
     }
 }
 
-<h2>文件库</h2>
+<h3>文件库</h3>
 
 <script type="text/javascript">
     var row = 0;
@@ -33,13 +33,14 @@
     );
 
     var opMap = new Array(
-        "=",
-        ">",
-        "<",
-        ">=",
-        "<=",
-        "<>"
-        );
+         "=",
+         ">",
+         "<",
+         ">=",
+         "<=",
+         "<>",
+         "包含"
+         );
 
     var valueMap = new Array(
         "FileName",
@@ -54,7 +55,7 @@
 
     function append_input() {
 
-        var fm = document.getElementById("query_form");
+        var fm = document.getElementById("query_panel");
         var f = document.createElement("div");
         f.className = "form-group";
 
@@ -63,9 +64,12 @@
         var op = document.createElement("select");
         var operand = document.createElement("input");
 
+        f.name = "fgroup" + row;
         field.name = "field" + row;
         op.name = "op" + row;
         operand.name = "operand" + row;
+
+        //operand.className = "form-control"
 
         for (var i = 0; i < fieldMap.length; i++) {
             var option = document.createElement("option");
@@ -81,121 +85,76 @@
             op.add(ooption);
         }
 
+        var cancel = document.createElement("button");
+        cancel.type = "button";
+        cancel.className = "btn btn-default btn-xs";
+        var cancelx = document.createElement("span");
+        cancelx.className = "glyphicon glyphicon-remove"
+        cancel.onclick = function () {
+            this.parentElement.hidden = true;
+            this.parentElement.getElementsByTagName("input").value = null;
+        };
+        cancel.appendChild(cancelx);
 
         f.appendChild(field);
         f.appendChild(op);
         f.appendChild(operand);
+        f.appendChild(cancel);
 
         fm.appendChild(f);
 
         row++;
     }
+
+    function select_all() {
+        var inputs = document.getElementById("query_form").getElementsByTagName("input");
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].type == "checkbox") {
+                inputs[i].checked = true;
+            }
+        }
+    }
+    function toggle_all() {
+        var inputs = document.getElementById("query_form").getElementsByTagName("input");
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].type == "checkbox") {
+                inputs[i].checked = !inputs[i].checked;
+            }
+        }
+    }
 </script>
 
-<div class="row">
-    <div class="col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">查询</h3>
-            </div>
-            <div class="panel-body">
-                <form action="/File/" id="query_form" method="post">
+<<form action="/File/" id="query_form" method="post">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">查询</h3>
+                </div>
+                <div id="query_panel" class="panel-body">
                     <input type="hidden" name="Colu" value=@col />
                     <input type="hidden" name="Direction" value=@dir />
                     <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
                     <input type="submit" id="query" value="确定" class="btn btn-sm" />
-                </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<br />
-<form action="/Equipment/" id="grid_form" method="post">
+    <br />
 
     <p>
         @Html.ActionLink("新建", "Create", "File", null, new { @class = "btn btn-default" })
         @Html.ActionLink("导出", "ExportExcel", "File", null, new { @class = "btn btn-default" })
     </p>
 
-    <!--
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Class)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EquipmentID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EquipDes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Charger)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.File)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ChangeTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Changer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreateTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Creator)
-            </th>
-            <th></th>
-        </tr>
-
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Class)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EquipmentID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EquipDes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Charger)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.File)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChangeTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Changer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreateTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Creator)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.FileName }) |
-                @Html.ActionLink("Details", "Details", new { id=item.FileName }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.FileName })
-            </td>
-        </tr>
-    }
-
-    </table>
-    -->
-    @Html.ActionLink("全选", "Create", "File", null, new { @class = "btn btn-default" })
+    <div class="btn-group">
+        <input type="button" id="select_button" value="全选" onclick="select_all()" class="btn btn-default" />
+        <input type="button" id="select_button" value="反选" onclick="toggle_all()" class="btn btn-default" />
+    </div>
     @Html.ActionLink("批量修改", "EditMultiple", "File", null, new { @class = "btn btn-default" })
     @Html.ActionLink("批量删除", "DeleteMultiple", "File", null, new { @class = "btn btn-default" })
-    <p>
 
-    </p>
     @using MvcContrib.UI.Grid
 
     @using MvcContrib
@@ -209,7 +168,7 @@
                 column.For(p => p.EquipmentID).Sortable(true);
                 column.For(p => p.EquipDes).Sortable(true);
                 column.For(p => p.Charger).Sortable(true);
-                //column.For(p => p.File).Sortable(true);
+                column.For(p => p.File.IsEmpty() ? "无" : "有").Named("文件").Sortable(true);
                 column.For(p => p.ChangeTime).Sortable(true);
                 column.For(p => p.Changer).Sortable(true);
                 column.For(p => p.CreateTime).Sortable(true);

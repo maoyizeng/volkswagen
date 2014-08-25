@@ -113,6 +113,7 @@ namespace Volkswagen.Controllers
 
         private IQueryable<EquipmentModels> getQuery()
         {
+            //p
             ParameterExpression param = Expression.Parameter(typeof(EquipmentModels), "p");
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
@@ -127,7 +128,9 @@ namespace Volkswagen.Controllers
                 if (string.IsNullOrEmpty(field)) break;
                 if (string.IsNullOrEmpty(operand)) continue;
 
+                //p.[filedn]
                 Expression left = Expression.Property(param, typeof(EquipmentModels).GetProperty(field));
+                //[operandn]
                 Expression right = Expression.Constant(operand);
                 Expression result;
 
@@ -151,15 +154,20 @@ namespace Volkswagen.Controllers
                     case "5":
                         result = Expression.NotEqual(left, right);
                         break;
+                    case "6": //Contain
+                        result = Expression.Call(left, typeof(string).GetMethod("Contains", new Type[]{typeof(string)}), right);
+                        break;
                     default:
                         result = Expression.Equal(left, right);
                         break;
                 }
                 filter = Expression.And(filter, result);
             }
-
+            
+            // p => p.[filedn] [opn] [operandn] && ...
             Expression pred = Expression.Lambda(filter, param);
 
+            // where(p => p.[filedn] [opn] [operandn] && ...)
             var e = db.Equipments;
             Expression expr = Expression.Call(typeof(Queryable), "Where", new Type[] { typeof(EquipmentModels) }, Expression.Constant(e), pred);
 
@@ -349,105 +357,6 @@ namespace Volkswagen.Controllers
                 
            
         }
-
-        // POST: /Equipment/Query
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> Query()
-        {
-            /*var equipmentList = await db.Equipments.ToListAsync();// = await db.Equipments.Where(p => p);
-            string sql = "1=1";
-
-            for (int n = 0; ; n++)
-            {
-                string field = Request.Form["field" + n];
-                string op = Request.Form["op" + n];
-                string operand = Request.Form["operand" + n];
-                if (string.IsNullOrEmpty(field)) break;
-
-                sql += " AND " + field + " " + op + " " + operand;
-
-            //}
-
-            ViewData.Model = db.Equipments.Where(sql);
-
-                switch (Convert.ToByte(op))
-                {
-                    case 0:
-                        sql += " AND p." + field + "=" + operand;
-                        break;
-                    case 1:
-                        sql += " AND p." + field + ">" + operand;
-                        break;
-                    case 2:
-                        sql += " AND p." + field + "<" + operand;
-                        break;
-                    case 3:
-                        sql += " AND p." + field + ">=" + operand;
-                        break;
-                    case 4:
-                        sql += " AND p." + field + "<=" + operand;
-                        break;
-                    case 5:
-                        //sql += " AND " + field + ">" + operand;
-                        break;
-                    default:
-                        break;
-                }
-            }*/
-
-            ParameterExpression param = Expression.Parameter(typeof(EquipmentModels), "p");
-            Expression filter = Expression.Constant(true);
-            for (int n = 0; ; n++) {
-                string field = Request.Form["field" + n];
-                string op = Request.Form["op" + n];
-                string operand = Request.Form["operand" + n];
-                if (string.IsNullOrEmpty(field)) break;
-
-                Expression left = Expression.Property(param, typeof(EquipmentModels).GetProperty(field));
-                Expression right = Expression.Constant(operand);
-                Expression result;
-
-                switch (op)
-                {
-                    case "0":
-                        result = Expression.Equal(left, right);
-                        break;
-                    case "1":
-                        result = Expression.GreaterThan(left, right);
-                        break;
-                    case "2":
-                        result = Expression.LessThan(left, right);
-                        break;
-                    case "3":
-                        result = Expression.GreaterThanOrEqual(left, right);
-                        break;
-                    case "4":
-                        result = Expression.LessThanOrEqual(left, right);
-                        break;
-                    case "5":
-                        result = Expression.NotEqual(left, right);
-                        break;
-                    default:
-                        result = Expression.Equal(left, right);
-                        break;
-                }
-                filter = Expression.And(filter, result);
-            }
-
-            Expression pred = Expression.Lambda(filter, param);
-
-            var e = db.Equipments;
-            Expression expr = Expression.Call(typeof(Queryable), "Where", new Type[] { typeof(EquipmentModels) }, Expression.Constant(e), pred);
-
-            ViewData.Model = db.Equipments.AsQueryable().Provider.CreateQuery<EquipmentModels>(expr).ToList();
-            //return RedirectToAction("Index");
-            return View();
-        }
-
-        
 
         // GET: /Equipment/Delete/5
         public async Task<ActionResult> Delete(string id)

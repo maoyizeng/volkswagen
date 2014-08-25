@@ -1,106 +1,195 @@
 ﻿@model IEnumerable<Volkswagen.Models.ArInspectionModels>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "历史记录 - 保养计划";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string col, dir;
+    if (ViewData["model"] == null)
+    {
+        col = "";
+        dir = "";
+    }
+    else
+    {
+        col = (ViewData["model"] as GridSortOptions).Column;
+        dir = ((ViewData["model"] as GridSortOptions).Direction == MvcContrib.Sorting.SortDirection.Ascending) ? "Asceding" : "Descending";
+    }
 }
 
-<h2>Index</h2>
+<h3>历史记录 - 设备保养计划</h3>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.EquipmentID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EquipDes)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Class)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Part)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Position)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Content)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Period)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Caution)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Remark)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ChangeTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Changer)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreateTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Creator)
-        </th>
-        <th></th>
-    </tr>
+<script type="text/javascript">
+    var row = 0;
+    var fieldMap = new Array(
+        "设备编号",
+        "设备名称",
+        "维护类别",
+        "保养部件",
+        "保养位置",
+        "保养内容",
+        "保养周期",
+        "注意事项",
+        "备注",
+        "编号",
+        "最后修改时间",
+        "修改人",
+        "创建时间",
+        "创建人",
+        "操作类型",
+        "操作时间"
+    );
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.EquipmentID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EquipDes)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Class)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Part)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Position)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Content)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Period)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Caution)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Remark)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ChangeTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Changer)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreateTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Creator)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-        </td>
-    </tr>
-}
+    var opMap = new Array(
+         "=",
+         ">",
+         "<",
+         ">=",
+         "<=",
+         "<>",
+         "包含"
+         );
 
-</table>
+    var valueMap = new Array(
+    "EquipmentID",
+    "EquipDes",
+    "Class",
+    "Part",
+    "Position",
+    "Content",
+    "Period",
+    "Caution",
+    "Remark",
+    "InspectionID",
+    "ChangeTime",
+    "Changer",
+    "CreateTime",
+    "Creator",
+        "Operator",
+        "OperateTime");
+
+    function append_input() {
+
+        var fm = document.getElementById("query_panel");
+        var f = document.createElement("div");
+        f.className = "form-group";
+
+
+        var field = document.createElement("select");
+        var op = document.createElement("select");
+        var operand = document.createElement("input");
+
+        f.name = "fgroup" + row;
+        field.name = "field" + row;
+        op.name = "op" + row;
+        operand.name = "operand" + row;
+
+        //operand.className = "form-control"
+
+        for (var i = 0; i < fieldMap.length; i++) {
+            var option = document.createElement("option");
+            option.text = fieldMap[i];
+            option.value = valueMap[i];
+            field.add(option);
+        }
+
+        for (var i = 0; i < opMap.length; i++) {
+            var ooption = document.createElement("option");
+            ooption.text = opMap[i];
+            ooption.value = i;
+            op.add(ooption);
+        }
+
+        var cancel = document.createElement("button");
+        cancel.type = "button";
+        cancel.className = "btn btn-default btn-xs";
+        var cancelx = document.createElement("span");
+        cancelx.className = "glyphicon glyphicon-remove"
+        cancel.onclick = function () {
+            this.parentElement.hidden = true;
+            this.parentElement.getElementsByTagName("input").value = null;
+        };
+        cancel.appendChild(cancelx);
+
+        f.appendChild(field);
+        f.appendChild(op);
+        f.appendChild(operand);
+        f.appendChild(cancel);
+
+        fm.appendChild(f);
+
+        row++;
+    }
+
+    function select_all() {
+        var inputs = document.getElementById("query_form").getElementsByTagName("input");
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].type == "checkbox") {
+                inputs[i].checked = true;
+            }
+        }
+    }
+    function toggle_all() {
+        var inputs = document.getElementById("query_form").getElementsByTagName("input");
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].type == "checkbox") {
+                inputs[i].checked = !inputs[i].checked;
+            }
+        }
+    }
+</script>
+
+
+<form action="/ArInspection/" id="query_form" method="post">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">查询</h3>
+                </div>
+                <div id="query_panel" class="panel-body">
+                    <input type="hidden" name="Colu" value=@col />
+                    <input type="hidden" name="Direction" value=@dir />
+                    <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
+                    <input type="submit" id="query" value="确定" class="btn btn-sm" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <p>
+        @Html.ActionLink("导出", "ExportExcel", "ArInspection", null, new { @class = "btn btn-default" })
+    </p>
+
+    <div class="btn-group">
+        <input type="button" id="select_button" value="全选" onclick="select_all()" class="btn btn-default" />
+        <input type="button" id="select_button" value="反选" onclick="toggle_all()" class="btn btn-default" />
+    </div>
+    @Html.ActionLink("批量删除", "DeleteMultiple", "ArInspection", null, new { @class = "btn btn-default" })
+
+    @using MvcContrib.UI.Grid
+    @using MvcContrib
+    @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
+        {
+            column.For(p => Html.CheckBox("Checked" + p.InspectionId)).Sortable(false);
+            column.For(p => p.EquipmentID).Sortable(true);
+            column.For(p => p.EquipDes).Sortable(true);
+            column.For(p => p.Class).Sortable(true);
+            column.For(p => p.Part).Sortable(true);
+            column.For(p => p.Position).Sortable(true);
+            column.For(p => p.Content).Sortable(true);
+            column.For(p => p.Period).Sortable(true);
+            column.For(p => p.Caution).Sortable(true);
+            column.For(p => p.InspectionId).Sortable(true);
+            column.For(p => p.ChangeTime).Sortable(true);
+            column.For(p => p.Changer).Sortable(true);
+            column.For(p => p.CreateTime).Sortable(true);
+            column.For(p => p.Creator).Sortable(true);
+            column.For(p => p.Remark).Sortable(true);
+            column.For(p => p.Operator).Sortable(true);
+            column.For(p => p.OperateTime).Sortable(true);
+            column.For(p => Html.ActionLink("查看", "Details", new { id = p.InspectionId }));
+            column.For(p => Html.ActionLink("删除", "Delete", new { id = p.InspectionId }));
+        }).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse", @class => "table table-striped table-hover")
+</form>

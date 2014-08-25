@@ -16,7 +16,7 @@
     }
 }
 
-<h2>设备履历</h2>
+<h3>设备履历</h3>
 
 <script type="text/javascript">
     var row = 0;
@@ -43,7 +43,8 @@
         "<",
         ">=",
         "<=",
-        "<>"
+        "<>",
+        "包含"
         );
 
     var valueMap = new Array(
@@ -94,13 +95,16 @@
             op.add(ooption);
         }
 
-        var cancel = document.createElement("input");
+        var cancel = document.createElement("button");
         cancel.type = "button";
-        cancel.value = "x";
+        cancel.className = "btn btn-default btn-xs";
+        var cancelx = document.createElement("span");
+        cancelx.className = "glyphicon glyphicon-remove"
         cancel.onclick = function () {
             this.parentElement.hidden = true;
             this.parentElement.getElementsByTagName("input").value = null;
         };
+        cancel.appendChild(cancelx);
 
         f.appendChild(field);
         f.appendChild(op);
@@ -188,7 +192,6 @@
                     <h3 class="panel-title">查询</h3>
                 </div>
                 <div id="query_panel" class="panel-body">
-
                     <input type="hidden" name="Colu" value=@col />
                     <input type="hidden" name="Direction" value=@dir />
                     <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
@@ -317,9 +320,7 @@
     </div>
     @Html.ActionLink("批量修改", "EditMultiple", "Equipment", null, new { @class = "btn btn-default" })
     @Html.ActionLink("批量删除", "DeleteMultiple", "Equipment", null, new { @class = "btn btn-default" })
-    <p>
-
-    </p>
+    
     @using MvcContrib.UI.Grid
 
     @using MvcContrib

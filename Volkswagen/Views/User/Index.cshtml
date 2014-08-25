@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Volkswagen.Models.UserModels>
 
 @{
-    ViewBag.Title = "上海大众";
+    ViewBag.Title = "人员信息";
     Layout = "~/Views/Shared/_Layout.cshtml";
     string col, dir;
     if (ViewData["model"] == null)
@@ -16,7 +16,7 @@
     }
 }
 
-<h2>人员信息</h2>
+<h3>人员信息</h3>
 
 <script type="text/javascript">
     var row = 0;
@@ -42,13 +42,14 @@
     );
 
     var opMap = new Array(
-        "=",
-        ">",
-        "<",
-        ">=",
-        "<=",
-        "<>"
-        );
+         "=",
+         ">",
+         "<",
+         ">=",
+         "<=",
+         "<>",
+         "包含"
+         );
 
     var valueMap = new Array(
         "Breviary",
@@ -72,7 +73,7 @@
 
     function append_input() {
 
-        var fm = document.getElementById("query_form");
+        var fm = document.getElementById("query_panel");
         var f = document.createElement("div");
         f.className = "form-group";
 
@@ -81,9 +82,12 @@
         var op = document.createElement("select");
         var operand = document.createElement("input");
 
+        f.name = "fgroup" + row;
         field.name = "field" + row;
         op.name = "op" + row;
         operand.name = "operand" + row;
+
+        //operand.className = "form-control"
 
         for (var i = 0; i < fieldMap.length; i++) {
             var option = document.createElement("option");
@@ -99,181 +103,82 @@
             op.add(ooption);
         }
 
+        var cancel = document.createElement("button");
+        cancel.type = "button";
+        cancel.className = "btn btn-default btn-xs";
+        var cancelx = document.createElement("span");
+        cancelx.className = "glyphicon glyphicon-remove"
+        cancel.onclick = function () {
+            this.parentElement.hidden = true;
+            this.parentElement.getElementsByTagName("input").value = null;
+        };
+        cancel.appendChild(cancelx);
 
         f.appendChild(field);
         f.appendChild(op);
         f.appendChild(operand);
+        f.appendChild(cancel);
 
         fm.appendChild(f);
 
         row++;
     }
+
+    function select_all() {
+        var inputs = document.getElementById("query_form").getElementsByTagName("input");
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].type == "checkbox") {
+                inputs[i].checked = true;
+            }
+        }
+    }
+    function toggle_all() {
+        var inputs = document.getElementById("query_form").getElementsByTagName("input");
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].type == "checkbox") {
+                inputs[i].checked = !inputs[i].checked;
+            }
+        }
+    }
 </script>
 
-<div class="row">
-    <div class="col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">查询</h3>
-            </div>
-            <div class="panel-body">
-                <form action="/User/" id="query_form" method="post">
+<form action="/User/" id="query_form" method="post">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">查询</h3>
+                </div>
+                <div id="query_panel" class="panel-body">
                     <input type="hidden" name="Colu" value=@col />
                     <input type="hidden" name="Direction" value=@dir />
                     <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
                     <input type="submit" id="query" value="确定" class="btn btn-sm" />
-                </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<br />
-<form action="/Equipment/" id="grid_form" method="post">
+    <br />
 
-    <p>
-        @Html.ActionLink("新建", "Create", "File", null, new { @class = "btn btn-default" })
-        @Html.ActionLink("导出", "ExportExcel", "File", null, new { @class = "btn btn-default" })
-    </p>
-    <!--
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Breviary)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Number)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Telephone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mobile)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Birthday)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EntryDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Position)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PoliticalStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Skill)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Experience)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Remark)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Image)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ChangeTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Changer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreateTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Creator)
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Breviary)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Number)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Telephone)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Mobile)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Birthday)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EntryDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Position)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PoliticalStatus)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Address)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Skill)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Experience)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Remark)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Image)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ChangeTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Changer)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreateTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Creator)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.UserID }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.UserID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.UserID })
-                </td>
-            </tr>
-        }
-
-    </table>
-    -->
-    @Html.ActionLink("全选", "Create", "User", null, new { @class = "btn btn-default" })
-    @Html.ActionLink("批量修改", "EditMultiple", "User", null, new { @class = "btn btn-default" })
-    @Html.ActionLink("批量删除", "DeleteMultiple", "User", null, new { @class = "btn btn-default" })
-    <p>
-
-    </p>
-    @using MvcContrib.UI.Grid
-
-    @using MvcContrib
+        <p>
+            @Html.ActionLink("新建", "Create", "User", null, new { @class = "btn btn-default" })
+            @Html.ActionLink("导出", "ExportExcel", "User", null, new { @class = "btn btn-default" })
+        </p>
 
 
-    @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
+        <div class="btn-group">
+            <input type="button" id="select_button" value="全选" onclick="select_all()" class="btn btn-default" />
+            <input type="button" id="select_button" value="反选" onclick="toggle_all()" class="btn btn-default" />
+        </div>
+        @Html.ActionLink("批量修改", "EditMultiple", "User", null, new { @class = "btn btn-default" })
+        @Html.ActionLink("批量删除", "DeleteMultiple", "User", null, new { @class = "btn btn-default" })
+        @using MvcContrib.UI.Grid
+
+        @using MvcContrib
+
+
+        @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
             {
                 column.For(p => Html.CheckBox("Checked" + p.UserID)).Sortable(false);
                 column.For(p => p.Breviary).Sortable(true);
@@ -288,8 +193,8 @@
                 column.For(p => p.Address).Sortable(true);
                 column.For(p => p.Skill).Sortable(true);
                 column.For(p => p.Experience).Sortable(true);
-                column.For(p => p.Remark).Sortable(true);
-                //column.For(p => p.Image).Sortable(true);
+                column.For(p => p.Remark).Sortable(true); 
+                column.For(p => p.Image.IsEmpty() ? "无" : "有").Named("图片").Sortable(true);
                 column.For(p => p.UserID).Sortable(true);
                 column.For(p => p.ChangeTime).Sortable(true);
                 column.For(p => p.Changer).Sortable(true);
