@@ -492,7 +492,6 @@ namespace Volkswagen.Controllers
             foreach (EquipmentModels e in list)
             {
                 db.Equipments.Remove(e);
-
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
