@@ -70,5 +70,21 @@ namespace Volkswagen.Models
 
         public virtual SpareModels Spares { get; set; }
 
+        public void upcast(ArSpareUserModels md)
+        {
+            SpareID = md.SpareID;
+            SpareDes = md.SpareDes;
+            Type = md.Type;
+            InValue = md.InValue;
+            OutValue = md.OutValue;
+            User = md.User;
+            UseTime = md.UseTime;
+            ActualUse = md.ActualUse;
+            UserID = md.UserID;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
+        }
     }
 }

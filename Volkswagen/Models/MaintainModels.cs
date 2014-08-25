@@ -125,6 +125,36 @@ namespace Volkswagen.Models
         //      表连接关系
         public virtual EquipmentModels Equipments { get; set; }
 
+        public void upcast(ArMaintainModels md)
+        {
+            EquipmentID = md.EquipmentID;
+            EquipDes = md.EquipDes;
+            Line = md.Line;
+            MType = md.MType;
+            MPart = md.MPart;
+            Content = md.Content;
+            Period = md.Period;             //该字段不在数据库清单中
+            MStartTime = md.MStartTime;
+            MEndTime = md.MEndTime;
+            ResponseClass = md.ResponseClass;
+            CheckStatus = md.CheckStatus;
+            CheckDetail = md.CheckDetail;
+            EquipStatus = md.EquipStatus;
+            EquipDetail = md.EquipDetail;
+            CheckerType = md.CheckerType;
+            Checker = md.Checker;
+            CheckTime = md.CheckTime;
+            Problem = md.Problem;
+            Mark = md.Mark;
+            Grade = md.Grade;
+            ProblemStatus = md.ProblemStatus;
+            CheckNum = md.CheckNum;
+            MaintainId = md.MaintainId;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
 
+        }
     }
 }

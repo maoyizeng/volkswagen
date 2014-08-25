@@ -106,5 +106,30 @@ namespace Volkswagen.Models
 
         public virtual SpareModels Spares { get; set; }
         public virtual EquipmentModels Equipments { get; set; }
+
+        public void upcast(ArSpareOrderModels md)
+        {
+            SpareID = md.SpareID;
+            SpareDes = md.SpareDes;
+            Type = md.Type;
+            OrderValue = md.OrderValue;
+            Producer = md.Producer;
+            OrderNum = md.OrderNum;
+            Property = md.Property;
+            EquipmentID = md.EquipmentID;
+            Maker = md.Maker;
+            MakerNum = md.MakerNum;
+            Orderman = md.Orderman;
+            UseTime = md.UseTime;
+            UnitPrice = md.UnitPrice;
+            TotalPrice = md.TotalPrice;
+            Status = md.Status;
+            Mode = md.Mode;
+            OrderID = md.OrderID;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
+        }
     }
 }

@@ -142,7 +142,7 @@ namespace Volkswagen.ArControllers
             List<ArInspectionModels> list_origin = l.ToList();
             foreach (ArInspectionModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.InspectionId] != "false")
+                if (Request.Form["Checked" + e.InspectionId + e.OperateTime.ToBinary()] != "false")
                 {
                     list.Add(e);
                 }
@@ -152,18 +152,63 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArInspection/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int? id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArInspectionModels arinspectionmodels = await db.ArInspections.FindAsync(id);
+            ArInspectionModels arinspectionmodels = await db.ArInspections.FindAsync(id, op, new DateTime(opt));
             if (arinspectionmodels == null)
             {
                 return HttpNotFound();
             }
             return View(arinspectionmodels);
+        }
+
+        // GET: /ArInspection/Rollback/5
+        public async Task<ActionResult> Rollback(int? id, string op, long opt)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ArInspectionModels a = await db.ArInspections.FindAsync(id, op, new DateTime(opt));
+            if (a == null)
+            {
+                return HttpNotFound();
+            }
+            InspectionModels origin = await db.Inspections.FindAsync(id);
+            string change;
+            if (origin != null)
+            {
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.ChangeTime = DateTime.Now;
+                change = "Update";
+            }
+            else
+            {
+                origin = new InspectionModels();
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.Creator = User.Identity.Name;
+                origin.CreateTime = DateTime.Now;
+                origin.ChangeTime = DateTime.Now;
+                change = "Create";
+                db.Inspections.Add(origin);
+            }
+
+            int x = await db.SaveChangesAsync();
+            if (x != 0)
+            {
+                ArInspectionModels ar = new ArInspectionModels(origin);
+                ar.Operator = change;
+                db.ArInspections.Add(ar);
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
         }
 
         // GET: /ArInspection/Create
@@ -173,13 +218,13 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArInspection/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        public async Task<ActionResult> Delete(int? id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArInspectionModels arinspectionmodels = await db.ArInspections.FindAsync(id);
+            ArInspectionModels arinspectionmodels = await db.ArInspections.FindAsync(id, op, new DateTime(opt));
             if (arinspectionmodels == null)
             {
                 return HttpNotFound();
@@ -190,9 +235,9 @@ namespace Volkswagen.ArControllers
         // POST: /ArInspection/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id, string op, long opt)
         {
-            ArInspectionModels arinspectionmodels = await db.ArInspections.FindAsync(id);
+            ArInspectionModels arinspectionmodels = await db.ArInspections.FindAsync(id, op, new DateTime(opt));
             db.ArInspections.Remove(arinspectionmodels);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

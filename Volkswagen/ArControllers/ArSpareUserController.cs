@@ -142,7 +142,7 @@ namespace Volkswagen.ArControllers
             List<ArSpareUserModels> list_origin = l.ToList();
             foreach (ArSpareUserModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.UserID] != "false")
+                if (Request.Form["Checked" + e.UserID + e.OperateTime.ToBinary()] != "false")
                 {
                     list.Add(e);
                 }
@@ -152,13 +152,13 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArSpareUser/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int? id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArSpareUserModels arspareusermodels = await db.ArSpareUsers.FindAsync(id);
+            ArSpareUserModels arspareusermodels = await db.ArSpareUsers.FindAsync(id, op, new DateTime(opt));
             if (arspareusermodels == null)
             {
                 return HttpNotFound();
@@ -166,14 +166,59 @@ namespace Volkswagen.ArControllers
             return View(arspareusermodels);
         }
 
-        // GET: /ArSpareUser/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        // GET: /ArSpareUser/Rollback/5
+        public async Task<ActionResult> Rollback(int? id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArSpareUserModels arspareusermodels = await db.ArSpareUsers.FindAsync(id);
+            ArSpareUserModels a = await db.ArSpareUsers.FindAsync(id, op, new DateTime(opt));
+            if (a == null)
+            {
+                return HttpNotFound();
+            }
+            SpareUserModels origin = await db.SpareUsers.FindAsync(id);
+            string change;
+            if (origin != null)
+            {
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.ChangeTime = DateTime.Now;
+                change = "Update";
+            }
+            else
+            {
+                origin = new SpareUserModels();
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.Creator = User.Identity.Name;
+                origin.CreateTime = DateTime.Now;
+                origin.ChangeTime = DateTime.Now;
+                change = "Create";
+                db.SpareUsers.Add(origin);
+            }
+
+            int x = await db.SaveChangesAsync();
+            if (x != 0)
+            {
+                ArSpareUserModels ar = new ArSpareUserModels(origin);
+                ar.Operator = change;
+                db.ArSpareUsers.Add(ar);
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        // GET: /ArSpareUser/Delete/5
+        public async Task<ActionResult> Delete(int? id, string op, long opt)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ArSpareUserModels arspareusermodels = await db.ArSpareUsers.FindAsync(id, op, new DateTime(opt));
             if (arspareusermodels == null)
             {
                 return HttpNotFound();
@@ -184,9 +229,9 @@ namespace Volkswagen.ArControllers
         // POST: /ArSpareUser/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id, string op, long opt)
         {
-            ArSpareUserModels arspareusermodels = await db.ArSpareUsers.FindAsync(id);
+            ArSpareUserModels arspareusermodels = await db.ArSpareUsers.FindAsync(id, op, new DateTime(opt));
             db.ArSpareUsers.Remove(arspareusermodels);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

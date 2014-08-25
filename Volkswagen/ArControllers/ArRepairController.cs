@@ -142,7 +142,7 @@ namespace Volkswagen.ArControllers
             List<ArRepairModels> list_origin = l.ToList();
             foreach (ArRepairModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.SheetID] != "false")
+                if (Request.Form["Checked" + e.SheetID + e.OperateTime.ToBinary()] != "false")
                 {
                     list.Add(e);
                 }
@@ -152,13 +152,13 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArRepair/Details/5
-        public async Task<ActionResult> Details(string id)
+        public async Task<ActionResult> Details(string id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArRepairModels arrepairmodels = await db.ArRepairs.FindAsync(id);
+            ArRepairModels arrepairmodels = await db.ArRepairs.FindAsync(id, op, new DateTime(opt));
             if (arrepairmodels == null)
             {
                 return HttpNotFound();
@@ -166,14 +166,59 @@ namespace Volkswagen.ArControllers
             return View(arrepairmodels);
         }
 
-        // GET: /ArRepair/Delete/5
-        public async Task<ActionResult> Delete(string id)
+        // GET: /ArRepair/Rollback/5
+        public async Task<ActionResult> Rollback(string id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArRepairModels arrepairmodels = await db.ArRepairs.FindAsync(id);
+            ArRepairModels a = await db.ArRepairs.FindAsync(id, op, new DateTime(opt));
+            if (a == null)
+            {
+                return HttpNotFound();
+            }
+            RepairModels origin = await db.Repairs.FindAsync(id);
+            string change;
+            if (origin != null)
+            {
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.ChangeTime = DateTime.Now;
+                change = "Update";
+            }
+            else
+            {
+                origin = new RepairModels();
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.Creator = User.Identity.Name;
+                origin.CreateTime = DateTime.Now;
+                origin.ChangeTime = DateTime.Now;
+                change = "Create";
+                db.Repairs.Add(origin);
+            }
+
+            int x = await db.SaveChangesAsync();
+            if (x != 0)
+            {
+                ArRepairModels ar = new ArRepairModels(origin);
+                ar.Operator = change;
+                db.ArRepairs.Add(ar);
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        // GET: /ArRepair/Delete/5
+        public async Task<ActionResult> Delete(string id, string op, long opt)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ArRepairModels arrepairmodels = await db.ArRepairs.FindAsync(id, op, new DateTime(opt));
             if (arrepairmodels == null)
             {
                 return HttpNotFound();
@@ -184,22 +229,26 @@ namespace Volkswagen.ArControllers
         // POST: /ArRepair/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(string id)
+        public async Task<ActionResult> DeleteConfirmed(string id, string op, long opt)
         {
-            ArRepairModels arrepairmodels = await db.ArRepairs.FindAsync(id);
+            ArRepairModels arrepairmodels = await db.ArRepairs.FindAsync(id, op, new DateTime(opt));
             db.ArRepairs.Remove(arrepairmodels);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
-        // POST: /ArRepair/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(string id)
+        // POST: /ArRepair/DeleteMultiple/
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteMultiple()
         {
-            ArRepairModels toDelete = await db.ArRepairs.FindAsync(id);
-            db.ArRepairs.Remove(toDelete);
-            await db.SaveChangesAsync();
+            IQueryable<ArRepairModels> l = getQuery();
+            List<ArRepairModels> list = getSelected(l);
+            foreach (ArRepairModels e in list)
+            {
+                db.ArRepairs.Remove(e);
+                await db.SaveChangesAsync();
+            }
             return RedirectToAction("Index");
         }
 

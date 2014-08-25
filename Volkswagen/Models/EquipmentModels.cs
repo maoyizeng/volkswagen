@@ -130,5 +130,26 @@ namespace Volkswagen.Models
         public virtual ICollection<RepairModels> Repairs { get; set; }
         public virtual EquipLogModels EquipLogs { get; set; }
         public virtual ICollection<MaintainModels> Maintains { get; set; }
+
+        public void upcast(ArEquipmentModels md)
+        {
+            EquipmentID = md.EquipmentID;
+            EquipDes = md.EquipDes;
+            Person = md.Person;
+            Section = md.Section;
+            WSArea = md.WSArea;
+            Photo = md.Photo;
+            ItemInspect = md.ItemInspect;
+            RegularCare = md.RegularCare;
+            Check = md.Check;
+            RoutingInspect = md.RoutingInspect;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
+            Remark = md.Remark;
+
+        }
+        
     }
 }

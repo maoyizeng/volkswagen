@@ -142,7 +142,7 @@ namespace Volkswagen.ArControllers
             List<ArSpareOrderModels> list_origin = l.ToList();
             foreach (ArSpareOrderModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.OrderID] != "false")
+                if (Request.Form["Checked" + e.OrderID + e.OperateTime.ToBinary()] != "false")
                 {
                     list.Add(e);
                 }
@@ -152,13 +152,13 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArSpareOrder/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int? id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArSpareOrderModels arspareordermodels = await db.ArSpareOrders.FindAsync(id);
+            ArSpareOrderModels arspareordermodels = await db.ArSpareOrders.FindAsync(id, op, new DateTime(opt));
             if (arspareordermodels == null)
             {
                 return HttpNotFound();
@@ -166,14 +166,59 @@ namespace Volkswagen.ArControllers
             return View(arspareordermodels);
         }
 
-        // GET: /ArSpareOrder/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        // GET: /ArSpareOrder/Rollback/5
+        public async Task<ActionResult> Rollback(int? id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArSpareOrderModels arspareordermodels = await db.ArSpareOrders.FindAsync(id);
+            ArSpareOrderModels a = await db.ArSpareOrders.FindAsync(id, op, new DateTime(opt));
+            if (a == null)
+            {
+                return HttpNotFound();
+            }
+            SpareOrderModels origin = await db.SpareOrders.FindAsync(id);
+            string change;
+            if (origin != null)
+            {
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.ChangeTime = DateTime.Now;
+                change = "Update";
+            }
+            else
+            {
+                origin = new SpareOrderModels();
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.Creator = User.Identity.Name;
+                origin.CreateTime = DateTime.Now;
+                origin.ChangeTime = DateTime.Now;
+                change = "Create";
+                db.SpareOrders.Add(origin);
+            }
+
+            int x = await db.SaveChangesAsync();
+            if (x != 0)
+            {
+                ArSpareOrderModels ar = new ArSpareOrderModels(origin);
+                ar.Operator = change;
+                db.ArSpareOrders.Add(ar);
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        // GET: /ArSpareOrder/Delete/5
+        public async Task<ActionResult> Delete(int? id, string op, long opt)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ArSpareOrderModels arspareordermodels = await db.ArSpareOrders.FindAsync(id, op, new DateTime(opt));
             if (arspareordermodels == null)
             {
                 return HttpNotFound();
@@ -184,9 +229,9 @@ namespace Volkswagen.ArControllers
         // POST: /ArSpareOrder/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id, string op, long opt)
         {
-            ArSpareOrderModels arspareordermodels = await db.ArSpareOrders.FindAsync(id);
+            ArSpareOrderModels arspareordermodels = await db.ArSpareOrders.FindAsync(id, op, new DateTime(opt));
             db.ArSpareOrders.Remove(arspareordermodels);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

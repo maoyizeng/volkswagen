@@ -142,7 +142,7 @@ namespace Volkswagen.ArControllers
             List<ArShiftModels> list_origin = l.ToList();
             foreach (ArShiftModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.ShiftID] != "false")
+                if (Request.Form["Checked" + e.ShiftID + e.OperateTime.ToBinary()] != "false")
                 {
                     list.Add(e);
                 }
@@ -152,13 +152,13 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArShift/Details/5
-        public async Task<ActionResult> Details(string id)
+        public async Task<ActionResult> Details(string id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArShiftModels arshiftmodels = await db.ArShifts.FindAsync(id);
+            ArShiftModels arshiftmodels = await db.ArShifts.FindAsync(id, op, new DateTime(opt));
             if (arshiftmodels == null)
             {
                 return HttpNotFound();
@@ -166,14 +166,59 @@ namespace Volkswagen.ArControllers
             return View(arshiftmodels);
         }
 
-        // GET: /ArShift/Delete/5
-        public async Task<ActionResult> Delete(string id)
+        // GET: /ArShift/Rollback/5
+        public async Task<ActionResult> Rollback(string id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArShiftModels arshiftmodels = await db.ArShifts.FindAsync(id);
+            ArShiftModels a = await db.ArShifts.FindAsync(id, op, new DateTime(opt));
+            if (a == null)
+            {
+                return HttpNotFound();
+            }
+            ShiftModels origin = await db.Shifts.FindAsync(id);
+            string change;
+            if (origin != null)
+            {
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.ChangeTime = DateTime.Now;
+                change = "Update";
+            }
+            else
+            {
+                origin = new ShiftModels();
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.Creator = User.Identity.Name;
+                origin.CreateTime = DateTime.Now;
+                origin.ChangeTime = DateTime.Now;
+                change = "Create";
+                db.Shifts.Add(origin);
+            }
+
+            int x = await db.SaveChangesAsync();
+            if (x != 0)
+            {
+                ArShiftModels ar = new ArShiftModels(origin);
+                ar.Operator = change;
+                db.ArShifts.Add(ar);
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        // GET: /ArShift/Delete/5
+        public async Task<ActionResult> Delete(string id, string op, long opt)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ArShiftModels arshiftmodels = await db.ArShifts.FindAsync(id, op, new DateTime(opt));
             if (arshiftmodels == null)
             {
                 return HttpNotFound();
@@ -184,9 +229,9 @@ namespace Volkswagen.ArControllers
         // POST: /ArShift/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(string id)
+        public async Task<ActionResult> DeleteConfirmed(string id, string op, long opt)
         {
-            ArShiftModels arshiftmodels = await db.ArShifts.FindAsync(id);
+            ArShiftModels arshiftmodels = await db.ArShifts.FindAsync(id, op, new DateTime(opt));
             db.ArShifts.Remove(arshiftmodels);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

@@ -93,6 +93,22 @@ namespace Volkswagen.Models
         //      表连接关系
         public virtual EquipmentModels Equipments { get; set; }
 
-
+        public void upcast(ArInspectionModels md)
+        {
+            EquipmentID = md.EquipmentID;
+            EquipDes = md.EquipDes;
+            Class = md.Class;
+            Part = md.Part;
+            Position = md.Position;
+            Content = md.Content;
+            Period = md.Period;
+            Caution = md.Caution;
+            Remark = md.Remark;
+            InspectionId = md.InspectionId;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
+        }
     }
 }

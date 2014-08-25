@@ -142,7 +142,7 @@ namespace Volkswagen.ArControllers
             List<ArMaintainModels> list_origin = l.ToList();
             foreach (ArMaintainModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.MaintainId] != "false")
+                if (Request.Form["Checked" + e.MaintainId + e.OperateTime.ToBinary()] != "false")
                 {
                     list.Add(e);
                 }
@@ -152,28 +152,73 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArMaintain/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int? id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArMaintainModels armaintainmodels = await db.ArMaintains.FindAsync(id);
+            ArMaintainModels armaintainmodels = await db.ArMaintains.FindAsync(id, op, new DateTime(opt));
             if (armaintainmodels == null)
             {
                 return HttpNotFound();
             }
             return View(armaintainmodels);
-        }        
+        }
 
-        // GET: /ArMaintain/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        // GET: /ArMaintain/Rollback/5
+        public async Task<ActionResult> Rollback(int? id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArMaintainModels armaintainmodels = await db.ArMaintains.FindAsync(id);
+            ArMaintainModels a = await db.ArMaintains.FindAsync(id, op, new DateTime(opt));
+            if (a == null)
+            {
+                return HttpNotFound();
+            }
+            MaintainModels origin = await db.Maintains.FindAsync(id);
+            string change;
+            if (origin != null)
+            {
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.ChangeTime = DateTime.Now;
+                change = "Update";
+            }
+            else
+            {
+                origin = new MaintainModels();
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.Creator = User.Identity.Name;
+                origin.CreateTime = DateTime.Now;
+                origin.ChangeTime = DateTime.Now;
+                change = "Create";
+                db.Maintains.Add(origin);
+            }
+
+            int x = await db.SaveChangesAsync();
+            if (x != 0)
+            {
+                ArMaintainModels ar = new ArMaintainModels(origin);
+                ar.Operator = change;
+                db.ArMaintains.Add(ar);
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        // GET: /ArMaintain/Delete/5
+        public async Task<ActionResult> Delete(int? id, string op, long opt)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ArMaintainModels armaintainmodels = await db.ArMaintains.FindAsync(id, op, new DateTime(opt));
             if (armaintainmodels == null)
             {
                 return HttpNotFound();
@@ -184,9 +229,9 @@ namespace Volkswagen.ArControllers
         // POST: /ArMaintain/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id, string op, long opt)
         {
-            ArMaintainModels armaintainmodels = await db.ArMaintains.FindAsync(id);
+            ArMaintainModels armaintainmodels = await db.ArMaintains.FindAsync(id, op, new DateTime(opt));
             db.ArMaintains.Remove(armaintainmodels);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

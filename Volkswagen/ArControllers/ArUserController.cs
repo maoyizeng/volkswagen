@@ -142,7 +142,7 @@ namespace Volkswagen.ArControllers
             List<ArUserModels> list_origin = l.ToList();
             foreach (ArUserModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.UserID] != "false")
+                if (Request.Form["Checked" + e.UserID + e.OperateTime.ToBinary()] != "false")
                 {
                     list.Add(e);
                 }
@@ -152,13 +152,13 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArUser/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int? id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArUserModels arusermodels = await db.ArUsers.FindAsync(id);
+            ArUserModels arusermodels = await db.ArUsers.FindAsync(id, op, new DateTime(opt));
             if (arusermodels == null)
             {
                 return HttpNotFound();
@@ -166,14 +166,59 @@ namespace Volkswagen.ArControllers
             return View(arusermodels);
         }
 
-        // GET: /ArUser/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        // GET: /ArUser/Rollback/5
+        public async Task<ActionResult> Rollback(int? id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArUserModels arusermodels = await db.ArUsers.FindAsync(id);
+            ArUserModels a = await db.ArUsers.FindAsync(id, op, new DateTime(opt));
+            if (a == null)
+            {
+                return HttpNotFound();
+            }
+            UserModels origin = await db.Users.FindAsync(id);
+            string change;
+            if (origin != null)
+            {
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.ChangeTime = DateTime.Now;
+                change = "Update";
+            }
+            else
+            {
+                origin = new UserModels();
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.Creator = User.Identity.Name;
+                origin.CreateTime = DateTime.Now;
+                origin.ChangeTime = DateTime.Now;
+                change = "Create";
+                db.Users.Add(origin);
+            }
+
+            int x = await db.SaveChangesAsync();
+            if (x != 0)
+            {
+                ArUserModels ar = new ArUserModels(origin);
+                ar.Operator = change;
+                db.ArUsers.Add(ar);
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        // GET: /ArUser/Delete/5
+        public async Task<ActionResult> Delete(int? id, string op, long opt)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ArUserModels arusermodels = await db.ArUsers.FindAsync(id, op, new DateTime(opt));
             if (arusermodels == null)
             {
                 return HttpNotFound();
@@ -184,9 +229,9 @@ namespace Volkswagen.ArControllers
         // POST: /ArUser/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id, string op, long opt)
         {
-            ArUserModels arusermodels = await db.ArUsers.FindAsync(id);
+            ArUserModels arusermodels = await db.ArUsers.FindAsync(id, op, new DateTime(opt));
             db.ArUsers.Remove(arusermodels);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

@@ -68,5 +68,22 @@ namespace Volkswagen.Models
 
 
  //       public virtual EquipmentModels Equipments { get; set; }
+
+        public void upcast(ArShiftModels md)
+        {
+            ShiftID = md.ShiftID;
+            ShiftDate = md.ShiftDate;
+            ShiftTime = md.ShiftTime;
+            Class = md.Class;
+            Line = md.Line;
+            Charger = md.Charger;
+            Record = md.Record;
+            Urgency = md.Urgency;
+            Remark = md.Remark;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
+        }
     }
 }

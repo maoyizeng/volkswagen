@@ -8,8 +8,9 @@
 <h3>历史记录 - 设备报修单</h3>
 
 <div>
-    <h4>@Model.RepairID</h4>
+    <h4>@Model.SheetID</h4>
 	<hr />
+    @Html.ActionLink("回滚", "Rollback", new { @class = "btn btn-default", id = Model.SheetID, op = Model.SheetID, opt = Model.OperateTime.ToBinary() })
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.RepairID)

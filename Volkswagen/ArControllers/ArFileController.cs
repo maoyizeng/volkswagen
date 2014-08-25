@@ -142,7 +142,7 @@ namespace Volkswagen.ArControllers
             List<ArFileModels> list_origin = l.ToList();
             foreach (ArFileModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.FileName] != "false")
+                if (Request.Form["Checked" + e.FileName + e.OperateTime.ToBinary()] != "false")
                 {
                     list.Add(e);
                 }
@@ -152,13 +152,13 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArFile/Details/5
-        public async Task<ActionResult> Details(string id)
+        public async Task<ActionResult> Details(string id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArFileModels arfilemodels = await db.ArFiles.FindAsync(id);
+            ArFileModels arfilemodels = await db.ArFiles.FindAsync(id, op, new DateTime(opt));
             if (arfilemodels == null)
             {
                 return HttpNotFound();
@@ -166,14 +166,59 @@ namespace Volkswagen.ArControllers
             return View(arfilemodels);
         }
 
-        // GET: /ArFile/Delete/5
-        public async Task<ActionResult> Delete(string id)
+        // GET: /ArFile/Rollback/5
+        public async Task<ActionResult> Rollback(string id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArFileModels arfilemodels = await db.ArFiles.FindAsync(id);
+            ArFileModels a = await db.ArFiles.FindAsync(id, op, new DateTime(opt));
+            if (a == null)
+            {
+                return HttpNotFound();
+            }
+            FileModels origin = await db.Files.FindAsync(id);
+            string change;
+            if (origin != null)
+            {
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.ChangeTime = DateTime.Now;
+                change = "Update";
+            }
+            else
+            {
+                origin = new FileModels();
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.Creator = User.Identity.Name;
+                origin.CreateTime = DateTime.Now;
+                origin.ChangeTime = DateTime.Now;
+                change = "Create";
+                db.Files.Add(origin);
+            }
+
+            int x = await db.SaveChangesAsync();
+            if (x != 0)
+            {
+                ArFileModels ar = new ArFileModels(origin);
+                ar.Operator = change;
+                db.ArFiles.Add(ar);
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        // GET: /ArFile/Delete/5
+        public async Task<ActionResult> Delete(string id, string op, long opt)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ArFileModels arfilemodels = await db.ArFiles.FindAsync(id, op, new DateTime(opt));
             if (arfilemodels == null)
             {
                 return HttpNotFound();
@@ -184,9 +229,9 @@ namespace Volkswagen.ArControllers
         // POST: /ArFile/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(string id)
+        public async Task<ActionResult> DeleteConfirmed(string id, string op, long opt)
         {
-            ArFileModels arfilemodels = await db.ArFiles.FindAsync(id);
+            ArFileModels arfilemodels = await db.ArFiles.FindAsync(id, op, new DateTime(opt));
             db.ArFiles.Remove(arfilemodels);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -217,7 +262,7 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArFile/ExportExcel
-        public ArFileResult ExportExcel()
+        public FileResult ExportExcel()
         {
             var sbHtml = new StringBuilder();
             List<ArFileModels> list = db.ArFiles.ToList();

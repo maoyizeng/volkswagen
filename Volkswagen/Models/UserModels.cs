@@ -91,5 +91,27 @@ namespace Volkswagen.Models
         [StringLength(10)]
         public string Creator { get; set; }
 
+        public void upcast(ArUserModels md)
+        {
+            Breviary = md.Breviary;
+            Name = md.Name;
+            Number = md.Number;
+            Telephone = md.Telephone;
+            Mobile = md.Mobile;
+            Birthday = md.Birthday;
+            EntryDate = md.EntryDate;
+            Position = md.Position;
+            PoliticalStatus = md.PoliticalStatus;
+            Address = md.Address;
+            Skill = md.Skill;
+            Experience = md.Experience;
+            Remark = md.Remark;
+            Image = md.Image;
+            UserID = md.UserID;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
+        }
     }
 }

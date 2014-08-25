@@ -115,5 +115,35 @@ namespace Volkswagen.Models
 
 
         public virtual EquipmentModels Equipments { get; set; }
+
+        public void upcast(ArRepairModels md)
+        {
+            SheetID = md.SheetID;
+            RepairID = md.RepairID;
+            EquipDes = md.EquipDes;
+            EquipmentID = md.EquipmentID;
+            StartTime = md.StartTime;
+            FinishTime = md.FinishTime;
+            RepairTime = md.RepairTime;
+            Class = md.Class;
+            Line = md.Line;
+            Section = md.Section;
+            FaultView = md.FaultView;
+            Repairman = md.Repairman;
+            Description = md.Description;
+            FaultType = md.FaultType;
+            Result = md.Result;
+            Problem = md.Problem;
+            Checker = md.Checker;
+            Remark = md.Remark;
+            StopTime = md.StopTime;
+            RepairNum = md.RepairNum;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
+
+
+        }
     }
 }

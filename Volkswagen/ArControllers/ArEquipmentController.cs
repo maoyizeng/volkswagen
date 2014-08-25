@@ -143,7 +143,7 @@ namespace Volkswagen.ArControllers
             List<ArEquipmentModels> list_origin = l.ToList();
             foreach (ArEquipmentModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.EquipmentID] != "false")
+                if (Request.Form["Checked" + e.EquipmentID + e.OperateTime.ToBinary()] != "false")
                 {
                     list.Add(e);
                 }
@@ -153,13 +153,15 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArEquipment/Details/5
-        public async Task<ActionResult> Details(string id)
+        public async Task<ActionResult> Details(string id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArEquipmentModels arequipmentmodels = await db.ArEquipments.FindAsync(id);
+            //ArEquipmentModels arequipmentmodels = await db.ArEquipments.Where(p => p.EquipmentID == id && p.OperateTime.Equals(new DateTime(opt))).FirstAsync();
+            ArEquipmentModels arequipmentmodels = await db.ArEquipments.FindAsync(id, op, new DateTime(opt));
+            
             if (arequipmentmodels == null)
             {
                 return HttpNotFound();
@@ -167,14 +169,59 @@ namespace Volkswagen.ArControllers
             return View(arequipmentmodels);
         }
 
-        // GET: /ArEquipment/Delete/5
-        public async Task<ActionResult> Delete(string id)
+        // GET: /ArEquipment/Rollback/5
+        public async Task<ActionResult> Rollback(string id, string op, long opt)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArEquipmentModels arequipmentmodels = await db.ArEquipments.FindAsync(id);
+            ArEquipmentModels a = await db.ArEquipments.FindAsync(id, op, new DateTime(opt));
+            if (a == null)
+            {
+                return HttpNotFound();
+            }
+            EquipmentModels origin = await db.Equipments.FindAsync(id);
+            string change;
+            if (origin != null)
+            {
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.ChangeTime = DateTime.Now;
+                change = "Update";
+            }
+            else
+            {
+                origin = new EquipmentModels();
+                origin.upcast(a);
+                origin.Changer = User.Identity.Name;
+                origin.Creator = User.Identity.Name;
+                origin.CreateTime = DateTime.Now;
+                origin.ChangeTime = DateTime.Now;
+                change = "Create";
+                db.Equipments.Add(origin);
+            }
+
+            int x = await db.SaveChangesAsync();
+            if (x != 0)
+            {
+                ArEquipmentModels ar = new ArEquipmentModels(origin);
+                ar.Operator = change;
+                db.ArEquipments.Add(ar);
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        // GET: /ArEquipment/Delete/5
+        public async Task<ActionResult> Delete(string id, string op, long opt)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ArEquipmentModels arequipmentmodels = await db.ArEquipments.FindAsync(id, op, new DateTime(opt));
             if (arequipmentmodels == null)
             {
                 return HttpNotFound();
@@ -185,9 +232,9 @@ namespace Volkswagen.ArControllers
         // POST: /ArEquipment/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(string id)
+        public async Task<ActionResult> DeleteConfirmed(string id, string op, long opt)
         {
-            ArEquipmentModels arequipmentmodels = await db.ArEquipments.FindAsync(id);
+            ArEquipmentModels arequipmentmodels = await db.ArEquipments.FindAsync(id, op, new DateTime(opt));
             db.ArEquipments.Remove(arequipmentmodels);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

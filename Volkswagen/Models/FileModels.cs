@@ -54,5 +54,19 @@ namespace Volkswagen.Models
 
 
  //       public virtual EquipmentModels Equipments { get; set; }
+
+        public void upcast(ArFileModels md)
+        {
+            FileName = md.FileName;
+            Class = md.Class;
+            EquipmentID = md.EquipmentID;
+            EquipDes = md.EquipDes;
+            Charger = md.Charger;
+            File = md.File;
+            ChangeTime = md.ChangeTime;
+            Changer = md.Changer;
+            CreateTime = md.CreateTime;
+            Creator = md.Creator;
+        }
     }
 }
