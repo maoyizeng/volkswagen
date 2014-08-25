@@ -122,6 +122,8 @@ namespace Volkswagen.Models
         public DateTime OperateTime { get; set; }
   //      public virtual ArEquipmentModels ArEquipments { get; set; }
 
+        public ArRepairModels() { }
+
         public ArRepairModels(RepairModels md)
         {
             SheetID = md.SheetID;

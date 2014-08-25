@@ -99,6 +99,8 @@ namespace Volkswagen.Models
         [Display(Name = "操作时间")]
         public DateTime OperateTime { get; set; }
 
+        public ArUserModels() { }
+
         public ArUserModels(UserModels md)
         {
             Breviary = md.Breviary;

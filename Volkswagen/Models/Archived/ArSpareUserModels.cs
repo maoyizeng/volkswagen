@@ -76,6 +76,8 @@ namespace Volkswagen.Models
         public DateTime OperateTime { get; set; }
 //        public virtual ArSpareModels ArSpares { get; set; }
 
+        public ArSpareUserModels() { }
+
         public ArSpareUserModels(SpareUserModels md)
         {
             SpareID = md.SpareID;

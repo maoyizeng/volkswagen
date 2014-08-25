@@ -85,6 +85,8 @@ namespace Volkswagen.Models
         //      表连接关系
      //   public virtual ArEquipmentModels ArEquipments { get; set; }
 
+        public ArInspectionModels() { }
+
         public ArInspectionModels (InspectionModels md)
         {
             EquipmentID = md.EquipmentID;

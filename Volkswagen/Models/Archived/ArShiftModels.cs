@@ -75,6 +75,8 @@ namespace Volkswagen.Models
         public DateTime OperateTime { get; set; }
  //       public virtual EquipmentModels Equipments { get; set; }
 
+        public ArShiftModels() { }
+
         public ArShiftModels (ShiftModels md)
         {
             ShiftID = md.ShiftID;

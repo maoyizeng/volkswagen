@@ -62,6 +62,8 @@ namespace Volkswagen.Models
 
  //       public virtual EquipmentModels Equipments { get; set; }
 
+        public ArFileModels() { }
+
         public ArFileModels(FileModels md)
         {
             FileName = md.FileName;

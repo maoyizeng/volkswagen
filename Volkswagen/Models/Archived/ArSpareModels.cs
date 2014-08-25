@@ -113,6 +113,8 @@ namespace Volkswagen.Models
 //        public virtual ICollection<ArSpareUserModels> ArSpareUsers { get; set; }
 //        public virtual ICollection<ArSpareOrderModels> ArSpareOrders { get; set; }
 
+        public ArSpareModels() { }
+
         public ArSpareModels(SpareModels md)
         {
             SpareID = md.SpareID;
