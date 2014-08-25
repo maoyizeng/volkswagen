@@ -5,11 +5,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>设备履历 - 详细</h2>
+<h3>设备履历 - 详细</h3>
 
 <div>
     <h4>@Model.EquipmentID</h4>
-	<hr />
+    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.EquipDes)
@@ -120,26 +120,42 @@
         </dt>
 
         <dd>
-            <img src=@Html.DisplayFor(model => model.Photo)>
-            var init = "@Model.Photo";
-            var arr = new Array();
+            @using System.Text.RegularExpressions;
 
-            arr = init.split('$');
-            var init_arr = new Array();
-            for (var i = 1; i < arr.length; i++) {
-            init_arr[i - 1] = "<img src='/img/equipments/" + arr[i] + "' class='file-preview-image'>";
-            }
             <div class="row">
                 <div class="col-xs-6 col-md-3">
-                    <a class="thumbnail">
-                        <img data-src="holder.js/100%x180" alt="...">
-                    </a>
+                        @{
+                            string init = Model.Photo;
+                            if (init == null)
+                            {
+                                <p>无</p>
+                            }
+                            else
+                            {
+                                <a class="thumbnail">
+                                    @{string[] sArray = Regex.Split(init, "[$]");//, RegexOptions.IgnoreCase);
+for (var i = 1; i < sArray.Length; i++)
+{
+    <img src='/img/equipments/@sArray[i]'>
+}
+}
+                                </a>
+                            }
+                        }
                 </div>
             </div>
         </dd>
 
     </dl>
 </div>
+<p>
+    @using Volkswagen.Controllers
+    @*@Html.ActionLink("保养计划", "Details", "Inspection", new { id = Volkswagen.Controllers.EquipmentController.db.Inspections.Where(p => p.EquipmentID == Model.EquipmentID).ToList().First().InspectionId }) |
+    @Html.ActionLink("备件库存", "Details", "Spare", new { id = Volkswagen.Controllers.EquipmentController.db.Spares.Where(p => p.EquipmentID == Model.EquipmentID).ToList().First().SpareID }) |
+    @Html.ActionLink("报修单", "Details", "Repair", new { id = Volkswagen.Controllers.EquipmentController.db.Repairs.Where(p => p.EquipmentID == Model.EquipmentID).ToList().First().RepairID }) |
+    @Html.ActionLink("台账", "Details", "EquipLog", new { id = Model.EquipmentID }) |
+    @Html.ActionLink("维护及状态跟踪", "Details", "Maintain", new { id = Volkswagen.Controllers.EquipmentController.db.Maintains.Where(p => p.EquipmentID == Model.EquipmentID).ToList().First().MaintainId }) *@
+</p>
 <p>
     @Html.ActionLink("编辑", "Edit", new { id = Model.EquipmentID }) |
     @Html.ActionLink("返回列表", "Index")

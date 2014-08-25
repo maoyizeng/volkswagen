@@ -1,14 +1,14 @@
 ﻿@model Volkswagen.Models.ArSpareModels
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "历史记录 - 备件库存";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+<h3>历史记录 - 备件库存</h3>
 
 <div>
-    <h4>ArSpareModels</h4>
+    <h4>@Model.SpareID</h4>
 	<hr />
     <dl class="dl-horizontal">
         <dt>
@@ -166,6 +166,5 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("返回列表", "Index")
 </p>

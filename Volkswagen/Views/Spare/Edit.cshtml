@@ -1,139 +1,112 @@
 ﻿@model Volkswagen.Models.SpareModels
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "编辑备件库存 - " + @Model.SpareID;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>备件库存 - 修改</h2>
+<h3>备件库存 - 编辑</h3>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>SpareModels</h4>
+        <h4>@Model.SpareID</h4>
         <hr />
         @Html.ValidationSummary(true)
         @Html.HiddenFor(model => model.SpareID)
 
         <div class="form-group">
+            @Html.LabelFor(model => model.SpareID, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.SpareID, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SpareID)
+            </div>
             @Html.LabelFor(model => model.SpareDes, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SpareDes)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.SpareDes, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.SpareDes)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Type, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Type)
-                @Html.ValidationMessageFor(model => model.Type)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Picture1, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Picture1)
-                @Html.ValidationMessageFor(model => model.Picture1)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Picture2, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Picture2)
-                @Html.ValidationMessageFor(model => model.Picture2)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Mark, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Mark)
-                @Html.ValidationMessageFor(model => model.Mark)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PresentValue, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PresentValue)
-                @Html.ValidationMessageFor(model => model.PresentValue)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.SafeValue, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SafeValue)
-                @Html.ValidationMessageFor(model => model.SafeValue)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.DCMinValue, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DCMinValue)
-                @Html.ValidationMessageFor(model => model.DCMinValue)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.DCMaxValue, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DCMaxValue)
-                @Html.ValidationMessageFor(model => model.DCMaxValue)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Property, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Property)
-                @Html.ValidationMessageFor(model => model.Property)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.EquipmentID, "EquipmentID", new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.LabelFor(model => model.EquipmentID, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
                 @Html.DropDownList("EquipmentID", String.Empty)
                 @Html.ValidationMessageFor(model => model.EquipmentID)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Producer, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Producer)
-                @Html.ValidationMessageFor(model => model.Producer)
+            @Html.LabelFor(model => model.Type, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Type, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Type)
+            </div>
+            @Html.LabelFor(model => model.Mark, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Mark, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Mark)
             </div>
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.PresentValue, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.PresentValue, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PresentValue)
+            </div>
+            @Html.LabelFor(model => model.SafeValue, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.SafeValue, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SafeValue)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DCMinValue, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.DCMinValue, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DCMinValue)
+            </div>
+            @Html.LabelFor(model => model.DCMaxValue, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.DCMaxValue, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DCMaxValue)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Property, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Property, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Property)
+            </div>
+            @Html.LabelFor(model => model.Producer, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Producer, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Producer)
+            </div>
+        </div>
+        <div class="form-group">
             @Html.LabelFor(model => model.OrderNumber, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.OrderNumber)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.OrderNumber, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.OrderNumber)
+            </div>
+            @Html.LabelFor(model => model.KeyPart, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.KeyPart, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.KeyPart)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Remark)
+                @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Remark)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.KeyPart, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.KeyPart)
-                @Html.ValidationMessageFor(model => model.KeyPart)
             </div>
         </div>
 
@@ -165,6 +138,44 @@
     </div>
 }
 
-<div>
-    @Html.ActionLink("返回", "Index")
+<div class="form-horizontal">
+    <div class="row">
+        @Html.LabelFor(model => model.Picture1, new { @class = "control-label  col-md-2" })
+        @using (Html.BeginForm("FileUpload", "Spare", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="form-group col-md-6">
+                <input id="photo-input" type="file" class="file" name="photos" data-preview-file-type="any" multiple="multiple">
+            </div>
+            <input type="hidden" value=@Model.SpareID name="key" />
+        }
+    </div>
 </div>
+<script>
+    var init = "@Model.Picture1";
+    var arr = new Array();
+
+    arr = init.split('$');
+    var init_arr = new Array();
+    for (var i = 1; i < arr.length; i++) {
+        init_arr[i - 1] = "<img src='/img/spare/" + arr[i] + "' class='file-preview-image'>";
+    }
+
+    $("#photo-input").fileinput({
+        initialPreview: init_arr,
+        overwriteInitial: true,
+        browseLabel: "浏览",
+        uploadLabel: "上传",
+        removeLabel: "移除",
+        showCaption: false
+    });
+
+
+</script>
+
+<div>
+    @Html.ActionLink("返回列表", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

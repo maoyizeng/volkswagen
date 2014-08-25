@@ -133,7 +133,7 @@ namespace Volkswagen.Controllers
         // GET: /Spare/Create
         public ActionResult Create()
         {
-            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipDes");
+            ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
             return View();
         }
 
@@ -256,6 +256,34 @@ namespace Volkswagen.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        // POST: /Spare/FileUpload
+        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
+        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult FileUpload(HttpPostedFileBase[] photos)
+        {
+            string key = Request.Form["key"];
+            string fullname = "";
+
+            foreach (HttpPostedFileBase file in photos)
+            {
+                if (file != null)
+                {
+                    string filePath = Path.Combine((AppDomain.CurrentDomain.BaseDirectory + @"img\spare\"), Path.GetFileName(file.FileName));
+                    file.SaveAs(filePath);
+                    fullname += "$" + file.FileName;
+                }
+            }
+
+            SpareModels e = db.Spares.Find(key);
+            // TODO - check e;
+            e.Picture1 = fullname;
+            db.SaveChanges();
+            return RedirectToAction("Edit", new { id = key });
+
         }
 
         public FileResult ExportExcel()

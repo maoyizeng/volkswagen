@@ -1,11 +1,11 @@
 ﻿@model Volkswagen.Models.ShiftModels
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "编辑交班记录 - " + Model.ShiftID;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>交班记录 - 编辑</h2>
+<h3>交班记录 - 编辑</h3>
 
 
 @using (Html.BeginForm())
@@ -13,71 +13,65 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>ShiftModels</h4>
+        <h4>@Model.ShiftID</h4>
         <hr />
         @Html.ValidationSummary(true)
         @Html.HiddenFor(model => model.ShiftID)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ShiftDate, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ShiftDate)
-                @Html.ValidationMessageFor(model => model.ShiftDate)
+            @Html.LabelFor(model => model.ShiftID, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.ShiftID, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ShiftID)
             </div>
         </div>
-
         <div class="form-group">
+            @Html.LabelFor(model => model.ShiftDate, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.ShiftDate, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ShiftDate)
+            </div>
             @Html.LabelFor(model => model.ShiftTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ShiftTime)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.ShiftTime, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.ShiftTime)
             </div>
         </div>
-
         <div class="form-group">
             @Html.LabelFor(model => model.Class, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Class)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Class, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Class)
             </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.Line, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Line)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Line, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Line)
             </div>
         </div>
-
         <div class="form-group">
             @Html.LabelFor(model => model.Charger, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Charger)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Charger, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Charger)
             </div>
         </div>
-
         <div class="form-group">
             @Html.LabelFor(model => model.Record, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Record)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Record, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Record)
             </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.Urgency, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Urgency)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Urgency, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Urgency)
             </div>
         </div>
-
         <div class="form-group">
             @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Remark)
+                @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Remark)
             </div>
         </div>
@@ -111,7 +105,7 @@
 }
 
 <div>
-    @Html.ActionLink("返回", "Index")
+    @Html.ActionLink("返回列表", "Index")
 </div>
 
 @section Scripts {

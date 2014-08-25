@@ -1,22 +1,22 @@
 ﻿@model Volkswagen.Models.SpareUserModels
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "备件领用记录 - " + Model.UserID;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>备件领用记录 - 详细</h2>
+<h3>备件领用记录 - 详细</h3>
 
 <div>
-    <h4>SpareUserModels</h4>
+    <h4>@Model.UserID</h4>
 	<hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Spares.SpareDes)
+            @Html.DisplayNameFor(model => model.SpareID)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Spares.SpareDes)
+            @Html.DisplayFor(model => model.SpareID)
         </dd>
 
         <dt>
@@ -111,5 +111,5 @@
 </div>
 <p>
     @Html.ActionLink("编辑", "Edit", new { id = Model.UserID }) |
-    @Html.ActionLink("返回", "Index")
+    @Html.ActionLink("返回列表", "Index")
 </p>

@@ -245,6 +245,34 @@ namespace Volkswagen.Controllers
             base.Dispose(disposing);
         }
 
+        // POST: /Equipment/FileUpload
+        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
+        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult FileUpload(HttpPostedFileBase[] photos)
+        {
+            string key = Request.Form["key"];
+            string fullname = "";
+
+            foreach (HttpPostedFileBase file in photos)
+            {
+                if (file != null)
+                {
+                    string filePath = Path.Combine((AppDomain.CurrentDomain.BaseDirectory + @"img\user\"), Path.GetFileName(file.FileName));
+                    file.SaveAs(filePath);
+                    fullname += "$" + file.FileName;
+                }
+            }
+
+            UserModels e = db.Users.Find(key);
+            // TODO - check e;
+            e.Image = fullname;
+            db.SaveChanges();
+            return RedirectToAction("Edit", new { id = key });
+
+        }
+
         // GET: /User/ExportExcel
         public FileResult ExportExcel()
         {

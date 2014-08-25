@@ -1,23 +1,23 @@
 ﻿@model Volkswagen.Models.InspectionModels
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "删除保养计划 - " + @Model.InspectionId;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Delete</h2>
+<h3>设备保养计划 - 删除</h3>
 
-<h3>Are you sure you want to delete this?</h3>
+<h4>确定要删除这条记录吗?</h4>
 <div>
-    <h4>InspectionModels</h4>
+    <h4>@Model.InspectionId</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Equipments.EquipDes)
+            @Html.DisplayNameFor(model => model.EquipmentID)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Equipments.EquipDes)
+            @Html.DisplayFor(model => model.EquipmentID)
         </dd>
 
         <dt>
@@ -85,38 +85,6 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.YInspectionFile)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.YInspectionFile)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.MInspectionFile)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.MInspectionFile)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.OInspectionFile)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.OInspectionFile)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.OtherFile)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.OtherFile)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.ChangeTime)
         </dt>
 
@@ -154,8 +122,8 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <input type="submit" value="删除" class="btn btn-default" /> |
+            @Html.ActionLink("返回列表", "Index")
         </div>
     }
 </div>

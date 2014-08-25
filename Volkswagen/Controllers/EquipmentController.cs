@@ -549,7 +549,7 @@ namespace Volkswagen.Controllers
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult FileUpload(HttpPostedFileBase[] photos)
         {
             string key = Request.Form["key"];
