@@ -15,6 +15,9 @@ using System.IO;
 using System.Linq.Dynamic;
 using MvcContrib.Sorting;
 using System.Text;
+using Microsoft.Office.Core;
+using Microsoft.Office.Interop.Excel;
+using System.Reflection;
 
 namespace Volkswagen.Controllers
 {
@@ -440,6 +443,37 @@ namespace Volkswagen.Controllers
 
             var fileStream = new MemoryStream(fileContents);
             return File(fileStream, "application/ms-excel", "设备保养计划.xls");
+        }
+
+        public FileResult ExportYearPlan()
+        {
+            IQueryable<InspectionModels> l = getQuery();
+            var data = l.Where("1 = 1").ToList();
+
+            Application app = new Application();
+            Workbooks wbks = app.Workbooks;
+            _Workbook wbk = wbks.Add(true);
+            Sheets shs = wbk.Sheets;
+            _Worksheet sh = shs.Add();
+
+            // http://www.cnblogs.com/wang_yb/articles/1750419.html
+            // TODO - generate excel data
+
+
+            //屏蔽掉系统跳出的Alert
+            app.AlertBeforeOverwriting = false;
+
+            //保存到指定目录
+            wbk.SaveAs("file/inspection_plan/年度设备保养计划.xls", Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+
+            wbk.Close(null, null, null);
+            wbks.Close();
+            app.Quit();
+
+            //释放掉多余的excel进程
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(app);
+            app = null;
+            return File("file/inspection_plan/年度设备保养计划.xls", "application/ms-excel", "年度设备保养计划.xls");
         }
     }
 }
