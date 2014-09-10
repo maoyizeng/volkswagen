@@ -41,12 +41,13 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Section, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.Section, new { @class = "form-control" })
+                <!--@Html.TextBoxFor(model => model.Section, new { @class = "form-control" })-->
+                @Html.DropDownList("Section", ViewBag.SectionNames as IEnumerable<SelectListItem>, String.Empty)
                 @Html.ValidationMessageFor(model => model.Section)
             </div>
             @Html.LabelFor(model => model.WSArea, new { @class = "control-label col-md-1" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.WSArea, new { @class = "form-control" })
+                @Html.DropDownList("WSName", ViewBag.WSNames as IEnumerable<SelectListItem>, String.Empty)
                 @Html.ValidationMessageFor(model => model.WSArea)
             </div>
         </div>
@@ -54,7 +55,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ItemInspect, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.ItemInspect, new { @class = "form-control" })
+                @Html.DropDownList("ItemInspect", ViewBag.ThereBe as IEnumerable<SelectListItem>, String.Empty)
                 @Html.ValidationMessageFor(model => model.ItemInspect)
             </div>
         </div>
@@ -62,7 +63,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.RegularCare, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.RegularCare, new { @class = "form-control" })
+                @Html.DropDownList("RegularCare", ViewBag.ThereBe as IEnumerable<SelectListItem>, String.Empty)
                 @Html.ValidationMessageFor(model => model.RegularCare)
             </div>
         </div>
@@ -70,7 +71,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Check, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.Check, new { @class = "form-control" })
+                @Html.DropDownList("Check", ViewBag.ThereBe as IEnumerable<SelectListItem>, String.Empty)
                 @Html.ValidationMessageFor(model => model.Check)
             </div>
         </div>
@@ -78,7 +79,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.RoutingInspect, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.RoutingInspect, new { @class = "form-control" })
+                @Html.DropDownList("RoutingInspect", ViewBag.YesNo as IEnumerable<SelectListItem>, String.Empty)
                 @Html.ValidationMessageFor(model => model.RoutingInspect)
             </div>
         </div>

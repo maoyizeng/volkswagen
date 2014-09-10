@@ -79,6 +79,10 @@
         op.name = "op" + row;
         operand.name = "operand" + row;
 
+        field.id = "field" + row;
+        op.id = "op" + row;
+        operand.id = "operand" + row;
+
         //operand.className = "form-control"
 
         for (var i = 0; i < fieldMap.length; i++) {
@@ -164,6 +168,28 @@
         row++;
     }
 
+    function add_input(a, b, c, r) {
+        var field = document.getElementsByName("field" + r)[0];
+        var op = document.getElementsByName("op" + r)[0];
+        var operand = document.getElementById("operand" + r);
+        for (var i = 0; i < field.options.length; i++) {
+            if (field.options[i].value == a) {
+                field.options[i].selected = true;
+                break;
+            }
+        }
+        for (var i = 0; i < op.options.length; i++) {
+            if (op.options[i].value == b) {
+                op.options[i].selected = true;
+                break;
+            }
+        }
+        operand.value = c;
+        if (operand.value == "") {
+            operand.parentElement.hidden = true;
+        }
+    }
+
     function select_all() {
         var inputs = document.getElementById("query_form").getElementsByTagName("input");
         for (var i = 0; i < inputs.length; i++) {
@@ -209,26 +235,7 @@
                             
                             <script>
                                 append_input();
-                                var field = document.getElementById("field" + row);
-                                var op = document.getElementById("op" + row);
-                                var operand = document.getElementById("operand" + row);
-                                for (var i = 0; i < field.options.length; i++) {
-                                    if (field.options[i].value == '@field') {
-                                        field.options[i].selected = true;
-                                        break;
-                                    }
-                                }
-                                for (var i = 0; i < op.options.length; i++) {
-                                    if (op.options[i].value == '@op') {
-                                        op.options[i].selected = true;
-                                        break;
-                                    }
-                                }
-                                operand.value = '@operand';
-                                operand.textContent = '@operand';
-                                if (operand.value == null) {
-                                    operand.parentElement.hidden = true;
-                                }
+                                add_input('@field' , '@op' , '@operand' , '@r' );
                             </script>
                             r++;
                         }
