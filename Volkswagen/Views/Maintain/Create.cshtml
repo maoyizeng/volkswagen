@@ -70,12 +70,12 @@
         <div class="form-group">
             @Html.LabelFor(model => model.MStartTime, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.MStartTime, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.MStartTime, new { @class = "form-control", type = "datetime-local"})
                 @Html.ValidationMessageFor(model => model.MStartTime)
             </div>
             @Html.LabelFor(model => model.MEndTime, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.MEndTime, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.MEndTime, new { @class = "form-control", type = "datetime-local" })
                 @Html.ValidationMessageFor(model => model.MEndTime)
             </div>
         </div>
