@@ -28,7 +28,7 @@ namespace Volkswagen.Models
         [StringLength(10)]
         public string Person { get; set; }
 
-        public enum SectionNames
+        /*public enum SectionNames
         {
             
             一工段,
@@ -36,12 +36,12 @@ namespace Volkswagen.Models
             三工段,
             四工段,
             返修
-        }    
+        }    */
 
         [Display(Name = "所在工段")]
- //       [StringLength(30)]
+        [StringLength(30)]
  //       [Column(TypeName = "nvarchar")]
-        public SectionNames Section { get; set; }
+        public string Section { get; set; }
 
         public enum WSNames
         {
@@ -51,7 +51,7 @@ namespace Volkswagen.Models
 
         [Display(Name = "车间生产线")]
  //       [StringLength(15)]
-        public WSNames WSArea { get; set; }
+        public Nullable<WSNames> WSArea { get; set; }
 
         [Display(Name = "设备照片")]
  //       [StringLength(10)]
@@ -66,15 +66,15 @@ namespace Volkswagen.Models
 
         [Display(Name = "点检")]
   //      [StringLength(15)]
-        public ThereBe ItemInspect { get; set; }
+        public Nullable<ThereBe> ItemInspect { get; set; }
 
         [Display(Name = "日常保养")]
   //      [StringLength(15)]
-        public ThereBe RegularCare { get; set; }
+        public Nullable<ThereBe> RegularCare { get; set; }
 
         [Display(Name = "巡检")]
  //       [StringLength(15)]
-        public ThereBe Check { get; set; }
+        public Nullable<ThereBe> Check { get; set; }
 
         public enum YesNo
         {
@@ -84,7 +84,7 @@ namespace Volkswagen.Models
 
         [Display(Name = "需更新否")]
  //       [StringLength(15)]
-        public YesNo RoutingInspect { get; set; }
+        public Nullable<YesNo> RoutingInspect { get; set; }
 
   //      [Display(Name = "TPM文件")]
   //      [StringLength(10)]

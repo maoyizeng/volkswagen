@@ -41,8 +41,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Section, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                <!--@Html.TextBoxFor(model => model.Section, new { @class = "form-control" })-->
-                @Html.DropDownList("Section", ViewBag.SectionNames as IEnumerable<SelectListItem>, String.Empty)
+                @Html.TextBoxFor(model => model.Section, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Section)
             </div>
             @Html.LabelFor(model => model.WSArea, new { @class = "control-label col-md-1" })
