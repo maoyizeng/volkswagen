@@ -18,6 +18,7 @@ using System.Text;
 
 namespace Volkswagen.Controllers
 {
+    [Authorize(Roles="Admin")]
     public class EquipmentController : Controller
     {
         public static SVWContext db = new SVWContext();

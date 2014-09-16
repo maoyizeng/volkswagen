@@ -40,4 +40,6 @@ namespace Volkswagen.Models
 
         public string ProviderKey { get; set; }
     }
+
+ 
 }
