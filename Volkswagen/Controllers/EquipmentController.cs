@@ -210,7 +210,7 @@ namespace Volkswagen.Controllers
         // GET: /Equipment/Create
         public ActionResult Create()
         {
-            ViewBag.SectionNames = new SelectList(Enum.GetValues(typeof(EquipmentModels.SectionNames)));
+            //ViewBag.SectionNames = new SelectList(Enum.GetValues(typeof(EquipmentModels.SectionNames)));
             ViewBag.WSNames = new SelectList(Enum.GetValues(typeof(EquipmentModels.WSNames)));
             ViewBag.ThereBe = new SelectList(Enum.GetValues(typeof(EquipmentModels.ThereBe)));
             ViewBag.YesNo = new SelectList(Enum.GetValues(typeof(EquipmentModels.YesNo)));
@@ -245,7 +245,7 @@ namespace Volkswagen.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.SectionNames = new SelectList(Enum.GetValues(typeof(EquipmentModels.SectionNames)));
+            //ViewBag.SectionNames = new SelectList(Enum.GetValues(typeof(EquipmentModels.SectionNames)));
             ViewBag.WSNames = new SelectList(Enum.GetValues(typeof(EquipmentModels.WSNames)));
             ViewBag.ThereBe = new SelectList(Enum.GetValues(typeof(EquipmentModels.ThereBe)));
             ViewBag.YesNo = new SelectList(Enum.GetValues(typeof(EquipmentModels.YesNo)));
