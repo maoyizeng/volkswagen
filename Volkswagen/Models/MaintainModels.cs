@@ -25,8 +25,8 @@ namespace Volkswagen.Models
         public string EquipDes { get; set; }
 
         [Display(Name = "车间生产线")]
-        [StringLength(5)]
-        public string Line { get; set; }
+        //[StringLength(5)]
+        public Nullable<EquipmentModels.WSNames> Line { get; set; }
 
         [Display(Name = "维护类别")]
         [StringLength(15)]
@@ -52,8 +52,8 @@ namespace Volkswagen.Models
         public Nullable<System.DateTime> MEndTime { get; set; }
 
         [Display(Name = "责任班组")]
-        [StringLength(3)]
-        public string ResponseClass { get; set; }
+        //[StringLength(3)]
+        public Nullable<RepairModels.ClassType> ResponseClass { get; set; }
 
         [Display(Name = "检具状态")]
         [StringLength(20)]
@@ -87,7 +87,7 @@ namespace Volkswagen.Models
         public string Problem { get; set; }
 
         [Display(Name = "分数")]
-        public int Mark { get; set; }
+        public Nullable<int> Mark { get; set; }
 
         [Display(Name = "等级")]
         [StringLength(10)]
@@ -98,7 +98,7 @@ namespace Volkswagen.Models
         public string ProblemStatus { get; set; }
 
         [Display(Name = "检查次数")]
-        public int CheckNum{ get; set; }
+        public Nullable<int> CheckNum { get; set; }
 
         [Key]
         [Display(Name = "编号")]

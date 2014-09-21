@@ -29,11 +29,11 @@ namespace Volkswagen.Models
 
         [Display(Name = "入库数量")]
         //       [StringLength(50)]
-        public int InValue { get; set; }
+        public Nullable<int> InValue { get; set; }
 
         [Display(Name = "出库数量")]
         //       [StringLength(50)]
-        public int OutValue { get; set; }
+        public Nullable<int> OutValue { get; set; }
 
         [Display(Name = "领用人员")]
         [StringLength(10)]

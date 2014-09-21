@@ -27,12 +27,12 @@ namespace Volkswagen.Models
         public Nullable<System.DateTime> ShiftTime { get; set; }
 
         [Display(Name = "班次")]
-        [StringLength(5)]
-        public string Class { get; set; }
+        //[StringLength(5)]
+        public Nullable<RepairModels.ClassType> Class { get; set; }
 
         [Display(Name = "车间生产线")]
-        [StringLength(5)]
-        public string Line { get; set; }
+        //[StringLength(5)]
+        public Nullable<EquipmentModels.WSNames> Line { get; set; }
 
         [Display(Name = "负责人")]
         [StringLength(10)]

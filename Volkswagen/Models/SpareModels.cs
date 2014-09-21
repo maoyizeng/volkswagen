@@ -29,8 +29,11 @@ namespace Volkswagen.Models
         public string Type { get; set; }
 
         [Display(Name = "图片1")]
- //       [StringLength(30)]
+        //       [StringLength(30)]
         public string Picture1 { get; set; }
+
+        //[Display(Name = "图片")]
+        //public string Picture { get; set; }
 
         [Display(Name = "图片2")]
         //       [StringLength(30)]
@@ -42,19 +45,19 @@ namespace Volkswagen.Models
 
         [Display(Name = "当前库存")]
  //       [StringLength(50)]
-        public int PresentValue { get; set; }
+        public Nullable<int> PresentValue { get; set; }
 
         [Display(Name = "安全库存")]
         //       [StringLength(50)]
-        public int SafeValue { get; set; }
+        public Nullable<int> SafeValue { get; set; }
 
         [Display(Name = "东昌最小库存")]
         //       [StringLength(50)]
-        public int DCMinValue { get; set; }
+        public Nullable<int> DCMinValue { get; set; }
 
         [Display(Name = "东昌最大库存")]
         //       [StringLength(50)]
-        public int DCMaxValue { get; set; }
+        public Nullable<int> DCMaxValue { get; set; }
 
         [Display(Name = "所属设备")]
         [StringLength(50)]
@@ -77,9 +80,14 @@ namespace Volkswagen.Models
         [Column(TypeName = "ntext")]
         public string Remark { get; set; }
 
+        public enum KeyPartType
+        {
+            关键备件
+        }
+        
         [Display(Name = "设备关键属性")]
-        [StringLength(15)]
-        public string KeyPart { get; set; }
+        //[StringLength(15)]
+        public Nullable<KeyPartType> KeyPart { get; set; }
 
 
   //      [Display(Name = "文件")]

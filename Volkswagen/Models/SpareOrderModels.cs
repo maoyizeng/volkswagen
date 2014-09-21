@@ -28,7 +28,7 @@ namespace Volkswagen.Models
         public string Type { get; set; }
 
         [Display(Name = "订购数量")]
-        public int OrderValue { get; set; }
+        public Nullable<int> OrderValue { get; set; }
 
         [Display(Name = "备件制造商")]
         [StringLength(50)]
@@ -64,11 +64,11 @@ namespace Volkswagen.Models
 
         [Display(Name = "单价金额")]
         [Column(TypeName = "bigint")]
-        public int UnitPrice { get; set; }
+        public Nullable<int> UnitPrice { get; set; }
 
         [Display(Name = "总金额")]
         [Column(TypeName = "bigint")]
-        public int TotalPrice { get; set; }
+        public Nullable<int> TotalPrice { get; set; }
 
         [Display(Name = "状态")]
         [StringLength(30)]

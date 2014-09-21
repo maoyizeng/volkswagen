@@ -41,19 +41,19 @@ namespace Volkswagen.Models
 
         [Display(Name = "维修耗时")]
         [Column(TypeName = "bigint")]
-        public int RepairTime { get; set; }
+        public Nullable<int> RepairTime { get; set; }
 
         [Display(Name = "班次")]
-        [StringLength(5)]
-        public string Class { get; set; }
+        //[StringLength(5)]
+        public Nullable<RepairModels.ClassType> Class { get; set; }
 
         [Display(Name = "车间生产线")]
-        [StringLength(5)]
-        public string Line { get; set; }
+        //[StringLength(5)]
+        public Nullable<EquipmentModels.WSNames> Line { get; set; }
 
         [Display(Name = "工段")]
-        [StringLength(10)]
-        public string Section { get; set; }
+        //[StringLength(10)]
+        public Nullable<RepairModels.SectionNames> Section { get; set; }
 
         [Display(Name = "故障现象")]
         [StringLength(200)]
@@ -68,12 +68,12 @@ namespace Volkswagen.Models
         public string Description { get; set; }
 
         [Display(Name = "故障类别")]
-        [StringLength(10)]
-        public string FaultType { get; set; }
+        //[StringLength(10)]
+        public Nullable<RepairModels.FaultTypeEnum> FaultType { get; set; }
 
         [Display(Name = "已修复否")]
-        [StringLength(3)]
-        public string Result { get; set; }
+        //[StringLength(3)]
+        public Nullable<EquipmentModels.YesNo> Result { get; set; }
 
         [Display(Name = "遗留问题")]
         [StringLength(200)]
@@ -89,13 +89,13 @@ namespace Volkswagen.Models
 
         [Display(Name = "停机时间")]
         [Column(TypeName = "bigint")]
-        public int StopTime { get; set; }
+        public Nullable<int> StopTime { get; set; }
 
   //      [Display(Name = "文件")]
   //      public string File { get; set; }
 
         [Display(Name = "维修次数")]
-        public int RepairNum { get; set; }
+        public Nullable<int> RepairNum { get; set; }
 
         [Display(Name = "最后修改时间")]
   //      [StringLength(10)]

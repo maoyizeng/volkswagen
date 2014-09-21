@@ -25,8 +25,8 @@ namespace Volkswagen.Models
         public string EquipDes { get; set; }
 
         [Display(Name = "维护类别")]
-        [StringLength(30)]
-        public string Class { get; set; }
+        //[StringLength(30)]
+        public Nullable<InspectionModels.InspectionClass> Class { get; set; }
 
         [Display(Name = "保养部件")]
         [StringLength(30)]
