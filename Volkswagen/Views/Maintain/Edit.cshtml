@@ -34,7 +34,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Line, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.Line, new { @class = "form-control" })
+                @Html.DropDownList("Line", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.WSNames))), Model.Line)
                 @Html.ValidationMessageFor(model => model.Line)
             </div>
         </div>
@@ -71,12 +71,12 @@
         <div class="form-group">
             @Html.LabelFor(model => model.MStartTime, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.MStartTime, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.MStartTime, new { @class = "form-control", type = "datetime-local" })
                 @Html.ValidationMessageFor(model => model.MStartTime)
             </div>
             @Html.LabelFor(model => model.MEndTime, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.MEndTime, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.MEndTime, new { @class = "form-control", type = "datetime-local" })
                 @Html.ValidationMessageFor(model => model.MEndTime)
             </div>
         </div>
@@ -84,7 +84,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ResponseClass, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.ResponseClass, new { @class = "form-control" })
+                @Html.DropDownList("ResponseClass", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.RepairModels.ClassType))), Model.ResponseClass)
                 @Html.ValidationMessageFor(model => model.ResponseClass)
             </div>
         </div>
@@ -131,7 +131,7 @@
             </div>
             @Html.LabelFor(model => model.CheckTime, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.CheckTime, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.CheckTime, new { @class = "form-control", type = "datetime-local" })
                 @Html.ValidationMessageFor(model => model.CheckTime)
             </div>
         </div>

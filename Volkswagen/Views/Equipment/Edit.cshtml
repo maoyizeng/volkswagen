@@ -40,7 +40,7 @@
             </div>
             @Html.LabelFor(model => model.WSArea, new { @class = "control-label col-md-1" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.WSArea, new { @class = "form-control" })
+                @Html.DropDownList("WSArea", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.WSNames))), Model.WSArea)
                 @Html.ValidationMessageFor(model => model.WSArea)
             </div>
         </div>
@@ -48,7 +48,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ItemInspect, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.ItemInspect, new { @class = "form-control" })
+                @Html.DropDownList("ItemInspect", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.ThereBe))), Model.ItemInspect)
                 @Html.ValidationMessageFor(model => model.ItemInspect)
             </div>
         </div>
@@ -56,7 +56,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.RegularCare, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.RegularCare, new { @class = "form-control" })
+                @Html.DropDownList("RegularCare", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.ThereBe))), Model.RegularCare)
                 @Html.ValidationMessageFor(model => model.RegularCare)
             </div>
         </div>
@@ -64,7 +64,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Check, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.Check, new { @class = "form-control" })
+                @Html.DropDownList("Check", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.ThereBe))), Model.Check)
                 @Html.ValidationMessageFor(model => model.Check)
             </div>
         </div>
@@ -72,7 +72,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.RoutingInspect, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.RoutingInspect, new { @class = "form-control" })
+                @Html.DropDownList("RoutingInspect", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.YesNo))), Model.RoutingInspect)
                 @Html.ValidationMessageFor(model => model.RoutingInspect)
             </div>
         </div>

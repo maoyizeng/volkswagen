@@ -122,6 +122,28 @@
         row++;
     }
 
+    function add_input(a, b, c, r) {
+        var field = document.getElementsByName("field" + r)[0];
+        var op = document.getElementsByName("op" + r)[0];
+        var operand = document.getElementById("operand" + r);
+        for (var i = 0; i < field.options.length; i++) {
+            if (field.options[i].value == a) {
+                field.options[i].selected = true;
+                break;
+            }
+        }
+        for (var i = 0; i < op.options.length; i++) {
+            if (op.options[i].value == b) {
+                op.options[i].selected = true;
+                break;
+            }
+        }
+        operand.value = c;
+        if (operand.value == "") {
+            operand.parentElement.hidden = true;
+        }
+    }
+
     function select_all() {
         var inputs = document.getElementById("query_form").getElementsByTagName("input");
         for (var i = 0; i < inputs.length; i++) {
@@ -153,6 +175,25 @@
                     <input type="hidden" name="Direction" value=@dir />
                     <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
                     <input type="submit" id="query" value="确定" class="btn btn-sm" />
+                    @{
+                        int r = 0;
+                        while (true)
+                        {
+                            string field = ViewData["field" + r] as string;
+                            string op = ViewData["op" + r] as string;
+                            string operand = ViewData["operand" + r] as string;
+                            if (string.IsNullOrEmpty(field))
+                            {
+                                break;
+                            }
+
+                            <script>
+                                append_input();
+                                add_input('@field' , '@op' , '@operand' , '@r' );
+                            </script>
+                            r++;
+                        }
+                    }
                 </div>
             </div>
         </div>

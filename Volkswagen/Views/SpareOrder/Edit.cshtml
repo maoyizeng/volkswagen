@@ -85,7 +85,7 @@
             </div>
             @Html.LabelFor(model => model.UseTime, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.UseTime, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.UseTime, new { @class = "form-control", type = "datetime-local" })
                 @Html.ValidationMessageFor(model => model.UseTime)
             </div>
         </div>

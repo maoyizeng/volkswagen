@@ -38,7 +38,7 @@
             </div>
             @Html.LabelFor(model => model.Class, new { @class = "control-label col-md-1" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.Class, new { @class = "form-control" })
+                @Html.DropDownList("Class", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.InspectionModels.InspectionClass))), String.Empty)
                 @Html.ValidationMessageFor(model => model.Class)
             </div>
         </div>

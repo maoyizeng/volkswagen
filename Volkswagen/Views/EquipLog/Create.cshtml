@@ -54,12 +54,12 @@
         <div class="form-group">
             @Html.LabelFor(model => model.DocumentDate, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.DocumentDate, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.DocumentDate, new { @class = "form-control", type = "datetime-local" })
                 @Html.ValidationMessageFor(model => model.DocumentDate)
             </div>
             @Html.LabelFor(model => model.EnableDate, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.EnableDate, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.EnableDate, new { @class = "form-control", type = "datetime-local" })
                 @Html.ValidationMessageFor(model => model.EnableDate)
             </div>
         </div>

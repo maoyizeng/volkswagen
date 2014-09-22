@@ -28,12 +28,12 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ShiftDate, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.ShiftDate, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.ShiftDate, new { @class = "form-control", type = "datetime-local" })
                 @Html.ValidationMessageFor(model => model.ShiftDate)
             </div>
             @Html.LabelFor(model => model.ShiftTime, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.ShiftTime, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.ShiftTime, new { @class = "form-control", type = "datetime-local" })
                 @Html.ValidationMessageFor(model => model.ShiftTime)
             </div>
         </div>
@@ -41,12 +41,12 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Class, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.Class, new { @class = "form-control" })
+                @Html.DropDownList("Class", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.RepairModels.ClassType))), String.Empty)
                 @Html.ValidationMessageFor(model => model.Class)
             </div>
             @Html.LabelFor(model => model.Line, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.Line, new { @class = "form-control" })
+                @Html.DropDownList("Line", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.WSNames))), String.Empty)
                 @Html.ValidationMessageFor(model => model.Line)
             </div>
         </div>
