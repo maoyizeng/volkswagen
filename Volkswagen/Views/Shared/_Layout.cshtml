@@ -13,58 +13,67 @@
     @RenderSection("Scripts", required: false)
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div data-bind="visible: loading">正在加载...</div>
+    <div style="display: none" data-bind="visible: true">
+        <div class="navbar navbar-inverse navbar-fixed-top">
 
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            @Html.ActionLink("上海大众", "Index", "Home", null, new { @class = "navbar-brand" })
-        </div>
-        <div class="navbar-collapse collapse" data-bind="if: loggedIn">
-            <ul class="nav navbar-nav">
-                <!--<li>@Html.ActionLink("主页", "Index", "Home", new { area = "" }, null)</li>-->
-                <li>@Html.ActionLink("设备履历", "Index", "Equipment", new { area = "" }, null)</li>
-                <li>@Html.ActionLink("设备保养计划", "Index", "Inspection", new { area = "" }, null)</li>
-                <li>@Html.ActionLink("备件库存", "Index", "Spare", new { area = "" }, null)</li>
-                <li>@Html.ActionLink("备件领用记录", "Index", "SpareUser", new { area = "" }, null)</li>
-                <li>@Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { area = "" }, null)</li>
-                <li>@Html.ActionLink("设备保修单", "Index", "Repair", new { area = "" }, null)</li>
-                <li>@Html.ActionLink("交班记录", "Index", "Shift", new { area = "" }, null)</li>
-                <li>@Html.ActionLink("设备台账", "Index", "EquipLog", new { area = "" }, null)</li>
-                <li>@Html.ActionLink("设备维护", "Index", "Maintain", new { area = "" }, null)</li>
-                <!--<li>@Html.ActionLink("API", "Index", "Help", new { area = "HelpPage" }, null)</li>-->
-                <li>@Html.ActionLink("人员信息", "Index", "User", new { area = "" }, null)</li>
-                <li>@Html.ActionLink("文件库", "Index", "File", new { area = "" }, null)</li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">历史记录 <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li>@Html.ActionLink("设备履历", "Index", "ArEquipment", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("设备保养计划", "Index", "ArInspection", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("备件库存", "Index", "ArSpare", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("备件领用记录", "Index", "ArSpareUser", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("备件订购信息", "Index", "ArSpareOrder", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("设备保修单", "Index", "ArRepair", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("交班记录", "Index", "ArShift", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("设备台账", "Index", "ArEquipLog", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("设备维护", "Index", "ArMaintain", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("人员信息", "Index", "ArUser", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("文件库", "Index", "ArFile", new { area = "" }, null)</li>
-                    </ul>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right" data-bind="with: user">
-                <li>
-                    <span class="navbar-text nofloat"><a href="#" class="navbar-link" data-bind="text: name, click: manage"></a>  </span>
-                </li>
-                <li><a href="#" data-bind="click: logOff">注销</a></li>
-            </ul>
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <p class="navbar-brand" data-bind="if: !loggedIn()">上海大众</p>
+                <a href="#" class="navbar-brand" data-bind="if: loggedIn, click: navigateToHome">上海大众</a>
+            </div>
+
+            <div class="navbar-collapse collapse" data-bind="if: loggedIn">
+                <ul class="nav navbar-nav">
+                    <!--<li>@Html.ActionLink("主页", "Index", "Home", new { area = "" }, null)</li>-->
+                    <li>@Html.ActionLink("设备履历", "Index", "Equipment", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("设备保养计划", "Index", "Inspection", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("备件库存", "Index", "Spare", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("备件领用记录", "Index", "SpareUser", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("设备保修单", "Index", "Repair", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("交班记录", "Index", "Shift", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("设备台账", "Index", "EquipLog", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("设备维护", "Index", "Maintain", new { area = "" }, null)</li>
+                    <!--<li>@Html.ActionLink("API", "Index", "Help", new { area = "HelpPage" }, null)</li>-->
+                    <li>@Html.ActionLink("人员信息", "Index", "User", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("文件库", "Index", "File", new { area = "" }, null)</li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">历史记录 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>@Html.ActionLink("设备履历", "Index", "ArEquipment", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("设备保养计划", "Index", "ArInspection", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("备件库存", "Index", "ArSpare", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("备件领用记录", "Index", "ArSpareUser", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("备件订购信息", "Index", "ArSpareOrder", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("设备保修单", "Index", "ArRepair", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("交班记录", "Index", "ArShift", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("设备台账", "Index", "ArEquipLog", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("设备维护", "Index", "ArMaintain", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("人员信息", "Index", "ArUser", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("文件库", "Index", "ArFile", new { area = "" }, null)</li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right" data-bind="with: user">
+                    <li>
+                        <span class="navbar-text nofloat"><a href="#" class="navbar-link" data-bind="text: name, click: manage"></a>  </span>
+                    </li>
+                    <li><a href="#" data-bind="click: logOff">注销</a></li>
+                </ul>
+            </div>
+
+
         </div>
 
-    </div>
-    <div class="body-content">
+        <div data-bind="foreach: errors" class="padding-error">
+            <p class="text-danger" data-bind="text: $data"></p>
+        </div>
+        <!-- <div class="body-content"> -->
         <ul class="nav nav-pills nav-stacked  col-md-1" role="tablist">
             设备列表
             @using Volkswagen.Controllers;
@@ -78,13 +87,21 @@
             }
         </ul>
 
-        <div class="col-lg-11">
+        <div class="col-md-11">
             @RenderBody()
         </div>
+        @Html.Partial("../Home/_Login")
+        @Html.Partial("../Home/_Register")
+        @Html.Partial("../Home/_RegisterExternal")
+        @Html.Partial("../Home/_Manage")
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - 上海大众</p>
         </footer>
     </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/app")
+    @Scripts.Render("~/bundles/bootstrap")
 </body>
 </html>
