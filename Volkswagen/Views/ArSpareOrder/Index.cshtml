@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Volkswagen.Models.ArSpareOrderModels>
+﻿@model IPagination<Volkswagen.Models.ArSpareOrderModels>
 
 @{
     ViewBag.Title = "历史记录 - 备件订购信息";
@@ -225,34 +225,38 @@
     @Html.ActionLink("批量删除", "DeleteMultiple", "ArSpareOrder", null, new { @class = "btn btn-default" })
 
     @using MvcContrib.UI.Grid
+    @using MvcContrib.UI.Pager
+    @using MvcContrib.Pagination
     @using MvcContrib
     @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
-        {
-            column.For(p => Html.CheckBox("Checked" + p.OrderID + p.OperateTime.ToBinary())).Sortable(false);
-            column.For(p => p.SpareID).Sortable(true);
-            column.For(p => p.SpareDes).Sortable(true);
-            column.For(p => p.Type).Sortable(true);
-            column.For(p => p.OrderValue).Sortable(true);
-            column.For(p => p.Producer).Sortable(true);
-            column.For(p => p.OrderNum).Sortable(true);
-            column.For(p => p.Property).Sortable(true);
-            column.For(p => p.EquipmentID).Sortable(true);
-            column.For(p => p.Maker).Sortable(true);
-            column.For(p => p.MakerNum).Sortable(true);
-            column.For(p => p.Orderman).Sortable(true);
-            column.For(p => p.UseTime).Sortable(true);
-            column.For(p => p.UnitPrice).Sortable(true);
-            column.For(p => p.TotalPrice).Sortable(true);
-            column.For(p => p.Status).Sortable(true);
-            column.For(p => p.Mode).Sortable(true);
-            column.For(p => p.OrderID).Sortable(true);
-            column.For(p => p.ChangeTime).Sortable(true);
-            column.For(p => p.Changer).Sortable(true);
-            column.For(p => p.CreateTime).Sortable(true);
-            column.For(p => p.Creator).Sortable(true);
-            column.For(p => p.Operator).Sortable(true);
-            column.For(p => p.OperateTime).Sortable(true);
-            column.For(p => Html.ActionLink("查看", "Details", new { id = p.OrderID, op = p.Operator, opt = p.OperateTime.ToBinary() }));
-            column.For(p => Html.ActionLink("删除", "Delete", new { id = p.OrderID, op = p.Operator, opt = p.OperateTime.ToBinary() }));
-        }).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse", @class => "table table-striped table-hover")
+{
+    column.For(p => Html.CheckBox("Checked" + p.OrderID + p.OperateTime.ToBinary())).Sortable(false);
+    column.For(p => p.SpareID).Sortable(true);
+    column.For(p => p.SpareDes).Sortable(true);
+    column.For(p => p.Type).Sortable(true);
+    column.For(p => p.OrderValue).Sortable(true);
+    column.For(p => p.Producer).Sortable(true);
+    column.For(p => p.OrderNum).Sortable(true);
+    column.For(p => p.Property).Sortable(true);
+    column.For(p => p.EquipmentID).Sortable(true);
+    column.For(p => p.Maker).Sortable(true);
+    column.For(p => p.MakerNum).Sortable(true);
+    column.For(p => p.Orderman).Sortable(true);
+    column.For(p => p.UseTime).Sortable(true);
+    column.For(p => p.UnitPrice).Sortable(true);
+    column.For(p => p.TotalPrice).Sortable(true);
+    column.For(p => p.Status).Sortable(true);
+    column.For(p => p.Mode).Sortable(true);
+    column.For(p => p.OrderID).Sortable(true);
+    column.For(p => p.ChangeTime).Sortable(true);
+    column.For(p => p.Changer).Sortable(true);
+    column.For(p => p.CreateTime).Sortable(true);
+    column.For(p => p.Creator).Sortable(true);
+    column.For(p => p.Operator).Sortable(true);
+    column.For(p => p.OperateTime).Sortable(true);
+    column.For(p => Html.ActionLink("查看", "Details", new { id = p.OrderID, op = p.Operator, opt = p.OperateTime.ToBinary() }));
+    column.For(p => Html.ActionLink("删除", "Delete", new { id = p.OrderID, op = p.Operator, opt = p.OperateTime.ToBinary() }));
+}).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse;white-space:nowrap;overflow:hidden;text-overflow:ellipsis", @class => "table table-striped table-hover")
+
+@Html.Pager(Model).First(" 首页 ").Next(" 下一页 ").Previous(" 上一页 ").Last(" 末页 ").Format("共{2}项, 当前{0}-{1} |")
 </form>

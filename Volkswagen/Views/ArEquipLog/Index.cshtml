@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Volkswagen.Models.ArEquipLogModels>
+﻿@model IPagination<Volkswagen.Models.ArEquipLogModels>
 
 @{
     ViewBag.Title = "历史记录 - 设备台账";
@@ -217,6 +217,8 @@
     @Html.ActionLink("批量删除", "DeleteMultiple", "ArEquipLog", null, new { @class = "btn btn-default" })
 
     @using MvcContrib.UI.Grid
+    @using MvcContrib.UI.Pager
+    @using MvcContrib.Pagination
     @using MvcContrib
     @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
         {
@@ -242,5 +244,7 @@
             column.For(p => p.OperateTime).Sortable(true);
             column.For(p => Html.ActionLink("查看", "Details", new { id = p.EquipmentID, op = p.Operator, opt = p.OperateTime.ToBinary() }));
             column.For(p => Html.ActionLink("删除", "Delete", new { id = p.EquipmentID, op = p.Operator, opt = p.OperateTime.ToBinary() }));
-        }).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse", @class => "table table-striped table-hover")
+        }).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse;white-space:nowrap;overflow:hidden;text-overflow:ellipsis", @class => "table table-striped table-hover")
+
+        @Html.Pager(Model).First(" 首页 ").Next(" 下一页 ").Previous(" 上一页 ").Last(" 末页 ").Format("共{2}项, 当前{0}-{1} |")
 </form>

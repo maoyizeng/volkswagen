@@ -9,6 +9,8 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/app")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("Scripts", required: false)
 </head>
@@ -30,14 +32,30 @@
             <div class="navbar-collapse collapse" data-bind="if: loggedIn">
                 <ul class="nav navbar-nav">
                     <!--<li>@Html.ActionLink("主页", "Index", "Home", new { area = "" }, null)</li>-->
-                    <li>@Html.ActionLink("设备履历", "Index", "Equipment", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("设备保养计划", "Index", "Inspection", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("备件库存", "Index", "Spare", new { area = "" }, null)</li>
+                    <!--<li>@Html.ActionLink("设备履历", "Index", "Equipment", new { area = "" }, null)</li>-->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">设备 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>@Html.ActionLink("设备履历", "Index", "Equipment", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("设备保养计划", "Index", "Inspection", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("设备台账", "Index", "EquipLog", new { area = "" }, null)</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">备件 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>@Html.ActionLink("备件库存", "Index", "Spare", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("备件领用记录", "Index", "SpareUser", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { area = "" }, null)</li>
+                        </ul>
+                    </li>
+                    <!--<li>@Html.ActionLink("设备保养计划", "Index", "Inspection", new { area = "" }, null)</li>-->
+                    <!--<li>@Html.ActionLink("备件库存", "Index", "Spare", new { area = "" }, null)</li>
                     <li>@Html.ActionLink("备件领用记录", "Index", "SpareUser", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { area = "" }, null)</li>-->
                     <li>@Html.ActionLink("设备保修单", "Index", "Repair", new { area = "" }, null)</li>
                     <li>@Html.ActionLink("交班记录", "Index", "Shift", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("设备台账", "Index", "EquipLog", new { area = "" }, null)</li>
+                    <!--<li>@Html.ActionLink("设备台账", "Index", "EquipLog", new { area = "" }, null)</li>-->
                     <li>@Html.ActionLink("设备维护", "Index", "Maintain", new { area = "" }, null)</li>
                     <!--<li>@Html.ActionLink("API", "Index", "Help", new { area = "HelpPage" }, null)</li>-->
                     <li>@Html.ActionLink("人员信息", "Index", "User", new { area = "" }, null)</li>
@@ -74,7 +92,7 @@
             <p class="text-danger" data-bind="text: $data"></p>
         </div>
         <!-- <div class="body-content"> -->
-        <ul class="nav nav-pills nav-stacked  col-md-1" role="tablist">
+        <ul class="nav nav-pills nav-stacked  col-md-1" role="tablist" data-bind="if: loggedIn">
             设备列表
             @using Volkswagen.Controllers;
             @using Volkswagen.Models;
@@ -87,7 +105,7 @@
             }
         </ul>
 
-        <div class="col-md-11">
+        <div class="col-md-11" data-bind="if: loggedIn">
             @RenderBody()
         </div>
         @Html.Partial("../Home/_Login")
@@ -99,9 +117,5 @@
             <p>&copy; @DateTime.Now.Year - 上海大众</p>
         </footer>
     </div>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/knockout")
-    @Scripts.Render("~/bundles/app")
-    @Scripts.Render("~/bundles/bootstrap")
 </body>
 </html>

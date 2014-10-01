@@ -300,6 +300,7 @@
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="App_Code\MyHelpers.cshtml" />
     <Content Include="Documents\数据库表结构_20140820_V3.xlsx" />
+    <None Include="Properties\PublishProfiles\VW.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\fileinput.js" />
     <Content Include="Scripts\fileinput.min.js" />

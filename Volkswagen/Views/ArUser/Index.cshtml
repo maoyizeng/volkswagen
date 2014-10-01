@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Volkswagen.Models.ArUserModels>
+﻿@model IPagination<Volkswagen.Models.ArUserModels>
 
 @{
     ViewBag.Title = "历史记录 - 人员信息";
@@ -216,36 +216,39 @@
     </div>
     @Html.ActionLink("批量删除", "DeleteMultiple", "ArUser", null, new { @class = "btn btn-default" })
     @using MvcContrib.UI.Grid
-
+    @using MvcContrib.UI.Pager
+    @using MvcContrib.Pagination
     @using MvcContrib
 
 
     @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
-            {
-                column.For(p => Html.CheckBox("Checked" + p.UserID + p.OperateTime.ToBinary())).Sortable(false);
-                column.For(p => p.Breviary).Sortable(true);
-                column.For(p => p.Name).Sortable(true);
-                column.For(p => p.Number).Sortable(true);
-                column.For(p => p.Telephone).Sortable(true);
-                column.For(p => p.Mobile).Sortable(true);
-                column.For(p => p.Birthday).Sortable(true);
-                column.For(p => p.EntryDate).Sortable(true);
-                column.For(p => p.Position).Sortable(true);
-                column.For(p => p.PoliticalStatus).Sortable(true);
-                column.For(p => p.Address).Sortable(true);
-                column.For(p => p.Skill).Sortable(true);
-                column.For(p => p.Experience).Sortable(true);
-                column.For(p => p.Remark).Sortable(true);
-                column.For(p => p.Image.IsEmpty() ? "无" : "有").Named("图片").Sortable(true);
-                column.For(p => p.UserID).Sortable(true);
-                column.For(p => p.ChangeTime).Sortable(true);
-                column.For(p => p.Changer).Sortable(true);
-                column.For(p => p.CreateTime).Sortable(true);
-                column.For(p => p.Creator).Sortable(true);
-                column.For(p => p.Operator).Sortable(true);
-                column.For(p => p.OperateTime).Sortable(true);
-                column.For(p => Html.ActionLink("查看", "Details", new { id = p.UserID, op = p.Operator, opt = p.OperateTime.ToBinary() }));
-                column.For(p => Html.ActionLink("删除", "Delete", new { id = p.UserID, op = p.Operator, opt = p.OperateTime.ToBinary() }));
-            }).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse", @class => "table table-striped table-hover")
+{
+    column.For(p => Html.CheckBox("Checked" + p.UserID + p.OperateTime.ToBinary())).Sortable(false);
+    column.For(p => p.Breviary).Sortable(true);
+    column.For(p => p.Name).Sortable(true);
+    column.For(p => p.Number).Sortable(true);
+    column.For(p => p.Telephone).Sortable(true);
+    column.For(p => p.Mobile).Sortable(true);
+    column.For(p => p.Birthday).Sortable(true);
+    column.For(p => p.EntryDate).Sortable(true);
+    column.For(p => p.Position).Sortable(true);
+    column.For(p => p.PoliticalStatus).Sortable(true);
+    column.For(p => p.Address).Sortable(true);
+    column.For(p => p.Skill).Sortable(true);
+    column.For(p => p.Experience).Sortable(true);
+    column.For(p => p.Remark).Sortable(true);
+    column.For(p => p.Image.IsEmpty() ? "无" : "有").Named("图片").Sortable(true);
+    column.For(p => p.UserID).Sortable(true);
+    column.For(p => p.ChangeTime).Sortable(true);
+    column.For(p => p.Changer).Sortable(true);
+    column.For(p => p.CreateTime).Sortable(true);
+    column.For(p => p.Creator).Sortable(true);
+    column.For(p => p.Operator).Sortable(true);
+    column.For(p => p.OperateTime).Sortable(true);
+    column.For(p => Html.ActionLink("查看", "Details", new { id = p.UserID, op = p.Operator, opt = p.OperateTime.ToBinary() }));
+    column.For(p => Html.ActionLink("删除", "Delete", new { id = p.UserID, op = p.Operator, opt = p.OperateTime.ToBinary() }));
+}).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse;white-space:nowrap;overflow:hidden;text-overflow:ellipsis", @class => "table table-striped table-hover")
+
+@Html.Pager(Model).First(" 首页 ").Next(" 下一页 ").Previous(" 上一页 ").Last(" 末页 ").Format("共{2}项, 当前{0}-{1} |")
 
 </form>

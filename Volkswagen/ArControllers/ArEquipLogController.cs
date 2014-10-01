@@ -13,6 +13,7 @@ using System.Linq.Expressions;
 using MvcContrib.UI.Grid;
 using System.IO;
 using MvcContrib.Sorting;
+using MvcContrib.Pagination;
 using System.Text;
 using System.Linq.Dynamic;
 
@@ -23,7 +24,7 @@ namespace Volkswagen.ArControllers
         private SVWContext db = new SVWContext();
 
         // GET: /ArEquipLog/
-        public async Task<ActionResult> Index(GridSortOptions model)
+        public async Task<ActionResult> Index(int? page, GridSortOptions model)
         {
             ViewData["model"] = model;
 
@@ -41,13 +42,13 @@ namespace Volkswagen.ArControllers
             }
             else
             {
-                return View(await db.ArEquipLogs.ToListAsync());
+                return View(db.ArEquipLogs.ToList().AsPagination(page ?? 1, 200));
             }
-            return View(list);
+            return View(list.ToList().AsPagination(page ?? 1, 200));
         }
 
         [HttpPost]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? page)
         {
             GridSortOptions model = new GridSortOptions();
             model.Column = Request.Form["Column"];
@@ -68,7 +69,7 @@ namespace Volkswagen.ArControllers
                 }
             }
 
-            return View(list);
+            return View(list.ToList().AsPagination(page ?? 1, 200));
         }
 
         private IQueryable<ArEquipLogModels> getQuery()

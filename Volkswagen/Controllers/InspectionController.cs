@@ -14,6 +14,7 @@ using System.Linq.Expressions;
 using System.IO;
 using System.Linq.Dynamic;
 using MvcContrib.Sorting;
+using MvcContrib.Pagination;
 using System.Text;
 using Microsoft.Office.Core;
 using Microsoft.Office.Interop.Excel;
@@ -26,7 +27,7 @@ namespace Volkswagen.Controllers
         private SVWContext db = new SVWContext();
 
         // GET: /Inspection/
-        public async Task<ActionResult> Index(GridSortOptions model)
+        public async Task<ActionResult> Index(int? page, GridSortOptions model)
         {
             ViewData["model"] = model;
 
@@ -44,13 +45,13 @@ namespace Volkswagen.Controllers
             }
             else
             {
-                return View(await db.Inspections.ToListAsync());
+                return View(db.Inspections.ToList().AsPagination(page ?? 1, 200));
             }
-            return View(list);
+            return View(list.ToList().AsPagination(page ?? 1, 200));
         }
 
         [HttpPost]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? page)
         {
             GridSortOptions model = new GridSortOptions();
             model.Column = Request.Form["Column"];
@@ -71,7 +72,7 @@ namespace Volkswagen.Controllers
                 }
             }
 
-            return View(list);
+            return View(list.ToList().AsPagination(page ?? 1, 200));
         }
 
         private IQueryable<InspectionModels> getQuery()

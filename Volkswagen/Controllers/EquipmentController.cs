@@ -14,10 +14,12 @@ using System.Linq.Expressions;
 using MvcContrib.UI.Grid;
 using System.IO;
 using MvcContrib.Sorting;
+using MvcContrib.Pagination;
 using System.Text;
 
 namespace Volkswagen.Controllers
 {
+
     [Authorize(Roles="Admin")]
     public class EquipmentController : Controller
     {
@@ -57,11 +59,11 @@ namespace Volkswagen.Controllers
         
 
         // GET: /Equipment/
-        public async Task<ActionResult> Index(GridSortOptions model)
+        public async Task<ActionResult> Index(int? page, GridSortOptions model)
         {
             //PrepareSelectItems();
             //return View(await db.Equipments.ToListAsync());
-
+            
             ViewData["model"] = model;
 
             IQueryable<EquipmentModels> list = db.Equipments.Where("1 = 1");
@@ -78,14 +80,16 @@ namespace Volkswagen.Controllers
             }
             else
             {
-                return View(await db.Equipments.ToListAsync());
+                //return View(await db.Equipments.ToListAsync());
+                return View(db.Equipments.ToList().AsPagination(page ?? 1, 200));
             }
             //list = list.AsPagination(page ?? 1, 5);
-            return View(list);
+            //IPagination<Volkswagen.Models.EquipmentModels> l = list.ToList().AsPagination(page ?? 1, 200);
+            return View(list.ToList().AsPagination(page ?? 1, 200));
         }
 
         [HttpPost]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? page)
         {
             //IQueryable<EquipmentModels> list = ViewData.Model as IQueryable<EquipmentModels>;
             //IQueryable<EquipmentModels> list = db.Equipments.Where("1 = 1");
@@ -108,8 +112,10 @@ namespace Volkswagen.Controllers
                     list = list.OrderBy(model.Column + " asc");
                 }
             }
-            
-            return View(list);
+
+            //IPagination<Volkswagen.Models.EquipmentModels> l = list.ToList().AsPagination(page ?? 1, 5);
+            return View(list.ToList().AsPagination(page ?? 1, 200));
+            //return View(l);
         }
 
         private IQueryable<EquipmentModels> getQuery()

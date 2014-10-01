@@ -14,6 +14,7 @@ using System.Linq.Expressions;
 using System.IO;
 using System.Linq.Dynamic;
 using MvcContrib.Sorting;
+using MvcContrib.Pagination;
 using System.Text;
 
 namespace Volkswagen.Controllers
@@ -23,7 +24,7 @@ namespace Volkswagen.Controllers
         private SVWContext db = new SVWContext();
 
         // GET: /Shift/
-        public async Task<ActionResult> Index(GridSortOptions model)
+        public async Task<ActionResult> Index(int? page, GridSortOptions model)
         {
             ViewData["model"] = model;
 
@@ -41,13 +42,13 @@ namespace Volkswagen.Controllers
             }
             else
             {
-                return View(await db.Shifts.ToListAsync());
+                return View(db.Shifts.ToList().AsPagination(page ?? 1, 200));
             }
-            return View(list);
+            return View(list.ToList().AsPagination(page ?? 1, 200));
         }
 
         [HttpPost]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? page)
         {
             GridSortOptions model = new GridSortOptions();
             model.Column = Request.Form["Column"];
@@ -68,7 +69,7 @@ namespace Volkswagen.Controllers
                 }
             }
 
-            return View(list);
+            return View(list.ToList().AsPagination(page ?? 1, 200));
         }
 
         private IQueryable<ShiftModels> getQuery()

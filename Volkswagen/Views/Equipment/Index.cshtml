@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Volkswagen.Models.EquipmentModels>
+﻿@model IPagination<Volkswagen.Models.EquipmentModels>
 
 @{
     ViewBag.Title = "设备履历";
@@ -255,6 +255,8 @@
         @Html.ActionLink("导出", "ExportExcel", "Equipment", null, new { @class = "btn btn-default" })
     </p>
     <!--
+        @*
+    
     <table class="table">
         <tr>
             <th>
@@ -357,6 +359,7 @@
     }
 
     </table>
+            *@
     -->
     <div class="btn-group">
         <input type="button" id="select_button" value="全选" onclick="select_all()" class="btn btn-default" />
@@ -366,8 +369,9 @@
     @Html.ActionLink("批量删除", "DeleteMultiple", "Equipment", null, new { @class = "btn btn-default" })
     
     @using MvcContrib.UI.Grid
-
+    @using MvcContrib.UI.Pager
     @using MvcContrib
+    @using MvcContrib.Pagination
 
 
     @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
@@ -391,6 +395,8 @@
                 column.For(p => Html.ActionLink("编辑", "Edit", new { id = p.EquipmentID }));
                 column.For(p => Html.ActionLink("查看", "Details", new { id = p.EquipmentID }));
                 column.For(p => Html.ActionLink("删除", "Delete", new { id = p.EquipmentID }));
-            }).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse", @class => "table table-striped table-hover")
+            }).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse;white-space:nowrap;overflow:hidden;text-overflow:ellipsis", @class => "table table-striped table-hover")
+    <!--;table-layout:fixed-->
 
+    @Html.Pager(Model).First(" 首页 ").Next(" 下一页 ").Previous(" 上一页 ").Last(" 末页 ").Format("共{2}项, 当前{0}-{1} |")
 </form>
