@@ -322,12 +322,12 @@ namespace Volkswagen.Controllers
             {
                 return BadRequest(ModelState);
             }
-/*          替换
+//          替换
             IdentityUser user = new IdentityUser
             {
                 UserName = model.UserName
             };
-*/
+/*
             ApplicationUser user = new ApplicationUser() 
             {
                 UserName = model.UserName,
@@ -335,6 +335,7 @@ namespace Volkswagen.Controllers
  //               LastName = model.LastName,
  //               Email = model.Email,
             };
+ * */
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
             IHttpActionResult errorResult = GetErrorResult(result);
 
