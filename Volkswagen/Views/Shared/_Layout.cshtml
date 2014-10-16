@@ -95,15 +95,14 @@
         <div class="row">
             <div class="col-md-1" data-bind="if: loggedIn">
                 <ul class="nav nav-stacked nav-pills">
-                    <li style="padding-left:10px">设备</li>
-
+                    
                     @using Volkswagen.Controllers;
                     @using Volkswagen.Models;
                     @{
 
                         foreach (string s in EquipmentController.db.Equipments.OrderByDescending(p => p.Section).Select(p => p.Section).Distinct())
                         {
-                            <li style="padding-left:10px">@s</li>
+                            <li style="padding-left:5px"><span class="label label-default">@(s.IsEmpty()?"无工段":s)</span></li>
 
                             foreach (EquipmentModels e in EquipmentController.db.Equipments.Where(p => (p.Section == s) && (p.WSArea == null)).ToList())
                             {
