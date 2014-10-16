@@ -92,30 +92,55 @@
             <p class="text-danger" data-bind="text: $data"></p>
         </div>
         <!-- <div class="body-content"> -->
-        <ul class="nav nav-pills nav-stacked  col-md-1" role="tablist" data-bind="if: loggedIn">
-            设备列表
-            @using Volkswagen.Controllers;
-            @using Volkswagen.Models;
-            @{
-                foreach (EquipmentModels e in EquipmentController.db.Equipments.ToList())
-                {
-                    string path = "/Equipment/Details/" + e.EquipmentID;
-                    <li role="presentation"><a href=@path>@e.EquipmentID</a></li>
-                }
-            }
-        </ul>
+        <div class="row">
+            <div class="col-md-1" data-bind="if: loggedIn">
+                <ul class="nav nav-stacked nav-pills">
+                    <li style="padding-left:10px">设备</li>
 
-        <div class="col-md-11" data-bind="if: loggedIn">
-            @RenderBody()
+                    @using Volkswagen.Controllers;
+                    @using Volkswagen.Models;
+                    @{
+
+                        foreach (string s in EquipmentController.db.Equipments.OrderByDescending(p => p.Section).Select(p => p.Section).Distinct())
+                        {
+                            <li style="padding-left:10px">@s</li>
+
+                            foreach (EquipmentModels e in EquipmentController.db.Equipments.Where(p => (p.Section == s) && (p.WSArea == null)).ToList())
+                            {
+                                string path = "/Equipment/Details/" + e.EquipmentID;
+                                <li><a href=@path>@e.EquipmentID</a></li>
+                            }
+
+                            foreach (EquipmentModels e in EquipmentController.db.Equipments.Where(p => (p.Section == s) && (p.WSArea == EquipmentModels.WSNames.一线)).ToList())
+                            {
+                                string path = "/Equipment/Details/" + e.EquipmentID;
+                                <li><a href=@path>@e.EquipmentID</a></li>
+                            }
+
+                            foreach (EquipmentModels e in EquipmentController.db.Equipments.Where(p => (p.Section == s) && (p.WSArea == EquipmentModels.WSNames.二线)).ToList())
+                            {
+                                string path = "/Equipment/Details/" + e.EquipmentID;
+                                <li><a href=@path>@e.EquipmentID</a></li>
+                            }
+
+                        }
+                    }
+                </ul>
+            </div>
+
+            <div class="col-md-11" data-bind="if: loggedIn">
+                @RenderBody()
+            </div>
+            <footer>
+                <p>&copy; @DateTime.Now.Year - 上海大众</p>
+            </footer>
         </div>
         @Html.Partial("../Home/_Login")
         @Html.Partial("../Home/_Register")
         @Html.Partial("../Home/_RegisterExternal")
         @Html.Partial("../Home/_Manage")
         <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - 上海大众</p>
-        </footer>
+
     </div>
 </body>
 </html>
