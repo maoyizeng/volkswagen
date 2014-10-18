@@ -105,7 +105,6 @@
             var name_placement = operand.name;
             this.parentElement.removeChild(operand);
             var new_operand = document.getElementById(this.value).cloneNode(true);
-            new_operand.hidden = false;
             new_operand.id = id_placement;
             new_operand.name = name_placement;
             this.parentElement.appendChild(new_operand);
