@@ -120,6 +120,65 @@ namespace Volkswagen.Controllers
 
         private IQueryable<EquipmentModels> getQuery()
         {
+            /*string query = "1 = 1";
+
+            ParameterExpression param = Expression.Parameter(typeof(EquipmentModels), "p");
+
+            for (int n = 0; ; n++)
+            {
+                string field = Request.Form["field" + n];
+                ViewData["field" + n] = field;
+                string op = Request.Form["op" + n];
+                ViewData["op" + n] = op;
+                string operand = Request.Form["operand" + n];
+                ViewData["operand" + n] = operand;
+
+                if (string.IsNullOrEmpty(field)) break;
+                if (string.IsNullOrEmpty(operand)) continue;
+
+                if (Expression.Property(param, typeof(EquipmentModels).GetProperty(field)).Type == typeof(string) && (!op.Equals("6")))
+                {
+                    operand = "\"" + operand + "\"";
+                }
+                else if (Expression.Property(param, typeof(EquipmentModels).GetProperty(field)).Type.MemberType.GetType().IsEnum)
+                {
+                    Type t = Expression.Property(param, typeof(EquipmentModels).GetProperty(field)).Type.GenericTypeArguments[0];
+                    operand = Convert.ToInt32(Enum.Parse(t, operand)) + "";
+                }
+
+                switch (op)
+                {
+                    case "0":
+                        query += " AND " + field + " = " + operand;
+                        break;
+                    case "1":
+                        query += " AND " + field + " > " + operand;
+                        break;
+                    case "2":
+                        query += " AND " + field + " < " + operand;
+                        break;
+                    case "3":
+                        query += " AND " + field + " >= " + operand;
+                        break;
+                    case "4":
+                        query += " AND " + field + " <= " + operand;
+                        break;
+                    case "5":
+                        query += " AND " + field + " <> " + operand;
+                        break;
+                    case "6": //Contain
+                        query += " AND " + field + " like %" + operand + "%";
+                        break;
+                    default:
+                        query += " AND " + field + " = " + operand;
+                        break;
+                }
+            }
+
+            IQueryable<EquipmentModels> list = db.Equipments.Where(query);
+            return list;
+             * */
+
             //p
             ParameterExpression param = Expression.Parameter(typeof(EquipmentModels), "p");
             Expression filter = Expression.Constant(true);
@@ -135,10 +194,29 @@ namespace Volkswagen.Controllers
                 if (string.IsNullOrEmpty(field)) break;
                 if (string.IsNullOrEmpty(operand)) continue;
 
+
                 //p.[filedn]
                 Expression left = Expression.Property(param, typeof(EquipmentModels).GetProperty(field));
                 //[operandn]
                 Expression right = Expression.Constant(operand);
+
+                if (field == "WSArea")
+                {
+                    right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.WSNames), operand)));
+                    right = Expression.Convert(right, left.Type);
+                }
+
+                /*if (left.Type != right.Type)
+                {
+                    if (left.Type.GenericTypeArguments[0].IsEnum)
+                        right = Expression.Call(null, typeof(Enum).GetMethod("Parse", new Type[] {typeof(Type), typeof(string) }), Expression.Constant(left.Type.GenericTypeArguments[0]), right);
+                    else
+                        right = Expression.Call(null, left.Type.GetMethod("Parse", new Type[] { typeof(string) }), right);
+                    right = Expression.Convert(right, left.Type);
+                }
+
+                right.Reduce();*/
+
                 Expression result;
 
                 switch (op)
@@ -179,7 +257,7 @@ namespace Volkswagen.Controllers
             Expression expr = Expression.Call(typeof(Queryable), "Where", new Type[] { typeof(EquipmentModels) }, Expression.Constant(e), pred);
 
             IQueryable<EquipmentModels> list = db.Equipments.AsQueryable().Provider.CreateQuery<EquipmentModels>(expr);
-
+            
             return list;
         }
 
