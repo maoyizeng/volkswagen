@@ -107,19 +107,19 @@
                             foreach (EquipmentModels e in EquipmentController.db.Equipments.Where(p => (p.Section == s) && (p.WSArea == null)).ToList())
                             {
                                 string path = "/Equipment/Details/" + e.EquipmentID;
-                                <li><a href=@path>@e.EquipmentID</a></li>
+                                <li><a href=@path>@e.EquipDes</a></li>
                             }
 
                             foreach (EquipmentModels e in EquipmentController.db.Equipments.Where(p => (p.Section == s) && (p.WSArea == EquipmentModels.WSNames.一线)).ToList())
                             {
                                 string path = "/Equipment/Details/" + e.EquipmentID;
-                                <li><a href=@path>@e.EquipmentID</a></li>
+                                <li><a href=@path>@e.EquipDes</a></li>
                             }
 
                             foreach (EquipmentModels e in EquipmentController.db.Equipments.Where(p => (p.Section == s) && (p.WSArea == EquipmentModels.WSNames.二线)).ToList())
                             {
                                 string path = "/Equipment/Details/" + e.EquipmentID;
-                                <li><a href=@path>@e.EquipmentID</a></li>
+                                <li><a href=@path>@e.EquipDes</a></li>
                             }
 
                         }
