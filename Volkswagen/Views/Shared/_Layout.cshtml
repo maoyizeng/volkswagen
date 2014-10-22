@@ -130,16 +130,18 @@
             <div class="col-md-11" data-bind="if: loggedIn">
                 @RenderBody()
             </div>
-            <footer>
-                <p>&copy; @DateTime.Now.Year - 上海大众</p>
-            </footer>
+            
         </div>
         @Html.Partial("../Home/_Login")
         @Html.Partial("../Home/_Register")
         @Html.Partial("../Home/_RegisterExternal")
         @Html.Partial("../Home/_Manage")
+        
         <hr />
 
+        <footer style="padding-left:inherit">
+            <p>&copy; @DateTime.Now.Year - 上海大众</p>
+        </footer>
     </div>
 </body>
 </html>

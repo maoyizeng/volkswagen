@@ -112,6 +112,7 @@
         }
 
         var cancel = document.createElement("button");
+        cancel.id = "cancel" + row;
         cancel.type = "button";
         cancel.className = "btn btn-default btn-xs";
         var cancelx = document.createElement("span");
@@ -126,7 +127,7 @@
         f.appendChild(field);
         f.appendChild(op);
         f.appendChild(operand);
-        
+
 
         fm.appendChild(f);
 
@@ -137,29 +138,53 @@
         var field = document.getElementsByName("field" + r)[0];
         var op = document.getElementsByName("op" + r)[0];
         var operand = document.getElementById("operand" + r);
-        for (var i = 0; i < field.options.length; i++) {
-            if (field.options[i].value == a) {
-                field.options[i].selected = true;
-                break;
-            }
+        var cancel = document.getElementById("cancel" + r)
+
+        field.value = a;
+
+        field.onchange = function () {
+            var operand = this.parentElement.children.item(this.parentElement.children.length - 1);
+            var id_placement = operand.id;
+            var name_placement = operand.name;
+            this.parentElement.removeChild(operand);
+            var new_operand = document.getElementById(this.value).cloneNode(true);
+            new_operand.id = id_placement;
+            new_operand.name = name_placement;
+            this.parentElement.appendChild(new_operand);
+            new_operand.name = name_placement;
         }
-        for (var i = 0; i < op.options.length; i++) {
-            if (op.options[i].value == b) {
-                op.options[i].selected = true;
-                break;
-            }
-        }
-        operand.value = c;
-        if (operand.value == "") {
-            operand.parentElement.hidden = true;
+
+        op.value = b;
+
+        cancel.onclick = function () {
+            this.parentElement.hidden = true;
+            this.parentElement.getElementsByTagName("input").value = null;
+        };
+
+        var id_placement = operand.id;
+        var name_placement = operand.name;
+        field.parentElement.removeChild(operand);
+        var new_operand = document.getElementById(field.value).cloneNode(true);
+        new_operand.id = id_placement;
+        new_operand.name = name_placement;
+        field.parentElement.appendChild(new_operand);
+        new_operand.name = name_placement;
+
+        new_operand.value = c;
+
+        if (new_operand.value == "") {
+            new_operand.parentElement.hidden = true;
         }
     }
+
+    var initial_value = new Array();
+
+    
 
     function select_all() {
         var inputs = document.getElementById("query_form").getElementsByTagName("input");
         for (var i = 0; i < inputs.length; i++) {
-            if (inputs[i].type == "checkbox")
-            {
+            if (inputs[i].type == "checkbox") {
                 inputs[i].checked = true;
             }
         }
@@ -188,172 +213,179 @@
     @Html.TextBoxFor(model => (model as Volkswagen.Models.EquipmentModels).Remark)
 </div>
 
-    <form action="/Equipment/" id="query_form" method="post">
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">查询</h3>
-                    </div>
-                    <div id="query_panel" class="panel-body">
-                        <input type="hidden" name="Colu" value=@col />
-                        <input type="hidden" name="Direction" value=@dir />
-                        <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
-                        <input type="submit" id="query" value="确定" class="btn btn-sm" />
-                        @{
-                            int r = 0;
-                            while (true)
+<form action="/Equipment/" id="query_form" method="post">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">查询</h3>
+                </div>
+                <div id="query_panel" class="panel-body">
+                    <input type="hidden" name="Colu" value=@col />
+                    <input type="hidden" name="Direction" value=@dir />
+                    <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
+                    <input type="submit" id="query" value="确定" class="btn btn-sm" />
+                    @{
+                        int r = 0;
+                        while (true)
+                        {
+                            string field = ViewData["field" + r] as string;
+                            string op = ViewData["op" + r] as string;
+                            string operand = ViewData["operand" + r] as string;
+                            if (string.IsNullOrEmpty(field))
                             {
-                                string field = ViewData["field" + r] as string;
-                                string op = ViewData["op" + r] as string;
-                                string operand = ViewData["operand" + r] as string;
-                                if (string.IsNullOrEmpty(field))
-                                {
-                                    break;
-                                }
+                                break;
+                            }
 
-                                <script>
-                                    append_input();
-                                    add_input('@field', '@op', '@operand', '@r');
-                                </script>
-                                r++;
+                            <script>
+                                initial_value.push({ field_name: '@field', op_name: '@op', operand_name: '@operand', r_name: '@r' });
+                                append_input();
+                            </script>
+                            r++;
+                        }
+                    }
+                    <script>
+                        document.onreadystatechange = function () {
+                            for (var i = 0; i < initial_value.length; i++) {
+                                add_input(initial_value[i].field_name, initial_value[i].op_name, initial_value[i].operand_name, initial_value[i].r_name);
                             }
                         }
-                        <!-- </form> -->
-                    </div>
+                    </script>
+                    <!-- </form> -->
                 </div>
             </div>
         </div>
+    </div>
 
-        <br />
+    <br />
 
-        <!-- <form action="/Equipment/" id="grid_form" method="post"> -->
+    <!-- <form action="/Equipment/" id="grid_form" method="post"> -->
 
-        <p>
-            @Html.ActionLink("新建", "Create", "Equipment", null, new { @class = "btn btn-default" })
-            @Html.ActionLink("导出", "ExportExcel", "Equipment", null, new { @class = "btn btn-default" })
-        </p>
-        <!--
-            @*
+    <p>
+        @Html.ActionLink("新建", "Create", "Equipment", null, new { @class = "btn btn-default" })
+        @Html.ActionLink("导出", "ExportExcel", "Equipment", null, new { @class = "btn btn-default" })
+    </p>
+    <!--
+        @*
 
-        <table class="table">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.EquipDes)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Person)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Section)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.WSArea)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Photo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ItemInspect)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.RegularCare)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Check)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.RoutingInspect)
-                </th>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EquipDes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Person)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Section)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WSArea)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Photo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemInspect)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RegularCare)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Check)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RoutingInspect)
+            </th>
 
-                <th>
-                    @Html.DisplayNameFor(model => model.ChangeTime)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Changer)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CreateTime)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Creator)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Remark)
-                </th>
-                <th></th>
-            </tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ChangeTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Changer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Creator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Remark)
+            </th>
+            <th></th>
+        </tr>
 
-        @foreach (var item in Model) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EquipDes)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Person)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Section)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.WSArea)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Photo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ItemInspect)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RegularCare)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Check)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RoutingInspect)
-                </td>
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EquipDes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Person)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Section)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WSArea)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Photo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemInspect)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegularCare)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Check)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoutingInspect)
+            </td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.ChangeTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Changer)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreateTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Creator)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Remark)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id=item.EquipmentID }) |
-                    @Html.ActionLink("Details", "Details", new { id=item.EquipmentID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id=item.EquipmentID })
-                </td>
-            </tr>
-        }
+            <td>
+                @Html.DisplayFor(modelItem => item.ChangeTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Changer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Creator)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Remark)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.EquipmentID }) |
+                @Html.ActionLink("Details", "Details", new { id=item.EquipmentID }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.EquipmentID })
+            </td>
+        </tr>
+    }
 
-        </table>
-                *@
-        -->
-        <div class="btn-group">
-            <input type="button" id="select_button" value="全选" onclick="select_all()" class="btn btn-default" />
-            <input type="button" id="select_button" value="反选" onclick="toggle_all()" class="btn btn-default" />
-        </div>
-        @Html.ActionLink("批量修改", "EditMultiple", "Equipment", null, new { @class = "btn btn-default" })
-        @Html.ActionLink("批量删除", "DeleteMultiple", "Equipment", null, new { @class = "btn btn-default" })
+    </table>
+            *@
+    -->
+    <div class="btn-group">
+        <input type="button" id="select_button" value="全选" onclick="select_all()" class="btn btn-default" />
+        <input type="button" id="select_button" value="反选" onclick="toggle_all()" class="btn btn-default" />
+    </div>
+    @Html.ActionLink("批量修改", "EditMultiple", "Equipment", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("批量删除", "DeleteMultiple", "Equipment", null, new { @class = "btn btn-default" })
 
-        @using MvcContrib.UI.Grid
-        @using MvcContrib.UI.Pager
-        @using MvcContrib
-        @using MvcContrib.Pagination
+    @using MvcContrib.UI.Grid
+    @using MvcContrib.UI.Pager
+    @using MvcContrib
+    @using MvcContrib.Pagination
 
 
-        @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
+    @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
             {
                 column.For(p => Html.CheckBox("Checked" + p.EquipmentID)).Sortable(false);
                 column.For(p => p.EquipmentID).Sortable(true);
@@ -375,6 +407,6 @@
                 column.For(p => Html.ActionLink("查看", "Details", new { id = p.EquipmentID }));
                 column.For(p => Html.ActionLink("删除", "Delete", new { id = p.EquipmentID }));
             }).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse;white-space:nowrap;overflow:hidden;text-overflow:ellipsis", @class => "table table-striped table-hover")
-        <!--;table-layout:fixed-->
-        @Html.Pager(Model).First(" 首页 ").Next(" 下一页 ").Previous(" 上一页 ").Last(" 末页 ").Format("共{2}项, 当前{0}-{1} |")
-    </form>
+    <!--;table-layout:fixed-->
+    @Html.Pager(Model).First(" 首页 ").Next(" 下一页 ").Previous(" 上一页 ").Last(" 末页 ").Format("共{2}项, 当前{0}-{1} |")
+</form>
