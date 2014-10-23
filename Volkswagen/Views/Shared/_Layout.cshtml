@@ -127,7 +127,7 @@
                 </ul>
             </div>
 
-            <div class="col-md-11" data-bind="if: loggedIn">
+            <div class="col-md-11">
                 @RenderBody()
             </div>
             
@@ -138,7 +138,6 @@
         @Html.Partial("../Home/_Manage")
         
         <hr />
-
         <footer style="padding-left:inherit">
             <p>&copy; @DateTime.Now.Year - 上海大众</p>
         </footer>
