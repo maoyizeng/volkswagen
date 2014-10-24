@@ -15,8 +15,14 @@
     @RenderSection("Scripts", required: false)
 </head>
 <body>
+    <script type="text/javascript">
+
+        if (!this.AppViewModel.loggedIn) {
+            window.location.pathname = "";
+            }
+
+    </script>
     <div data-bind="visible: loading">正在加载...</div>
-    <div style="display: none" data-bind="visible: true">
         <div class="navbar navbar-inverse navbar-fixed-top">
 
             <div class="navbar-header">
@@ -25,11 +31,10 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <p class="navbar-brand" data-bind="if: !loggedIn()">上海大众</p>
-                <a href="#" class="navbar-brand" data-bind="if: loggedIn, click: navigateToHome">上海大众</a>
+                <a href="#" class="navbar-brand" data-bind="click: navigateToHome">上海大众</a>
             </div>
 
-            <div class="navbar-collapse collapse" data-bind="if: loggedIn">
+            <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <!--<li>@Html.ActionLink("主页", "Index", "Home", new { area = "" }, null)</li>-->
                     <!--<li>@Html.ActionLink("设备履历", "Index", "Equipment", new { area = "" }, null)</li>-->
@@ -93,7 +98,7 @@
         </div>
         <!-- <div class="body-content"> -->
         <div class="row">
-            <div class="col-md-1" data-bind="if: loggedIn">
+            <div class="col-md-1">
                 <ul class="nav nav-stacked nav-pills">
                     
                     @using Volkswagen.Controllers;
@@ -132,15 +137,11 @@
             </div>
             
         </div>
-        @Html.Partial("../Home/_Login")
-        @Html.Partial("../Home/_Register")
-        @Html.Partial("../Home/_RegisterExternal")
-        @Html.Partial("../Home/_Manage")
         
         <hr />
         <footer style="padding-left:inherit">
             <p>&copy; @DateTime.Now.Year - 上海大众</p>
         </footer>
-    </div>
+
 </body>
 </html>
