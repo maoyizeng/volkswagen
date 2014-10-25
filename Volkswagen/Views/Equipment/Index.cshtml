@@ -261,6 +261,73 @@
 
     <!-- <form action="/Equipment/" id="grid_form" method="post"> -->
 
+    <div class="panel">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"]).First().EquipDes)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().EquipDes)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"]).First().Person)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Person)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"]).First().Section)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Section)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"]).First().WSArea)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().WSArea)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().ItemInspect)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().ItemInspect)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().RegularCare)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().RegularCare)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Check)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Check)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().RoutingInspect)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().RoutingInspect)
+            </dd>
+</div>
+
     <p>
         @Html.ActionLink("新建", "Create", "Equipment", null, new { @class = "btn btn-default" })
         @Html.ActionLink("导出", "ExportExcel", "Equipment", null, new { @class = "btn btn-default" })

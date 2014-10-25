@@ -65,6 +65,7 @@ namespace Volkswagen.Controllers
             //return View(await db.Equipments.ToListAsync());
             
             ViewData["model"] = model;
+            ViewData["selected"] = "1234567";
 
             IQueryable<EquipmentModels> list = db.Equipments.Where("1 = 1");
             if (!string.IsNullOrEmpty(model.Column))

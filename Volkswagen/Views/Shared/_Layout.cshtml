@@ -15,130 +15,129 @@
     @RenderSection("Scripts", required: false)
 </head>
 <body>
-   
+
     <div data-bind="visible: loading">正在加载...</div>
-        <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-inverse navbar-fixed-top">
 
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a href="#" class="navbar-brand" data-bind="click: navigateToHome">上海大众</a>
-            </div>
-
-
-
-
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <!--<li>@Html.ActionLink("主页", "Index", "Home", new { area = "" }, null)</li>-->
-                    <!--<li>@Html.ActionLink("设备履历", "Index", "Equipment", new { area = "" }, null)</li>-->
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">设备 <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>@Html.ActionLink("设备履历", "Index", "Equipment", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("设备保养计划", "Index", "Inspection", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("设备台账", "Index", "EquipLog", new { area = "" }, null)</li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">备件 <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>@Html.ActionLink("备件库存", "Index", "Spare", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("备件领用记录", "Index", "SpareUser", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { area = "" }, null)</li>
-                        </ul>
-                    </li>
-                    <!--<li>@Html.ActionLink("设备保养计划", "Index", "Inspection", new { area = "" }, null)</li>-->
-                    <!--<li>@Html.ActionLink("备件库存", "Index", "Spare", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("备件领用记录", "Index", "SpareUser", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { area = "" }, null)</li>-->
-                    <li>@Html.ActionLink("设备保修单", "Index", "Repair", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("交班记录", "Index", "Shift", new { area = "" }, null)</li>
-                    <!--<li>@Html.ActionLink("设备台账", "Index", "EquipLog", new { area = "" }, null)</li>-->
-                    <li>@Html.ActionLink("设备维护", "Index", "Maintain", new { area = "" }, null)</li>
-                    <!--<li>@Html.ActionLink("API", "Index", "Help", new { area = "HelpPage" }, null)</li>-->
-                    <li>@Html.ActionLink("人员信息", "Index", "User", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("文件库", "Index", "File", new { area = "" }, null)</li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">历史记录 <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>@Html.ActionLink("设备履历", "Index", "ArEquipment", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("设备保养计划", "Index", "ArInspection", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("备件库存", "Index", "ArSpare", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("备件领用记录", "Index", "ArSpareUser", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("备件订购信息", "Index", "ArSpareOrder", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("设备保修单", "Index", "ArRepair", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("交班记录", "Index", "ArShift", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("设备台账", "Index", "ArEquipLog", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("设备维护", "Index", "ArMaintain", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("人员信息", "Index", "ArUser", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("文件库", "Index", "ArFile", new { area = "" }, null)</li>
-                        </ul>
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right" data-bind="with: user">
-                    <li>
-                        <span class="navbar-text nofloat"><a href="#" class="navbar-link" data-bind="text: name, click: manage"></a>  </span>
-                    </li>
-                    <li><a href="#" data-bind="click: logOff">注销</a></li>
-                </ul>
-            </div>
-
-
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="#" class="navbar-brand" data-bind="click: navigateToHome">上海大众</a>
         </div>
 
-        <div data-bind="foreach: errors" class="padding-error">
-            <p class="text-danger" data-bind="text: $data"></p>
-        </div>
-        <!-- <div class="body-content"> -->
-        <div class="row">
-            <div class="col-md-1">
-                <ul class="nav nav-stacked nav-pills">
-                    
-                    @using Volkswagen.Controllers;
-                    @using Volkswagen.Models;
-                    @{
 
-                        foreach (string s in EquipmentController.db.Equipments.OrderByDescending(p => p.Section).Select(p => p.Section).Distinct())
+
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <!--<li>@Html.ActionLink("主页", "Index", "Home", new { area = "" }, null)</li>-->
+                <!--<li>@Html.ActionLink("设备履历", "Index", "Equipment", new { area = "" }, null)</li>-->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">设备 <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>@Html.ActionLink("设备履历", "Index", "Equipment", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("设备保养计划", "Index", "Inspection", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("设备台账", "Index", "EquipLog", new { area = "" }, null)</li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">备件 <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>@Html.ActionLink("备件库存", "Index", "Spare", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("备件领用记录", "Index", "SpareUser", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { area = "" }, null)</li>
+                    </ul>
+                </li>
+                <!--<li>@Html.ActionLink("设备保养计划", "Index", "Inspection", new { area = "" }, null)</li>-->
+                <!--<li>@Html.ActionLink("备件库存", "Index", "Spare", new { area = "" }, null)</li>
+                <li>@Html.ActionLink("备件领用记录", "Index", "SpareUser", new { area = "" }, null)</li>
+                <li>@Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { area = "" }, null)</li>-->
+                <li>@Html.ActionLink("设备保修单", "Index", "Repair", new { area = "" }, null)</li>
+                <li>@Html.ActionLink("交班记录", "Index", "Shift", new { area = "" }, null)/li>
+                <!--<li>@Html.ActionLink("设备台账", "Index", "EquipLog", new { area = "" }, null)</li>-->
+                <li>@Html.ActionLink("设备维护", "Index", "Maintain", new { area = "" }, null)</li>
+                <!--<li>@Html.ActionLink("API", "Index", "Help", new { area = "HelpPage" }, null)</li>-->
+                <li>@Html.ActionLink("人员信息", "Index", "User", new { area = "" }, null)</li>
+                <li>@Html.ActionLink("文件库", "Index", "File", new { area = "" }, null)</li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">历史记录 <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>@Html.ActionLink("设备履历", "Index", "ArEquipment", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("设备保养计划", "Index", "ArInspection", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("备件库存", "Index", "ArSpare", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("备件领用记录", "Index", "ArSpareUser", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("备件订购信息", "Index", "ArSpareOrder", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("设备保修单", "Index", "ArRepair", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("交班记录", "Index", "ArShift", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("设备台账", "Index", "ArEquipLog", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("设备维护", "Index", "ArMaintain", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("人员信息", "Index", "ArUser", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("文件库", "Index", "ArFile", new { area = "" }, null)</li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" data-bind="with: user">
+                <li>
+                    <span class="navbar-text nofloat"><a href="#" class="navbar-link" data-bind="text: name, click: manage"></a>  </span>
+                </li>
+                <li><a href="#" data-bind="click: logOff">注销</a></li>
+            </ul>
+        </div>
+
+
+    </div>
+
+    <div data-bind="foreach: errors" class="padding-error">
+        <p class="text-danger" data-bind="text: $data"></p>
+    </div>
+    <!-- <div class="body-content"> -->
+    <div class="row">
+        <div class="col-md-1">
+            <ul class="nav nav-stacked nav-pills">
+
+                @using Volkswagen.Controllers;
+                @using Volkswagen.Models;
+                @{
+
+                    foreach (string s in EquipmentController.db.Equipments.OrderByDescending(p => p.Section).Select(p => p.Section).Distinct())
+                    {
+                        <li style="padding-left:5px"><span class="label label-default">@(s.IsEmpty() ? "无工段" : s)</span></li>
+
+                        foreach (EquipmentModels e in EquipmentController.db.Equipments.Where(p => (p.Section == s) && (p.WSArea == null)).ToList())
                         {
-                            <li style="padding-left:5px"><span class="label label-default">@(s.IsEmpty()?"无工段":s)</span></li>
-
-                            foreach (EquipmentModels e in EquipmentController.db.Equipments.Where(p => (p.Section == s) && (p.WSArea == null)).ToList())
-                            {
-                                string path = "/Equipment/Details/" + e.EquipmentID;
-                                <li><a href=@path>@e.EquipDes</a></li>
-                            }
-
-                            foreach (EquipmentModels e in EquipmentController.db.Equipments.Where(p => (p.Section == s) && (p.WSArea == EquipmentModels.WSNames.一线)).ToList())
-                            {
-                                string path = "/Equipment/Details/" + e.EquipmentID;
-                                <li><a href=@path>@e.EquipDes</a></li>
-                            }
-
-                            foreach (EquipmentModels e in EquipmentController.db.Equipments.Where(p => (p.Section == s) && (p.WSArea == EquipmentModels.WSNames.二线)).ToList())
-                            {
-                                string path = "/Equipment/Details/" + e.EquipmentID;
-                                <li><a href=@path>@e.EquipDes</a></li>
-                            }
-
+                            string path = "/Equipment/Details/" + e.EquipmentID;
+                            <li><a href=@path>@e.EquipDes</a></li>
                         }
+
+                        foreach (EquipmentModels e in EquipmentController.db.Equipments.Where(p => (p.Section == s) && (p.WSArea == EquipmentModels.WSNames.一线)).ToList())
+                        {
+                            string path = "/Equipment/Details/" + e.EquipmentID;
+                            <li><a href=@path>@e.EquipDes</a></li>
+                        }
+
+                        foreach (EquipmentModels e in EquipmentController.db.Equipments.Where(p => (p.Section == s) && (p.WSArea == EquipmentModels.WSNames.二线)).ToList())
+                        {
+                            string path = "/Equipment/Details/" + e.EquipmentID;
+                            <li><a href=@path>@e.EquipDes</a></li>
+                        }
+
                     }
-                </ul>
-            </div>
-
-            <div class="col-md-11">
-                @RenderBody()
-            </div>
-            
+                }
+            </ul>
         </div>
-        
-        <hr />
-        <footer style="padding-left:inherit">
-            <p>&copy; @DateTime.Now.Year - 上海大众</p>
-        </footer>
 
+        <div class="col-md-11">
+            @RenderBody()
+        </div>
+
+    </div>
+
+    <hr />
+    <footer style="padding-left:inherit">
+        <p>&copy; @DateTime.Now.Year - 上海大众</p>
+    </footer>
 </body>
 </html>
