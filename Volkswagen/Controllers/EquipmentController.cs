@@ -59,13 +59,13 @@ namespace Volkswagen.Controllers
         
 
         // GET: /Equipment/
-        public async Task<ActionResult> Index(int? page, GridSortOptions model)
+        public async Task<ActionResult> Index(int? page, GridSortOptions model, string selected_item)
         {
             //PrepareSelectItems();
             //return View(await db.Equipments.ToListAsync());
             
             ViewData["model"] = model;
-            ViewData["selected"] = "1234567";
+            ViewData["selected"] = (selected_item ?? "1234567");
 
             IQueryable<EquipmentModels> list = db.Equipments.Where("1 = 1");
             if (!string.IsNullOrEmpty(model.Column))
@@ -90,7 +90,7 @@ namespace Volkswagen.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Index(int? page)
+        public async Task<ActionResult> Index(int? page, string selected_item)
         {
             //IQueryable<EquipmentModels> list = ViewData.Model as IQueryable<EquipmentModels>;
             //IQueryable<EquipmentModels> list = db.Equipments.Where("1 = 1");
@@ -99,6 +99,7 @@ namespace Volkswagen.Controllers
             model.Column = Request.Form["Column"];
             model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
             ViewData["model"] = model;
+            ViewData["selected"] = (selected_item ?? "1234567");
 
             IQueryable<EquipmentModels> list = getQuery();
 
