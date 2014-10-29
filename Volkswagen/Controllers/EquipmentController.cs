@@ -65,7 +65,7 @@ namespace Volkswagen.Controllers
             //return View(await db.Equipments.ToListAsync());
             
             ViewData["model"] = model;
-            ViewData["selected"] = (selected_item ?? "1234567");
+            ViewData["selected"] = selected_item;
 
             IQueryable<EquipmentModels> list = db.Equipments.Where("1 = 1");
             if (!string.IsNullOrEmpty(model.Column))
@@ -99,8 +99,8 @@ namespace Volkswagen.Controllers
             model.Column = Request.Form["Column"];
             model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
             ViewData["model"] = model;
-            ViewData["selected"] = (selected_item ?? "1234567");
-
+            ViewData["selected"] = selected_item;
+            
             IQueryable<EquipmentModels> list = getQuery();
 
             if (!string.IsNullOrEmpty(model.Column))

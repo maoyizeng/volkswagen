@@ -261,6 +261,7 @@
 
     <!-- <form action="/Equipment/" id="grid_form" method="post"> -->
 
+    @if (ViewData["selected"] != null) {
     <div class="panel">
         <dl class="dl-horizontal">
             <dt>
@@ -327,6 +328,7 @@
                 @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().RoutingInspect)
             </dd>
 </div>
+    }
 
     <p>
         @Html.ActionLink("新建", "Create", "Equipment", null, new { @class = "btn btn-default" })
@@ -340,8 +342,8 @@
     @Html.ActionLink("批量修改", "EditMultiple", "Equipment", null, new { @class = "btn btn-default" })
     @Html.ActionLink("批量删除", "DeleteMultiple", "Equipment", null, new { @class = "btn btn-default" })
 
-    <input type="hidden" id="selected_item" />
-
+    <input type="hidden" name="selected_item" id="selected_item" />
+    
     @using MvcContrib.UI.Grid
     @using MvcContrib.UI.Pager
     @using MvcContrib
@@ -351,9 +353,9 @@
     @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
             {
                 column.For(p => Html.CheckBox("Checked" + p.EquipmentID)).Sortable(false);
-                column.For(p => Html.ActionLink("编辑", "Edit", new { id = p.EquipmentID }));
-                column.For(p => new MvcHtmlString( "<input type='submit' class='btn btn-sm' text='查看' onclick=\"$('selected_item').value='" + @p.EquipmentID + "';\" />"));
-                column.For(p => Html.ActionLink("删除", "Delete", new { id = p.EquipmentID }));
+                column.For(p => new MvcHtmlString("<button class='btn btn-sm' onclick=\"var sel = document.getElementById('selected_item'); sel.value='" + @p.EquipmentID + "';\" ><span class='glyphicon glyphicon-eye-open'></span></button>"));
+                column.For(p => new MvcHtmlString("<button class='btn btn-sm' formaction='/Equipment/Edit/" + p.EquipmentID + "'><span class='glyphicon glyphicon-pencil'></span></button>"));
+                column.For(p => new MvcHtmlString("<button class='btn btn-sm' formaction='/Equipment/Delete/" + p.EquipmentID + "'><span class='glyphicon glyphicon-trash'></span></button>"));
                 column.For(p => p.EquipmentID).Sortable(true);
                 column.For(p => p.EquipDes).Sortable(true);
                 column.For(p => p.Person).Sortable(true);
