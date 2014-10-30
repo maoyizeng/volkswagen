@@ -179,7 +179,7 @@
 
     var initial_value = new Array();
 
-    
+
 
     function select_all() {
         var inputs = document.getElementById("query_form").getElementsByTagName("input");
@@ -260,81 +260,115 @@
     <br />
 
     <!-- <form action="/Equipment/" id="grid_form" method="post"> -->
+    @if (ViewData["selected"] != null)
+    {
+        <div class="panel">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"]).First().EquipDes)
+                </dt>
 
-    @if (ViewData["selected"] != null) {
-    <div class="panel">
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"]).First().EquipDes)
-            </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().EquipDes)
+                </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().EquipDes)
-            </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"]).First().Person)
+                </dt>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"]).First().Person)
-            </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Person)
+                </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Person)
-            </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"]).First().Section)
+                </dt>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"]).First().Section)
-            </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Section)
+                </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Section)
-            </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"]).First().WSArea)
+                </dt>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"]).First().WSArea)
-            </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().WSArea)
+                </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().WSArea)
-            </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().ItemInspect)
+                </dt>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().ItemInspect)
-            </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().ItemInspect)
+                </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().ItemInspect)
-            </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().RegularCare)
+                </dt>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().RegularCare)
-            </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().RegularCare)
+                </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().RegularCare)
-            </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Check)
+                </dt>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Check)
-            </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Check)
+                </dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Check)
-            </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().RoutingInspect)
+                </dt>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().RoutingInspect)
-            </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().RoutingInspect)
+                </dd>
+            </dl>
+            @{ var em = Model.GetEnumerator();
+               var current_em = Model.Where(p => p.EquipmentID == ViewData["selected"] as string).First();
+               var prev_em = em.Current;
+               string first_one = "", last_one = "";
+               try
+               {
+                   em.MoveNext();
+                   while ((em.Current != null) && (em.Current != current_em))
+                   {
+                       prev_em = em.Current;
+                       em.MoveNext();
+                   }
+                   if (prev_em == null)
+                   {
+                       first_one = "disabled=\"disabled\"";
+                       prev_em = em.Current;
+                   }
+                   if (!em.MoveNext())
+                   {
+                       last_one = "disabled=\"disabled\"";
+                   }
+               }
+               catch (Exception) { }
+                   
+               }
 
-            <dd>
-                @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().RoutingInspect)
-            </dd>
-</div>
+            <div class="btn-group">
+                <button class='btn btn-default' @first_one onclick="var sel=document.getElementById('selected_item'); sel.value='@prev_em.EquipmentID';"><span class='glyphicon glyphicon-chevron-left'></span>上一项</button>
+                @Html.ActionLink("详细", "Details", "Equipment", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
+                @Html.ActionLink("编辑", "Edit", "Equipment", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
+                @Html.ActionLink("删除", "Delete", "Equipment", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
+                <button class='btn btn-default' @last_one onclick="var sel=document.getElementById('selected_item'); sel.value='@em.Current.EquipmentID';"><span class='glyphicon glyphicon-chevron-right'></span>下一项</button>
+            </div>
+        </div>
     }
 
     <p>
         @Html.ActionLink("新建", "Create", "Equipment", null, new { @class = "btn btn-default" })
         @Html.ActionLink("导出", "ExportExcel", "Equipment", null, new { @class = "btn btn-default" })
     </p>
-   
+
     <div class="btn-group">
         <input type="button" id="select_button" value="全选" onclick="select_all()" class="btn btn-default" />
         <input type="button" id="select_button" value="反选" onclick="toggle_all()" class="btn btn-default" />
@@ -343,7 +377,7 @@
     @Html.ActionLink("批量删除", "DeleteMultiple", "Equipment", null, new { @class = "btn btn-default" })
 
     <input type="hidden" name="selected_item" id="selected_item" />
-    
+
     @using MvcContrib.UI.Grid
     @using MvcContrib.UI.Pager
     @using MvcContrib
