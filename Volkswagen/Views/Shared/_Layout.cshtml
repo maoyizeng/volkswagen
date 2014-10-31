@@ -101,30 +101,32 @@
                 @using Volkswagen.Controllers;
                 @using Volkswagen.Models;
                 @{
+                    var db = new Volkswagen.DAL.SVWContext();
 
-                    foreach (string s in EquipmentController.db.Equipments.OrderByDescending(p => p.Section).Select(p => p.Section).Distinct())
+                    foreach (string s in db.Equipments.OrderByDescending(p => p.Section).Select(p => p.Section).Distinct())
                     {
                         <li style="padding-left:5px"><span class="label label-default">@(s.IsEmpty() ? "无工段" : s)</span></li>
 
-                        foreach (EquipmentModels e in EquipmentController.db.Equipments.Where(p => (p.Section == s) && (p.WSArea == null)).ToList())
+                        foreach (EquipmentModels e in db.Equipments.Where(p => (p.Section == s) && (p.WSArea == null)).ToList())
                         {
                             string path = "/Equipment/Details/" + e.EquipmentID;
                             <li><a href=@path>@e.EquipDes</a></li>
                         }
 
-                        foreach (EquipmentModels e in EquipmentController.db.Equipments.Where(p => (p.Section == s) && (p.WSArea == EquipmentModels.WSNames.一线)).ToList())
+                        foreach (EquipmentModels e in db.Equipments.Where(p => (p.Section == s) && (p.WSArea == EquipmentModels.WSNames.一线)).ToList())
                         {
                             string path = "/Equipment/Details/" + e.EquipmentID;
                             <li><a href=@path>@e.EquipDes</a></li>
                         }
 
-                        foreach (EquipmentModels e in EquipmentController.db.Equipments.Where(p => (p.Section == s) && (p.WSArea == EquipmentModels.WSNames.二线)).ToList())
+                        foreach (EquipmentModels e in db.Equipments.Where(p => (p.Section == s) && (p.WSArea == EquipmentModels.WSNames.二线)).ToList())
                         {
                             string path = "/Equipment/Details/" + e.EquipmentID;
                             <li><a href=@path>@e.EquipDes</a></li>
                         }
 
                     }
+                    db.Dispose();
                 }
             </ul>
         </div>

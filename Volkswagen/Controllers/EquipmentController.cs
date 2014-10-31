@@ -23,7 +23,7 @@ namespace Volkswagen.Controllers
 //    [Authorize(Roles="Admin")]
     public class EquipmentController : Controller
     {
-        public static SVWContext db = new SVWContext();
+        public SVWContext db = new SVWContext();
         /*private enum operation
         {
             EQ,     // == equal to
@@ -512,7 +512,7 @@ namespace Volkswagen.Controllers
         {
             if (disposing)
             {
-                //db.Dispose();
+                db.Dispose();
             }
             base.Dispose(disposing);
         }

@@ -213,7 +213,7 @@
     @Html.TextBoxFor(model => (model as Volkswagen.Models.EquipmentModels).Remark)
 </div>
 
-<form action="/Equipment/" id="query_form" method="post">
+<form action="/Equipment/" id="query_form" method="get">
     <div class="row">
         <div class="col-sm-6">
             <div class="panel panel-default">
@@ -360,6 +360,12 @@
                 @Html.ActionLink("编辑", "Edit", "Equipment", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
                 @Html.ActionLink("删除", "Delete", "Equipment", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
                 <button class='btn btn-default' @last_one onclick="var sel=document.getElementById('selected_item'); sel.value='@em.Current.EquipmentID';"><span class='glyphicon glyphicon-chevron-right'></span>下一项</button>
+            </div>
+            <div class="row">
+                <div class="btn-group">
+                    @Html.ActionLink("详细", "Details", "Equipment", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
+                    @Ajax.ActionLink("设备保养计划", "Index", "Inspection", new AjaxOptions() { HttpMethod="POST" })
+                </div>
             </div>
         </div>
     }
