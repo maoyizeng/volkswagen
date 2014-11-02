@@ -486,8 +486,8 @@
             {
                 column.For(p => Html.CheckBox("Checked" + p.EquipmentID)).Sortable(false);
                 column.For(p => new MvcHtmlString("<button class='btn btn-sm' onclick=\"var sel = document.getElementById('selected_item'); sel.value='" + @p.EquipmentID + "';\" ><span class='glyphicon glyphicon-eye-open'></span></button>"));
-                column.For(p => new MvcHtmlString("<button class='btn btn-sm' formaction='/Equipment/Edit/" + p.EquipmentID + "'><span class='glyphicon glyphicon-pencil'></span></button>"));
-                column.For(p => new MvcHtmlString("<button class='btn btn-sm' formaction='/Equipment/Delete/" + p.EquipmentID + "'><span class='glyphicon glyphicon-trash'></span></button>"));
+                column.For(p => new MvcHtmlString("<a href='/Equipment/Edit/" + p.EquipmentID + "' class='btn btn-sm'><span class='glyphicon glyphicon-pencil'></span></a>"));
+                column.For(p => new MvcHtmlString("<a href='/Equipment/Delete/" + p.EquipmentID + "' class='btn btn-sm'><span class='glyphicon glyphicon-trash'></span></a>"));
                 column.For(p => p.EquipmentID).Sortable(true);
                 column.For(p => p.EquipDes).Sortable(true);
                 column.For(p => p.Person).Sortable(true);
