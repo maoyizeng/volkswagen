@@ -213,7 +213,7 @@
     @Html.TextBoxFor(model => (model as Volkswagen.Models.EquipmentModels).Remark)
 </div>
 
-<form action="/Equipment/" id="query_form" method="get">
+<form action="/Equipment/" id="query_form" method="post">
     <div class="row">
         <div class="col-sm-6">
             <div class="panel panel-default">
@@ -263,6 +263,9 @@
     @if (ViewData["selected"] != null)
     {
         <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">@ViewData["selected"]</h3>
+            </div>
             <dl class="dl-horizontal">
                 <dt>
                     @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"]).First().EquipDes)
@@ -361,12 +364,17 @@
                 @Html.ActionLink("删除", "Delete", "Equipment", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
                 <button class='btn btn-default' @last_one onclick="var sel=document.getElementById('selected_item'); sel.value='@em.Current.EquipmentID';"><span class='glyphicon glyphicon-chevron-right'></span>下一项</button>
             </div>
-            <div class="row">
+            
                 <div class="btn-group">
-                    @Html.ActionLink("详细", "Details", "Equipment", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
-                    @Ajax.ActionLink("设备保养计划", "Index", "Inspection", new AjaxOptions() { HttpMethod="POST" })
+                    @Html.ActionLink("设备保养计划", "Index", "Inspection", new { field0 = "EquipmentID", op0 = "0", operand0 = em.Current.EquipmentID }, new { @class = "btn btn-default" })
+                    @Html.ActionLink("备件库存", "Index", "Spare", new { field0 = "EquipmentID", op0 = "0", operand0 = em.Current.EquipmentID }, new { @class = "btn btn-default" })
+                    @Html.ActionLink("备件领用记录", "Index", "SpareUser", new { field0 = "EquipmentID", op0 = "0", operand0 = em.Current.EquipmentID }, new { @class = "btn btn-default" })
+                    @Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { field0 = "EquipmentID", op0 = "0", operand0 = em.Current.EquipmentID }, new { @class = "btn btn-default" })
+                    @Html.ActionLink("设备保修单", "Index", "Repair", new { field0 = "EquipmentID", op0 = "0", operand0 = em.Current.EquipmentID }, new { @class = "btn btn-default" })
+                    @Html.ActionLink("设备维护", "Index", "Maintain", new { field0 = "EquipmentID", op0 = "0", operand0 = em.Current.EquipmentID }, new { @class = "btn btn-default" })
+                    @Html.ActionLink("文件库", "Index", "File", new { field0 = "EquipmentID", op0 = "0", operand0 = em.Current.EquipmentID }, new { @class = "btn btn-default" })
                 </div>
-            </div>
+            
         </div>
     }
 

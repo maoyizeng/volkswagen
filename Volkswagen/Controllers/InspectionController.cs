@@ -31,7 +31,7 @@ namespace Volkswagen.Controllers
         {
             ViewData["model"] = model;
 
-            IQueryable<InspectionModels> list = db.Inspections.Where("1 = 1");
+            IQueryable<InspectionModels> list = getQuery(false);
             if (!string.IsNullOrEmpty(model.Column))
             {
                 if (model.Direction == SortDirection.Descending)
@@ -42,10 +42,6 @@ namespace Volkswagen.Controllers
                 {
                     list = list.OrderBy(model.Column + " asc");
                 }
-            }
-            else
-            {
-                return View(db.Inspections.ToList().AsPagination(page ?? 1, 200));
             }
             return View(list.ToList().AsPagination(page ?? 1, 200));
         }
@@ -58,7 +54,7 @@ namespace Volkswagen.Controllers
             model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
             ViewData["model"] = model;
 
-            IQueryable<InspectionModels> list = getQuery();
+            IQueryable<InspectionModels> list = getQuery(true);
 
             if (!string.IsNullOrEmpty(model.Column))
             {
@@ -75,18 +71,18 @@ namespace Volkswagen.Controllers
             return View(list.ToList().AsPagination(page ?? 1, 200));
         }
 
-        private IQueryable<InspectionModels> getQuery()
+        private IQueryable<InspectionModels> getQuery(bool post = true)
         {
             //p
             ParameterExpression param = Expression.Parameter(typeof(InspectionModels), "p");
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
             {
-                string field = Request.Form["field" + n];
+                string field = (post? Request.Form["field" + n] : Request["field" + n]);
                 ViewData["field" + n] = field;
-                string op = Request.Form["op" + n];
+                string op = (post ? Request.Form["op" + n] : Request["op" + n]);
                 ViewData["op" + n] = op;
-                string operand = Request.Form["operand" + n];
+                string operand = (post ? Request.Form["operand" + n] : Request["operand" + n]);
                 ViewData["operand" + n] = operand;
 
                 if (string.IsNullOrEmpty(field)) break;
