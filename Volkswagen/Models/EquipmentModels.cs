@@ -68,13 +68,26 @@ namespace Volkswagen.Models
   //      [StringLength(15)]
         public Nullable<ThereBe> ItemInspect { get; set; }
 
+        [Display(Name = "点检编号")]
+        [StringLength(50)]
+        public string ItemInspectNum { get; set; }
+
+
         [Display(Name = "日常保养")]
   //      [StringLength(15)]
         public Nullable<ThereBe> RegularCare { get; set; }
 
+        [Display(Name = "日常保养编号")]
+        [StringLength(50)]
+        public string RegularCareNum { get; set; }
+
         [Display(Name = "巡检")]
  //       [StringLength(15)]
         public Nullable<ThereBe> Check { get; set; }
+
+        [Display(Name = "巡检编号")]
+        [StringLength(50)]
+        public string CheckNum { get; set; }
 
         public enum YesNo
         {
@@ -140,8 +153,11 @@ namespace Volkswagen.Models
             WSArea = md.WSArea;
             Photo = md.Photo;
             ItemInspect = md.ItemInspect;
+            ItemInspectNum = md.ItemInspectNum;
             RegularCare = md.RegularCare;
+            RegularCareNum = md.RegularCareNum;
             Check = md.Check;
+            CheckNum = md.CheckNum;
             RoutingInspect = md.RoutingInspect;
             ChangeTime = md.ChangeTime;
             Changer = md.Changer;

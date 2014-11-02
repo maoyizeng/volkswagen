@@ -30,7 +30,7 @@
         "保养周期",
         "注意事项",
         "备注",
-        "编号",
+        "保养计划编号",
         "最后修改时间",
         "修改人",
         "创建时间",
@@ -79,6 +79,10 @@
         op.name = "op" + row;
         operand.name = "operand" + row;
 
+        field.id = "field" + row;
+        op.id = "op" + row;
+        operand.id = "operand" + row;
+
         //operand.className = "form-control"
 
         for (var i = 0; i < fieldMap.length; i++) {
@@ -91,11 +95,24 @@
         for (var i = 0; i < opMap.length; i++) {
             var ooption = document.createElement("option");
             ooption.text = opMap[i];
-            ooption.value = i;
+            ooption.value = i.toString();
             op.add(ooption);
         }
 
+        field.onchange = function () {
+            var operand = this.parentElement.children.item(this.parentElement.children.length - 1);
+            var id_placement = operand.id;
+            var name_placement = operand.name;
+            this.parentElement.removeChild(operand);
+            var new_operand = document.getElementById(this.value).cloneNode(true);
+            new_operand.id = id_placement;
+            new_operand.name = name_placement;
+            this.parentElement.appendChild(new_operand);
+            new_operand.name = name_placement;
+        }
+
         var cancel = document.createElement("button");
+        cancel.id = "cancel" + row;
         cancel.type = "button";
         cancel.className = "btn btn-default btn-xs";
         var cancelx = document.createElement("span");
@@ -106,10 +123,11 @@
         };
         cancel.appendChild(cancelx);
 
+        f.appendChild(cancel);
         f.appendChild(field);
         f.appendChild(op);
         f.appendChild(operand);
-        f.appendChild(cancel);
+
 
         fm.appendChild(f);
 
@@ -120,23 +138,46 @@
         var field = document.getElementsByName("field" + r)[0];
         var op = document.getElementsByName("op" + r)[0];
         var operand = document.getElementById("operand" + r);
-        for (var i = 0; i < field.options.length; i++) {
-            if (field.options[i].value == a) {
-                field.options[i].selected = true;
-                break;
-            }
+        var cancel = document.getElementById("cancel" + r)
+
+        field.value = a;
+
+        field.onchange = function () {
+            var operand = this.parentElement.children.item(this.parentElement.children.length - 1);
+            var id_placement = operand.id;
+            var name_placement = operand.name;
+            this.parentElement.removeChild(operand);
+            var new_operand = document.getElementById(this.value).cloneNode(true);
+            new_operand.id = id_placement;
+            new_operand.name = name_placement;
+            this.parentElement.appendChild(new_operand);
+            new_operand.name = name_placement;
         }
-        for (var i = 0; i < op.options.length; i++) {
-            if (op.options[i].value == b) {
-                op.options[i].selected = true;
-                break;
-            }
-        }
-        operand.value = c;
-        if (operand.value == "") {
-            operand.parentElement.hidden = true;
+
+        op.value = b;
+
+        cancel.onclick = function () {
+            this.parentElement.hidden = true;
+            this.parentElement.getElementsByTagName("input").value = null;
+        };
+
+        var id_placement = operand.id;
+        var name_placement = operand.name;
+        field.parentElement.removeChild(operand);
+        var new_operand = document.getElementById(field.value).cloneNode(true);
+        new_operand.id = id_placement;
+        new_operand.name = name_placement;
+        field.parentElement.appendChild(new_operand);
+        new_operand.name = name_placement;
+
+        new_operand.value = c;
+
+        if (new_operand.value == "") {
+            new_operand.parentElement.hidden = true;
         }
     }
+
+    var initial_value = new Array();
 
     function select_all() {
         var inputs = document.getElementById("query_form").getElementsByTagName("input");
@@ -156,6 +197,22 @@
     }
 </script>
 
+<div hidden="hidden">
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).EquipmentID)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).EquipDes)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).Position)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).Part)
+    @Html.DropDownList("Class", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.InspectionModels.InspectionClass))), String.Empty)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).Content)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).Period)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).Caution)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).InspectionId)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).Changer)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).ChangeTime, new { type = "datetime-local" })
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).Creator)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).CreateTime, new { type = "datetime-local" })
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).Remark)
+</div>
 
 <form action="/Inspection/" id="query_form" method="post">
     <div class="row">
@@ -182,18 +239,175 @@
                             }
 
                             <script>
+                                initial_value.push({ field_name: '@field', op_name: '@op', operand_name: '@operand', r_name: '@r' });
                                 append_input();
-                                add_input('@field' , '@op' , '@operand' , '@r' );
                             </script>
                             r++;
                         }
                     }
+                    <script>
+                        window.onload = function () {
+                            for (var i = 0; i < initial_value.length; i++) {
+                                add_input(initial_value[i].field_name, initial_value[i].op_name, initial_value[i].operand_name, initial_value[i].r_name);
+                            }
+                        }
+                    </script>
+
                 </div>
             </div>
         </div>
     </div>
 
     <br />
+
+    @if ((ViewData["selected"] != null) && (ViewData["selected"] != ""))
+    {
+        int ins_id = Convert.ToInt32(ViewData["selected"] as string);
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">@ViewData["selected"]</h3>
+            </div>
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.InspectionId == ins_id).First().EquipmentID)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.InspectionId == ins_id).First().EquipmentID)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.InspectionId == ins_id).First().EquipDes)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.InspectionId == ins_id).First().EquipDes)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.InspectionId == ins_id).First().Class)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.InspectionId == ins_id).First().Class)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.InspectionId == ins_id).First().Part)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.InspectionId == ins_id).First().Part)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.InspectionId == ins_id).First().Position)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.InspectionId == ins_id).First().Position)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.InspectionId == ins_id).First().Content)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.InspectionId == ins_id).First().Content)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.InspectionId == ins_id).First().Period)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.InspectionId == ins_id).First().Period)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.InspectionId == ins_id).First().Caution)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.InspectionId == ins_id).First().Caution)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.InspectionId == ins_id).First().Remark)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.InspectionId == ins_id).First().Remark)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.InspectionId == ins_id).First().ChangeTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.InspectionId == ins_id).First().ChangeTime)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.InspectionId == ins_id).First().Changer)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.InspectionId == ins_id).First().Changer)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.InspectionId == ins_id).First().CreateTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.InspectionId == ins_id).First().CreateTime)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.InspectionId == ins_id).First().Creator)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.InspectionId == ins_id).First().Creator)
+                </dd>
+
+            </dl>
+            @{ var em = Model.GetEnumerator();
+               var current_em = Model.Where(p => p.InspectionId == ins_id).First();
+             var prev_em = em.Current;
+             string first_one = "", last_one = "";
+             try
+             {
+                 em.MoveNext();
+                 while ((em.Current != null) && (em.Current != current_em))
+                 {
+                     prev_em = em.Current;
+                     em.MoveNext();
+                 }
+                 if (prev_em == null)
+                 {
+                     first_one = "disabled=\"disabled\"";
+                     prev_em = em.Current;
+                 }
+                 if (!em.MoveNext())
+                 {
+                     last_one = "disabled=\"disabled\"";
+                 }
+             }
+             catch (Exception) { }
+
+            }
+
+            <div class="btn-group">
+                <button class='btn btn-default' @first_one onclick="var sel=document.getElementById('selected_item'); sel.value='@prev_em.InspectionId';"><span class='glyphicon glyphicon-chevron-left'></span>上一项</button>
+                @Html.ActionLink("详细", "Details", "Inspection", new { id = ins_id }, new { @class = "btn btn-default" })
+                @Html.ActionLink("编辑", "Edit", "Inspection", new { id = ins_id }, new { @class = "btn btn-default" })
+                @Html.ActionLink("删除", "Delete", "Inspection", new { id = ins_id }, new { @class = "btn btn-default" })
+                <button class='btn btn-default' @last_one onclick="var sel=document.getElementById('selected_item'); sel.value='@em.Current.InspectionId';"><span class='glyphicon glyphicon-chevron-right'></span>下一项</button>
+            </div>
+        </div>
+    }
 
     <p>
         @Html.ActionLink("新建", "Create", "Inspection", null, new { @class = "btn btn-default" })
@@ -208,6 +422,8 @@
     @Html.ActionLink("批量修改", "EditMultiple", "Inspection", null, new { @class = "btn btn-default" })
     @Html.ActionLink("批量删除", "DeleteMultiple", "Inspection", null, new { @class = "btn btn-default" })
 
+    <input type="hidden" name="selected_item" id="selected_item" />
+
     @using MvcContrib.UI.Grid
     @using MvcContrib.UI.Pager
     @using MvcContrib.Pagination
@@ -215,6 +431,9 @@
     @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
 {
     column.For(p => Html.CheckBox("Checked" + p.InspectionId)).Sortable(false);
+    column.For(p => new MvcHtmlString("<button class='btn btn-sm' onclick=\"var sel = document.getElementById('selected_item'); sel.value='" + @p.InspectionId + "';\" ><span class='glyphicon glyphicon-eye-open'></span></button>"));
+    column.For(p => new MvcHtmlString("<button class='btn btn-sm' formaction='/Inspection/Edit/" + p.InspectionId + "'><span class='glyphicon glyphicon-pencil'></span></button>"));
+    column.For(p => new MvcHtmlString("<button class='btn btn-sm' formaction='/Inspection/Delete/" + p.InspectionId + "'><span class='glyphicon glyphicon-trash'></span></button>"));
     column.For(p => p.EquipmentID).Sortable(true);
     column.For(p => p.EquipDes).Sortable(true);
     column.For(p => p.Class).Sortable(true);
@@ -229,10 +448,7 @@
     column.For(p => p.CreateTime).Sortable(true);
     column.For(p => p.Creator).Sortable(true);
     column.For(p => p.Remark).Sortable(true);
-    column.For(p => Html.ActionLink("编辑", "Edit", new { id = p.InspectionId }));
-    column.For(p => Html.ActionLink("查看", "Details", new { id = p.InspectionId }));
-    column.For(p => Html.ActionLink("删除", "Delete", new { id = p.InspectionId }));
-}).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse;white-space:nowrap;overflow:hidden;text-overflow:ellipsis", @class => "table table-striped table-hover")
+}).Empty("无数据").Attributes(@width => "100%", @style => "align:left;border-collapse:collapse;white-space:nowrap;overflow:hidden;text-overflow:ellipsis", @class => "table table-striped table-hover table-condensed");
 
-@Html.Pager(Model).First(" 首页 ").Next(" 下一页 ").Previous(" 上一页 ").Last(" 末页 ").Format("共{2}项, 当前{0}-{1} |")
+    @Html.Pager(Model).First(" 首页 ").Next(" 下一页 ").Previous(" 上一页 ").Last(" 末页 ").Format("共{2}项, 当前{0}-{1} |")
 </form>

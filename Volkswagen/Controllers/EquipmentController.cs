@@ -67,7 +67,7 @@ namespace Volkswagen.Controllers
             ViewData["model"] = model;
             ViewData["selected"] = selected_item;
 
-            IQueryable<EquipmentModels> list = db.Equipments.Where("1 = 1");
+            IQueryable<EquipmentModels> list = getQuery(false);
             if (!string.IsNullOrEmpty(model.Column))
             {
                 if (model.Direction == SortDirection.Descending)
@@ -79,14 +79,9 @@ namespace Volkswagen.Controllers
                     list = list.OrderBy(model.Column + " asc");
                 }
             }
-            else
-            {
-                //return View(await db.Equipments.ToListAsync());
-                return View(db.Equipments.ToList().AsPagination(page ?? 1, 200));
-            }
             //list = list.AsPagination(page ?? 1, 5);
             //IPagination<Volkswagen.Models.EquipmentModels> l = list.ToList().AsPagination(page ?? 1, 200);
-            return View(list.ToList().AsPagination(page ?? 1, 200));
+            return View(list.ToList().AsPagination(page ?? 1, 100));
         }
 
         [HttpPost]
@@ -116,11 +111,11 @@ namespace Volkswagen.Controllers
             }
 
             //IPagination<Volkswagen.Models.EquipmentModels> l = list.ToList().AsPagination(page ?? 1, 5);
-            return View(list.ToList().AsPagination(page ?? 1, 200));
+            return View(list.ToList().AsPagination(page ?? 1, 100));
             //return View(l);
         }
 
-        private IQueryable<EquipmentModels> getQuery()
+        private IQueryable<EquipmentModels> getQuery(bool post = true)
         {
             /*string query = "1 = 1";
 
@@ -186,11 +181,11 @@ namespace Volkswagen.Controllers
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
             {
-                string field = Request.Form["field" + n];
+                string field = (post ? Request.Form["field" + n] : Request["field" + n]);
                 ViewData["field" + n] = field;
-                string op = Request.Form["op" + n];
+                string op = (post ? Request.Form["op" + n] : Request["op" + n]);
                 ViewData["op" + n] = op;
-                string operand = Request.Form["operand" + n];
+                string operand = (post ? Request.Form["operand" + n] : Request["operand" + n]);
                 ViewData["operand" + n] = operand;
 
                 if (string.IsNullOrEmpty(field)) break;
@@ -207,17 +202,21 @@ namespace Volkswagen.Controllers
                     right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.WSNames), operand)));
                     right = Expression.Convert(right, left.Type);
                 }
-
-                /*if (left.Type != right.Type)
+                else if ((field == "ItemInspect") || (field == "RegularCare") || (field == "Check"))
                 {
-                    if (left.Type.GenericTypeArguments[0].IsEnum)
-                        right = Expression.Call(null, typeof(Enum).GetMethod("Parse", new Type[] {typeof(Type), typeof(string) }), Expression.Constant(left.Type.GenericTypeArguments[0]), right);
-                    else
-                        right = Expression.Call(null, left.Type.GetMethod("Parse", new Type[] { typeof(string) }), right);
+                    right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.ThereBe), operand)));
                     right = Expression.Convert(right, left.Type);
                 }
-
-                right.Reduce();*/
+                else if (field == "RoutingInspect")
+                {
+                    right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.YesNo), operand)));
+                    right = Expression.Convert(right, left.Type);
+                }
+                else if ((field == "ChangeTime") || (field == "CreateTime"))
+                {
+                    right = Expression.Constant(Convert.ToDateTime(operand));
+                    right = Expression.Convert(right, left.Type);
+                }
 
                 Expression result;
 
@@ -308,7 +307,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,RegularCare,Check,RoutingInspect,Rules,TechnicFile,TrainingFile,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
+        public async Task<ActionResult> Create([Bind(Include="EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,ItemInspectNum,RegularCare,RegularCareNum,Check,CheckNum,RoutingInspect,Rules,TechnicFile,TrainingFile,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
         {
             if (ModelState.IsValid)
             {
@@ -358,7 +357,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,RegularCare,Check,RoutingInspect,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
+        public async Task<ActionResult> Edit([Bind(Include = "EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,ItemInspectNum,RegularCare,RegularCareNum,Check,CheckNum,RoutingInspect,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
         {
             if (ModelState.IsValid)
             {
@@ -404,7 +403,7 @@ namespace Volkswagen.Controllers
         // POST: /Equipment/ChangeMultiple/
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> ChangeMultiple([Bind(Include = "EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,RegularCare,Check,RoutingInspect,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
+        public async Task<ActionResult> ChangeMultiple([Bind(Include = "EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,ItemInspectNum,RegularCare,RegularCareNum,Check,CheckNum,RoutingInspect,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
         {
             bool changed = false;
             List<EquipmentModels> l = new List<EquipmentModels>();
@@ -420,8 +419,11 @@ namespace Volkswagen.Controllers
                     if (equipmentmodels.Section != null  && ModelState.IsValidField("Section")) e.Section = equipmentmodels.Section;
                     if (equipmentmodels.WSArea != null  && ModelState.IsValidField("WSArea")) e.WSArea = equipmentmodels.WSArea;
                     if (equipmentmodels.ItemInspect != null  && ModelState.IsValidField("ItemInspect")) e.ItemInspect = equipmentmodels.ItemInspect;
+                    if (equipmentmodels.ItemInspectNum != null && ModelState.IsValidField("ItemInspectNum")) e.ItemInspectNum = equipmentmodels.ItemInspectNum;
                     if (equipmentmodels.RegularCare != null  && ModelState.IsValidField("RegularCare")) e.RegularCare = equipmentmodels.RegularCare;
+                    if (equipmentmodels.RegularCareNum != null && ModelState.IsValidField("RegularCareNum")) e.RegularCareNum = equipmentmodels.RegularCareNum;
                     if (equipmentmodels.Check != null  && ModelState.IsValidField("Check")) e.Check = equipmentmodels.Check;
+                    if (equipmentmodels.CheckNum != null && ModelState.IsValidField("CheckNum")) e.CheckNum = equipmentmodels.CheckNum;
                     if (equipmentmodels.RoutingInspect != null  && ModelState.IsValidField("RoutingInspect")) e.RoutingInspect = equipmentmodels.RoutingInspect;
                     if (equipmentmodels.Remark != null  && ModelState.IsValidField("Remark")) e.Remark = equipmentmodels.Remark;
                     if (db.Entry(e).State == EntityState.Modified )
@@ -617,8 +619,11 @@ namespace Volkswagen.Controllers
                 sbHtml.AppendFormat(format, i.Section);
                 sbHtml.AppendFormat(format, i.WSArea);
                 sbHtml.AppendFormat(format, i.ItemInspect);
+                sbHtml.AppendFormat(format, i.ItemInspectNum);
                 sbHtml.AppendFormat(format, i.RegularCare);
+                sbHtml.AppendFormat(format, i.RegularCareNum);
                 sbHtml.AppendFormat(format, i.Check);
+                sbHtml.AppendFormat(format, i.CheckNum);
                 sbHtml.AppendFormat(format, i.RoutingInspect);
                 // TODO - photo?
                 sbHtml.AppendFormat(format, i.ChangeTime);

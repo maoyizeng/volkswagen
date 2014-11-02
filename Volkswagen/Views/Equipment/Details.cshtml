@@ -52,6 +52,14 @@
         </dd>
 
         <dt>
+            @Html.DisplayNameFor(model => model.ItemInspectNum)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ItemInspectNum)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.RegularCare)
         </dt>
 
@@ -60,11 +68,27 @@
         </dd>
 
         <dt>
+            @Html.DisplayNameFor(model => model.RegularCareNum)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RegularCareNum)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.Check)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.Check)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CheckNum)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CheckNum)
         </dd>
 
         <dt>
@@ -150,11 +174,15 @@ for (var i = 1; i < sArray.Length; i++)
 </div>
 <p>
     @using Volkswagen.Controllers
-    @*@Html.ActionLink("保养计划", "Details", "Inspection", new { id = Volkswagen.Controllers.EquipmentController.db.Inspections.Where(p => p.EquipmentID == Model.EquipmentID).ToList().First().InspectionId }) |
-    @Html.ActionLink("备件库存", "Details", "Spare", new { id = Volkswagen.Controllers.EquipmentController.db.Spares.Where(p => p.EquipmentID == Model.EquipmentID).ToList().First().SpareID }) |
-    @Html.ActionLink("报修单", "Details", "Repair", new { id = Volkswagen.Controllers.EquipmentController.db.Repairs.Where(p => p.EquipmentID == Model.EquipmentID).ToList().First().RepairID }) |
-    @Html.ActionLink("台账", "Details", "EquipLog", new { id = Model.EquipmentID }) |
-    @Html.ActionLink("维护及状态跟踪", "Details", "Maintain", new { id = Volkswagen.Controllers.EquipmentController.db.Maintains.Where(p => p.EquipmentID == Model.EquipmentID).ToList().First().MaintainId }) *@
+    <div class="btn-group">
+        @Html.ActionLink("设备保养计划", "Index", "Inspection", new { field0 = "EquipmentID", op0 = "0", operand0 = Model.EquipmentID }, new { @class = "btn btn-default" })
+        @Html.ActionLink("备件库存", "Index", "Spare", new { field0 = "EquipmentID", op0 = "0", operand0 = Model.EquipmentID }, new { @class = "btn btn-default" })
+        @Html.ActionLink("备件领用记录", "Index", "SpareUser", new { field0 = "EquipmentID", op0 = "0", operand0 = Model.EquipmentID }, new { @class = "btn btn-default" })
+        @Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { field0 = "EquipmentID", op0 = "0", operand0 = Model.EquipmentID }, new { @class = "btn btn-default" })
+        @Html.ActionLink("设备保修单", "Index", "Repair", new { field0 = "EquipmentID", op0 = "0", operand0 = Model.EquipmentID }, new { @class = "btn btn-default" })
+        @Html.ActionLink("设备维护", "Index", "Maintain", new { field0 = "EquipmentID", op0 = "0", operand0 = Model.EquipmentID }, new { @class = "btn btn-default" })
+        @Html.ActionLink("文件库", "Index", "File", new { field0 = "EquipmentID", op0 = "0", operand0 = Model.EquipmentID }, new { @class = "btn btn-default" })
+    </div>
 </p>
 <p>
     @Html.ActionLink("编辑", "Edit", new { id = Model.EquipmentID }) |

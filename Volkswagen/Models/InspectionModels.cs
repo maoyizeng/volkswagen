@@ -59,7 +59,7 @@ namespace Volkswagen.Models
         public string Remark { get; set; }
 
         [Key]
-        [Display(Name = "编号")]
+        [Display(Name = "保养计划编号")]
  //       [StringLength(15)]
         public int InspectionId { get; set; }
 

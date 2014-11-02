@@ -28,13 +28,8 @@
             <a href="#" class="navbar-brand" data-bind="click: navigateToHome">上海大众</a>
         </div>
 
-
-
-
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <!--<li>@Html.ActionLink("主页", "Index", "Home", new { area = "" }, null)</li>-->
-                <!--<li>@Html.ActionLink("设备履历", "Index", "Equipment", new { area = "" }, null)</li>-->
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">设备 <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
@@ -51,15 +46,9 @@
                         <li>@Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { area = "" }, null)</li>
                     </ul>
                 </li>
-                <!--<li>@Html.ActionLink("设备保养计划", "Index", "Inspection", new { area = "" }, null)</li>-->
-                <!--<li>@Html.ActionLink("备件库存", "Index", "Spare", new { area = "" }, null)</li>
-                <li>@Html.ActionLink("备件领用记录", "Index", "SpareUser", new { area = "" }, null)</li>
-                <li>@Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { area = "" }, null)</li>-->
                 <li>@Html.ActionLink("设备保修单", "Index", "Repair", new { area = "" }, null)</li>
-                <li>@Html.ActionLink("交班记录", "Index", "Shift", new { area = "" }, null)/li>
-                <!--<li>@Html.ActionLink("设备台账", "Index", "EquipLog", new { area = "" }, null)</li>-->
+                <li>@Html.ActionLink("交班记录", "Index", "Shift", new { area = "" }, null)</li>
                 <li>@Html.ActionLink("设备维护", "Index", "Maintain", new { area = "" }, null)</li>
-                <!--<li>@Html.ActionLink("API", "Index", "Help", new { area = "HelpPage" }, null)</li>-->
                 <li>@Html.ActionLink("人员信息", "Index", "User", new { area = "" }, null)</li>
                 <li>@Html.ActionLink("文件库", "Index", "File", new { area = "" }, null)</li>
                 <li class="dropdown">
@@ -86,8 +75,6 @@
                 <li><a href="#" data-bind="click: logOff">注销</a></li>
             </ul>
         </div>
-
-
     </div>
 
     <div data-bind="foreach: errors" class="padding-error">

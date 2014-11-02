@@ -22,7 +22,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.EquipDes, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.EquipDes, new { @class = "form-control" })
+                @Html.TextAreaFor(model => model.EquipDes, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.EquipDes)
             </div>
             @Html.LabelFor(model => model.Person, new { @class = "control-label col-md-1" })
@@ -51,6 +51,11 @@
                 @Html.DropDownList("ItemInspect", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.ThereBe))), Model.ItemInspect)
                 @Html.ValidationMessageFor(model => model.ItemInspect)
             </div>
+            @Html.LabelFor(model => model.ItemInspectNum, new { @class = "control-label col-md-1" })
+            <div class="col-md-2">
+                @Html.TextAreaFor(model => model.ItemInspectNum, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ItemInspectNum)
+            </div>
         </div>
 
         <div class="form-group">
@@ -59,6 +64,11 @@
                 @Html.DropDownList("RegularCare", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.ThereBe))), Model.RegularCare)
                 @Html.ValidationMessageFor(model => model.RegularCare)
             </div>
+            @Html.LabelFor(model => model.RegularCareNum, new { @class = "control-label col-md-1" })
+            <div class="col-md-2">
+                @Html.TextAreaFor(model => model.RegularCareNum, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.RegularCareNum)
+            </div>
         </div>
 
         <div class="form-group">
@@ -66,6 +76,11 @@
             <div class="col-md-2">
                 @Html.DropDownList("Check", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.ThereBe))), Model.Check)
                 @Html.ValidationMessageFor(model => model.Check)
+            </div>
+            @Html.LabelFor(model => model.CheckNum, new { @class = "control-label col-md-1" })
+            <div class="col-md-2">
+                @Html.TextAreaFor(model => model.CheckNum, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CheckNum)
             </div>
         </div>
 
@@ -77,40 +92,10 @@
             </div>
         </div>
 
-        <!--
-        <div class="form-group">
-            @Html.LabelFor(model => model.ChangeTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ChangeTime)
-                @Html.ValidationMessageFor(model => model.ChangeTime)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Changer, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Changer)
-                @Html.ValidationMessageFor(model => model.Changer)
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CreateTime, new { @class = "control-label col-md-2" })
-            <div class="col-md-2">
-                @Html.DisplayFor(model => model.CreateTime, new { @class = "control-label" })
-            </div>
-            @Html.LabelFor(model => model.Creator, new { @class = "control-label col-md-1" })
-            <div class="col-md-2">
-                @Html.DisplayFor(model => model.Creator, new { @class = "control-label" })
-            </div>
-        </div>
-            -->
-
         <div class="form-group">
             @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
+                @Html.TextAreaFor(model => model.Remark, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Remark)
             </div>
         </div>
@@ -142,29 +127,6 @@
         </div>
     </div>
 }
-
-<!-- <div class="form-group">
-    @*@Html.LabelFor(model => model.TPMFile, new { @class = "control-label col-md-2" })*@
-    <div class="col-md-10">
-        @*@Html.EditorFor(model => model.TPMFile)
-            @Html.ValidationMessageFor(model => model.TPMFile)*@
-        @using (Html.BeginForm("FileUpload", "Equipment", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-            /*<input type="file" name="file" value="浏览" />
-            <input type="submit" value="上传" />
-            <input type="submit" value="删除" />*/
-            <div class="form-group">
-                 <input id="file-tpm" type="file" class="file" name="tpmfile" data-preview-file-type="any"  data-overwrite-initial="true">
-            </div>
-            <div class="form-group">
-                 <input id="file-tpm" type="file" class="file" name="tpmfile" data-preview-file-type="any"  data-overwrite-initial="true" multiple=true>
-            </div>
-            <div class="form-group">
-                 <input id="file-tpm" type="file" class="file" name="tpmfile" data-preview-file-type="any" data-initial-caption="" data-overwrite-initial="true">
-            </div>
-        }
-    </div>
-</div> -->
 
 <div class="form-horizontal">
     <div class="row">

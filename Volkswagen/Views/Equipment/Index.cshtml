@@ -27,8 +27,11 @@
         "所在工段",
         "车间生产线",
         "点检",
+        "点检编号",
         "日常保养",
+        "日常保养编号",
         "巡检",
+        "巡检编号",
         "需更新否",
         "最后修改时间",
         "修改人",
@@ -54,8 +57,11 @@
     "Section",
     "WSArea",
     "ItemInspect",
+    "ItemInspectNum",
     "RegularCare",
+    "RegularCareNum",
     "Check",
+    "CheckNum",
     "RoutingInspect",
     "ChangeTime",
     "Changer",
@@ -179,8 +185,6 @@
 
     var initial_value = new Array();
 
-
-
     function select_all() {
         var inputs = document.getElementById("query_form").getElementsByTagName("input");
         for (var i = 0; i < inputs.length; i++) {
@@ -210,6 +214,13 @@
     @Html.DropDownList("RegularCare", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.ThereBe))), String.Empty)
     @Html.DropDownList("Check", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.ThereBe))), String.Empty)
     @Html.DropDownList("RoutingInspect", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.YesNo))), String.Empty)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.EquipmentModels).ItemInspectNum)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.EquipmentModels).RegularCareNum)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.EquipmentModels).CheckNum)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.EquipmentModels).Changer)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.EquipmentModels).ChangeTime, new { type = "datetime-local" })
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.EquipmentModels).Creator)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.EquipmentModels).CreateTime, new { type = "datetime-local" })
     @Html.TextBoxFor(model => (model as Volkswagen.Models.EquipmentModels).Remark)
 </div>
 
@@ -245,7 +256,7 @@
                         }
                     }
                     <script>
-                        document.onreadystatechange = function () {
+                        window.onload = function () {
                             for (var i = 0; i < initial_value.length; i++) {
                                 add_input(initial_value[i].field_name, initial_value[i].op_name, initial_value[i].operand_name, initial_value[i].r_name);
                             }
@@ -260,7 +271,7 @@
     <br />
 
     <!-- <form action="/Equipment/" id="grid_form" method="post"> -->
-    @if (ViewData["selected"] != null)
+    @if ((ViewData["selected"] != null) && (ViewData["selected"] != ""))
     {
         <div class="panel">
             <div class="panel-heading">
@@ -330,32 +341,105 @@
                 <dd>
                     @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().RoutingInspect)
                 </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().ChangeTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().ChangeTime)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Changer)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Changer)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().CreateTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().CreateTime)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Creator)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Creator)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Remark)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Remark)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Photo)
+                </dt>
+
+                <dd>
+                    @using System.Text.RegularExpressions;
+
+                    <div class="row">
+                        <div class="col-xs-6 col-md-3">
+                            @{
+        string init = Model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Photo;
+        if (init == null)
+        {
+            <p>无</p>
+        }
+        else
+        {
+            <a class="thumbnail">
+                @{string[] sArray = Regex.Split(init, "[$]");//, RegexOptions.IgnoreCase);
+                for (var i = 1; i < sArray.Length; i++)
+                {
+                    <img src='/img/equipments/@sArray[i]'>
+                }
+                }
+            </a>
+        }
+                            }
+                        </div>
+                    </div>
+                </dd>
+
+
             </dl>
             @{ var em = Model.GetEnumerator();
-               var current_em = Model.Where(p => p.EquipmentID == ViewData["selected"] as string).First();
-               var prev_em = em.Current;
-               string first_one = "", last_one = "";
-               try
-               {
-                   em.MoveNext();
-                   while ((em.Current != null) && (em.Current != current_em))
-                   {
-                       prev_em = em.Current;
-                       em.MoveNext();
-                   }
-                   if (prev_em == null)
-                   {
-                       first_one = "disabled=\"disabled\"";
-                       prev_em = em.Current;
-                   }
-                   if (!em.MoveNext())
-                   {
-                       last_one = "disabled=\"disabled\"";
-                   }
-               }
-               catch (Exception) { }
-                   
-               }
+             var current_em = Model.Where(p => p.EquipmentID == ViewData["selected"] as string).First();
+             var prev_em = em.Current;
+             string first_one = "", last_one = "";
+             try
+             {
+                 em.MoveNext();
+                 while ((em.Current != null) && (em.Current != current_em))
+                 {
+                     prev_em = em.Current;
+                     em.MoveNext();
+                 }
+                 if (prev_em == null)
+                 {
+                     first_one = "disabled=\"disabled\"";
+                     prev_em = em.Current;
+                 }
+                 if (!em.MoveNext())
+                 {
+                     last_one = "disabled=\"disabled\"";
+                 }
+             }
+             catch (Exception) { }
+
+            }
 
             <div class="btn-group">
                 <button class='btn btn-default' @first_one onclick="var sel=document.getElementById('selected_item'); sel.value='@prev_em.EquipmentID';"><span class='glyphicon glyphicon-chevron-left'></span>上一项</button>
@@ -364,17 +448,17 @@
                 @Html.ActionLink("删除", "Delete", "Equipment", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
                 <button class='btn btn-default' @last_one onclick="var sel=document.getElementById('selected_item'); sel.value='@em.Current.EquipmentID';"><span class='glyphicon glyphicon-chevron-right'></span>下一项</button>
             </div>
-            
-                <div class="btn-group">
-                    @Html.ActionLink("设备保养计划", "Index", "Inspection", new { field0 = "EquipmentID", op0 = "0", operand0 = em.Current.EquipmentID }, new { @class = "btn btn-default" })
-                    @Html.ActionLink("备件库存", "Index", "Spare", new { field0 = "EquipmentID", op0 = "0", operand0 = em.Current.EquipmentID }, new { @class = "btn btn-default" })
-                    @Html.ActionLink("备件领用记录", "Index", "SpareUser", new { field0 = "EquipmentID", op0 = "0", operand0 = em.Current.EquipmentID }, new { @class = "btn btn-default" })
-                    @Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { field0 = "EquipmentID", op0 = "0", operand0 = em.Current.EquipmentID }, new { @class = "btn btn-default" })
-                    @Html.ActionLink("设备保修单", "Index", "Repair", new { field0 = "EquipmentID", op0 = "0", operand0 = em.Current.EquipmentID }, new { @class = "btn btn-default" })
-                    @Html.ActionLink("设备维护", "Index", "Maintain", new { field0 = "EquipmentID", op0 = "0", operand0 = em.Current.EquipmentID }, new { @class = "btn btn-default" })
-                    @Html.ActionLink("文件库", "Index", "File", new { field0 = "EquipmentID", op0 = "0", operand0 = em.Current.EquipmentID }, new { @class = "btn btn-default" })
-                </div>
-            
+
+            <div class="btn-group">
+                @Html.ActionLink("设备保养计划", "Index", "Inspection", new { field0 = "EquipmentID", op0 = "0", operand0 = current_em.EquipmentID }, new { @class = "btn btn-default" })
+                @Html.ActionLink("备件库存", "Index", "Spare", new { field0 = "EquipmentID", op0 = "0", operand0 = current_em.EquipmentID }, new { @class = "btn btn-default" })
+                @Html.ActionLink("备件领用记录", "Index", "SpareUser", new { field0 = "EquipmentID", op0 = "0", operand0 = current_em.EquipmentID }, new { @class = "btn btn-default" })
+                @Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { field0 = "EquipmentID", op0 = "0", operand0 = current_em.EquipmentID }, new { @class = "btn btn-default" })
+                @Html.ActionLink("设备保修单", "Index", "Repair", new { field0 = "EquipmentID", op0 = "0", operand0 = current_em.EquipmentID }, new { @class = "btn btn-default" })
+                @Html.ActionLink("设备维护", "Index", "Maintain", new { field0 = "EquipmentID", op0 = "0", operand0 = current_em.EquipmentID }, new { @class = "btn btn-default" })
+                @Html.ActionLink("文件库", "Index", "File", new { field0 = "EquipmentID", op0 = "0", operand0 = current_em.EquipmentID }, new { @class = "btn btn-default" })
+            </div>
+
         </div>
     }
 
@@ -409,10 +493,13 @@
                 column.For(p => p.Person).Sortable(true);
                 column.For(p => p.Section).Sortable(true);
                 column.For(p => p.WSArea).Sortable(true);
-                column.For(p => p.Photo.IsEmpty() ? "无" : "有").Named("设备图片").Sortable(true);
+                column.For(p => p.Photo.IsEmpty() ? "无" : "有").Named("设备图片").Sortable(false);
                 column.For(p => p.ItemInspect).Sortable(true);
+                column.For(p => p.ItemInspectNum).Sortable(true);
                 column.For(p => p.RegularCare).Sortable(true);
+                column.For(p => p.RegularCareNum).Sortable(true);
                 column.For(p => p.Check).Sortable(true);
+                column.For(p => p.CheckNum).Sortable(true);
                 column.For(p => p.RoutingInspect).Sortable(true);
                 column.For(p => p.ChangeTime).Sortable(true);
                 column.For(p => p.Changer).Sortable(true);
