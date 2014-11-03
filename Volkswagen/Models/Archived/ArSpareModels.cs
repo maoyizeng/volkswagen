@@ -32,9 +32,9 @@ namespace Volkswagen.Models
  //       [StringLength(30)]
         public string Picture1 { get; set; }
 
-        [Display(Name = "图片2")]
+        //[Display(Name = "图片2")]
         //       [StringLength(30)]
-        public string Picture2 { get; set; }
+        //public string Picture2 { get; set; }
 
         [Display(Name = "仓位号")]
         [StringLength(50)]
@@ -121,7 +121,7 @@ namespace Volkswagen.Models
             SpareDes = md.SpareDes;
             Type = md.Type;
             Picture1 = md.Picture1;
-            Picture2 = md.Picture2;
+            //Picture2 = md.Picture2;
             Mark = md.Mark;
             PresentValue = md.PresentValue;
             SafeValue = md.SafeValue;

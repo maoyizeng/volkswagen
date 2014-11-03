@@ -18,14 +18,9 @@
         @Html.HiddenFor(model => model.SpareID)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.SpareID, new { @class = "control-label col-md-2" })
-            <div class="col-md-2">
-                @Html.TextBoxFor(model => model.SpareID, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.SpareID)
-            </div>
             @Html.LabelFor(model => model.SpareDes, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.SpareDes, new { @class = "form-control" })
+                @Html.TextAreaFor(model => model.SpareDes, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.SpareDes)
             </div>
         </div>
@@ -33,7 +28,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.EquipmentID, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.DropDownList("EquipmentID", String.Empty)
+                @Html.TextBoxFor(model => model.EquipmentID, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.EquipmentID)
             </div>
         </div>
@@ -41,7 +36,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Type, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.Type, new { @class = "form-control" })
+                @Html.TextAreaFor(model => model.Type, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Type)
             </div>
             @Html.LabelFor(model => model.Mark, new { @class = "control-label col-md-2" })
@@ -97,7 +92,7 @@
             </div>
             @Html.LabelFor(model => model.KeyPart, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.KeyPart, new { @class = "form-control" })
+                @Html.DropDownList("KeyPart", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.SpareModels.KeyPartType))), Model.KeyPart)
                 @Html.ValidationMessageFor(model => model.KeyPart)
             </div>
         </div>
@@ -105,7 +100,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
+                @Html.TextAreaFor(model => model.Remark, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Remark)
             </div>
         </div>

@@ -304,7 +304,6 @@ namespace Volkswagen.ArControllers
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.SpareDes);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Type);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Picture1);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Picture2);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Mark);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.PresentValue);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.SafeValue);

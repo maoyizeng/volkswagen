@@ -148,6 +148,10 @@
             @Html.DisplayFor(model => model.Creator)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.Picture1)
+        </dt>
+
         <dd>
             @using System.Text.RegularExpressions;
 
@@ -175,36 +179,7 @@
             </div>
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Picture2)
-        </dt>
-
-        <dd>
-            @using System.Text.RegularExpressions;
-
-            <div class="row">
-                <div class="col-xs-6 col-md-3">
-                    @{
-                        string init2 = Model.Picture2;
-                        if (init2 == null)
-                        {
-                            <p>无</p>
-                        }
-                        else
-                        {
-                            <a class="thumbnail">
-                                @{string[] sArray2 = Regex.Split(init2, "[$]");//, RegexOptions.IgnoreCase);
-                                for (var i = 1; i < sArray2.Length; i++)
-                                {
-                                    <img src='/img/spare/@sArray2[i]'>
-                                }
-                                }
-                            </a>
-                        }
-                    }
-                </div>
-            </div>
-        </dd>
+        
 
     </dl>
 

@@ -96,7 +96,7 @@ namespace Volkswagen.Controllers
                 Expression right = Expression.Constant(operand);
                 Expression result;
 
-                if (field == "Class")
+                /*if (field == "Class")
                 {
                     right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(InspectionModels.InspectionClass), operand)));
                     right = Expression.Convert(right, left.Type);
@@ -105,6 +105,25 @@ namespace Volkswagen.Controllers
                 {
                     right = Expression.Constant(Convert.ToDateTime(operand));
                     right = Expression.Convert(right, left.Type);
+                }*/
+
+                switch (field)
+                {
+                    case "Class":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(InspectionModels.InspectionClass), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "ChangeTime":
+                    case "CreateTime":
+                        right = Expression.Constant(Convert.ToDateTime(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "InspectionId":
+                        right = Expression.Constant(int.Parse(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    default:
+                    break;
                 }
 
                 switch (op)

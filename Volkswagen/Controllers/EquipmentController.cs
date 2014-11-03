@@ -197,7 +197,7 @@ namespace Volkswagen.Controllers
                 //[operandn]
                 Expression right = Expression.Constant(operand);
 
-                if (field == "WSArea")
+                /*if (field == "WSArea")
                 {
                     right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.WSNames), operand)));
                     right = Expression.Convert(right, left.Type);
@@ -216,6 +216,31 @@ namespace Volkswagen.Controllers
                 {
                     right = Expression.Constant(Convert.ToDateTime(operand));
                     right = Expression.Convert(right, left.Type);
+                }*/
+
+                switch (field)
+                {
+                    case "WSArea":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.WSNames), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "ItemInspect":
+                    case "RegularCare":
+                    case "Check":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.ThereBe), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "RoutingInspect":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.YesNo), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "ChangeTime":
+                    case "CreateTime":
+                        right = Expression.Constant(Convert.ToDateTime(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    default:
+                        break;
                 }
 
                 Expression result;

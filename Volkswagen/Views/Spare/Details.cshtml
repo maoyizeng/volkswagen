@@ -178,43 +178,12 @@
             </div>
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Picture2)
-        </dt>
-
-        <dd>
-            @using System.Text.RegularExpressions;
-
-            <div class="row">
-                <div class="col-xs-6 col-md-3">
-                    @{
-                        string init2 = Model.Picture2;
-                        if (init2 == null)
-                        {
-                            <p>无</p>
-                        }
-                        else
-                        {
-                            <a class="thumbnail">
-                                @{string[] sArray2 = Regex.Split(init2, "[$]");//, RegexOptions.IgnoreCase);
-                                for (var i = 1; i < sArray2.Length; i++)
-                                {
-                                    <img src='/img/spare/@sArray2[i]'>
-                                }
-                                }
-                            </a>
-                        }
-                    }
-                </div>
-            </div>
-        </dd>
-
     </dl>
 </div>
 <p>
     @using Volkswagen.Controllers
-    @*@Html.ActionLink("领用记录", "Details", "SpareUser", new { id = Volkswagen.Controllers.EquipmentController.db.SpareUsers.Where(p => p.SpareID == Model.SpareID).ToList().First().UserID }) |
-    @Html.ActionLink("订购信息", "Details", "SpareOrder", new { id = Volkswagen.Controllers.EquipmentController.db.SpareOrders.Where(p => p.SpareID == Model.SpareID).ToList().First().OrderID }) *@
+    @Html.ActionLink("备件领用记录", "Index", "SpareUser", new { field0 = "SpareID", op0 = "0", operand0 = Model.SpareID }, new { @class = "btn btn-default" })
+    @Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { field0 = "SpareID", op0 = "0", operand0 = Model.SpareID }, new { @class = "btn btn-default" })
 </p>
 <p>
     @Html.ActionLink("编辑", "Edit", new { id = Model.SpareID }) |

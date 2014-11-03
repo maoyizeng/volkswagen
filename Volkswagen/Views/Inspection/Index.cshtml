@@ -57,7 +57,7 @@
     "Period",
     "Caution",
     "Remark",
-    "InspectionID",
+    "InspectionId",
     "ChangeTime",
     "Changer",
     "CreateTime",
@@ -432,8 +432,8 @@
 {
     column.For(p => Html.CheckBox("Checked" + p.InspectionId)).Sortable(false);
     column.For(p => new MvcHtmlString("<button class='btn btn-sm' onclick=\"var sel = document.getElementById('selected_item'); sel.value='" + @p.InspectionId + "';\" ><span class='glyphicon glyphicon-eye-open'></span></button>"));
-    column.For(p => new MvcHtmlString("<a href='/Inspection/Edit/" + p.InspectionId + "' class='btn btn-sm'><span class='glyphicon glyphicon-pencil'></span></button>"));
-    column.For(p => new MvcHtmlString("<a href='/Inspection/Delete/" + p.InspectionId + "' class='btn btn-sm'><span class='glyphicon glyphicon-trash'></span></button>"));
+    column.For(p => new MvcHtmlString("<a href='/Inspection/Edit/" + p.InspectionId + "' class='btn btn-sm'><span class='glyphicon glyphicon-pencil'></span></a>"));
+    column.For(p => new MvcHtmlString("<a href='/Inspection/Delete/" + p.InspectionId + "' class='btn btn-sm'><span class='glyphicon glyphicon-trash'></span></a>"));
     column.For(p => p.EquipmentID).Sortable(true);
     column.For(p => p.EquipDes).Sortable(true);
     column.For(p => p.Class).Sortable(true);

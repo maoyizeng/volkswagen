@@ -28,12 +28,12 @@
         <div class="form-group">
             @Html.LabelFor(model => model.SpareID, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.DropDownList("SpareID", String.Empty)
+                @Html.TextBoxFor(model => model.SpareID, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.SpareID)
             </div>
             @Html.LabelFor(model => model.SpareDes, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.DropDownList("SpareDes", String.Empty)
+                @Html.TextBoxFor(model => model.SpareDes, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.SpareDes)
             </div>
         </div>
@@ -41,7 +41,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Type, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.Type, new { @class = "control-label col-md-2" })
+                @Html.TextAreaFor(model => model.Type, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Type)
             </div>
         </div>
@@ -49,12 +49,12 @@
         <div class="form-group">
             @Html.LabelFor(model => model.InValue, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.InValue, new { @class = "control-label col-md-2" })
+                @Html.TextBoxFor(model => model.InValue, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.InValue)
             </div>
             @Html.LabelFor(model => model.OutValue, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.OutValue, new { @class = "control-label col-md-2" })
+                @Html.TextBoxFor(model => model.OutValue, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.OutValue)
             </div>
         </div>
@@ -62,7 +62,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.User, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.User, new { @class = "control-label col-md-2" })
+                @Html.TextBoxFor(model => model.User, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.User)
             </div>
             @Html.LabelFor(model => model.UseTime, new { @class = "control-label col-md-2" })
@@ -75,7 +75,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ActualUse, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.ActualUse, new { @class = "control-label col-md-2" })
+                @Html.TextBoxFor(model => model.ActualUse, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.ActualUse)
             </div>
         </div>

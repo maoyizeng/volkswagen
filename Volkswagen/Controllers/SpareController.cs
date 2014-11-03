@@ -24,11 +24,12 @@ namespace Volkswagen.Controllers
         private SVWContext db = new SVWContext();
 
         // GET: /Spare/
-        public async Task<ActionResult> Index(int? page, GridSortOptions model)
+        public async Task<ActionResult> Index(int? page, GridSortOptions model, string selected_item)
         {
             ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
 
-            IQueryable<SpareModels> list = db.Spares.Where("1 = 1");
+            IQueryable<SpareModels> list = getQuery(false);
             if (!string.IsNullOrEmpty(model.Column))
             {
                 if (model.Direction == SortDirection.Descending)
@@ -40,20 +41,18 @@ namespace Volkswagen.Controllers
                     list = list.OrderBy(model.Column + " asc");
                 }
             }
-            else
-            {
-                return View(db.Spares.ToList().AsPagination(page ?? 1, 200));
-            }
-            return View(list.ToList().AsPagination(page ?? 1, 200));
+            
+            return View(list.ToList().AsPagination(page ?? 1, 100));
         }
 
         [HttpPost]
-        public async Task<ActionResult> Index(int? page)
+        public async Task<ActionResult> Index(int? page, string selected_item)
         {
             GridSortOptions model = new GridSortOptions();
             model.Column = Request.Form["Column"];
             model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
             ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
 
             IQueryable<SpareModels> list = getQuery();
 
@@ -69,21 +68,21 @@ namespace Volkswagen.Controllers
                 }
             }
 
-            return View(list.ToList().AsPagination(page ?? 1, 200));
+            return View(list.ToList().AsPagination(page ?? 1, 100));
         }
 
-        private IQueryable<SpareModels> getQuery()
+        private IQueryable<SpareModels> getQuery(bool post = true)
         {
             //p
             ParameterExpression param = Expression.Parameter(typeof(SpareModels), "p");
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
             {
-                string field = Request.Form["field" + n];
+                string field = (post ? Request.Form["field" + n] : Request["field" + n]);
                 ViewData["field" + n] = field;
-                string op = Request.Form["op" + n];
+                string op = (post ? Request.Form["op" + n] : Request["op" + n]);
                 ViewData["op" + n] = op;
-                string operand = Request.Form["operand" + n];
+                string operand = (post ? Request.Form["operand" + n] : Request["operand" + n]);
                 ViewData["operand" + n] = operand;
 
                 if (string.IsNullOrEmpty(field)) break;
@@ -94,6 +93,28 @@ namespace Volkswagen.Controllers
                 //[operandn]
                 Expression right = Expression.Constant(operand);
                 Expression result;
+
+                switch (field)
+                {
+                    case "KeyPart":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(SpareModels.KeyPartType), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "ChangeTime":
+                    case "CreateTime":
+                        right = Expression.Constant(Convert.ToDateTime(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "PresentValue":
+                    case "SafeValue":
+                    case "DCMinValue":
+                    case "DCMaxValue":
+                        right = Expression.Constant(int.Parse(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    default:
+                    break;
+                }
 
                 switch (op)
                 {
@@ -179,7 +200,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="SpareID,SpareDes,Type,Picture1,Picture2,Mark,PresentValue,SafeValue,DCMinValue,DCMaxValue,Property,EquipmentID,Producer,OrderNumber,Remark,KeyPart,File,ChangeTime,Changer,CreateTime,Creator")] SpareModels sparemodels)
+        public async Task<ActionResult> Create([Bind(Include="SpareID,SpareDes,Type,Picture1,Mark,PresentValue,SafeValue,DCMinValue,DCMaxValue,Property,EquipmentID,Producer,OrderNumber,Remark,KeyPart,File,ChangeTime,Changer,CreateTime,Creator")] SpareModels sparemodels)
         {
             if (ModelState.IsValid)
             {
@@ -224,7 +245,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include="SpareID,SpareDes,Type,Picture1,Picture2,Mark,PresentValue,SafeValue,DCMinValue,DCMaxValue,Property,EquipmentID,Producer,OrderNumber,Remark,KeyPart,File,ChangeTime,Changer,CreateTime,Creator")] SpareModels sparemodels)
+        public async Task<ActionResult> Edit([Bind(Include="SpareID,SpareDes,Type,Picture1,Mark,PresentValue,SafeValue,DCMinValue,DCMaxValue,Property,EquipmentID,Producer,OrderNumber,Remark,KeyPart,File,ChangeTime,Changer,CreateTime,Creator")] SpareModels sparemodels)
         {
             if (ModelState.IsValid)
             {
@@ -270,7 +291,7 @@ namespace Volkswagen.Controllers
         // POST: /Spare/ChangeMultiple/
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> ChangeMultiple([Bind(Include = "SpareID,SpareDes,Type,Picture1,Picture2,Mark,PresentValue,SafeValue,DCMinValue,DCMaxValue,Property,EquipmentID,Producer,OrderNumber,Remark,KeyPart,File,ChangeTime,Changer,CreateTime,Creator")] SpareModels sparemodels)
+        public async Task<ActionResult> ChangeMultiple([Bind(Include = "SpareID,SpareDes,Type,Picture1,Mark,PresentValue,SafeValue,DCMinValue,DCMaxValue,Property,EquipmentID,Producer,OrderNumber,Remark,KeyPart,File,ChangeTime,Changer,CreateTime,Creator")] SpareModels sparemodels)
         {
             bool changed = false;
             List<SpareModels> l = new List<SpareModels>();
@@ -453,8 +474,7 @@ namespace Volkswagen.Controllers
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.SpareID);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.SpareDes);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Type);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Picture1);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Picture2);
+                //sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Picture1);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Mark);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.PresentValue);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.SafeValue);
