@@ -24,11 +24,12 @@ namespace Volkswagen.Controllers
         private SVWContext db = new SVWContext();
 
         // GET: /User/
-        public async Task<ActionResult> Index(int? page, GridSortOptions model)
+        public async Task<ActionResult> Index(int? page, GridSortOptions model, string selected_item)
         {
             ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
 
-            IQueryable<UserModels> list = db.Users.Where("1 = 1");
+            IQueryable<UserModels> list = getQuery(false);
             if (!string.IsNullOrEmpty(model.Column))
             {
                 if (model.Direction == SortDirection.Descending)
@@ -40,20 +41,17 @@ namespace Volkswagen.Controllers
                     list = list.OrderBy(model.Column + " asc");
                 }
             }
-            else
-            {
-                return View(db.Users.ToList().AsPagination(page ?? 1, 200));
-            }
-            return View(list.ToList().AsPagination(page ?? 1, 200));
+            return View(list.ToList().AsPagination(page ?? 1, 100));
         }
 
         [HttpPost]
-        public async Task<ActionResult> Index(int? page)
+        public async Task<ActionResult> Index(int? page, string selected_item)
         {
             GridSortOptions model = new GridSortOptions();
             model.Column = Request.Form["Column"];
             model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
             ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
 
             IQueryable<UserModels> list = getQuery();
 
@@ -69,21 +67,21 @@ namespace Volkswagen.Controllers
                 }
             }
 
-            return View(list.ToList().AsPagination(page ?? 1, 200));
+            return View(list.ToList().AsPagination(page ?? 1, 100));
         }
 
-        private IQueryable<UserModels> getQuery()
+        private IQueryable<UserModels> getQuery(bool post = true)
         {
             //p
             ParameterExpression param = Expression.Parameter(typeof(UserModels), "p");
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
             {
-                string field = Request.Form["field" + n];
+                string field = (post ? Request.Form["field" + n] : Request["field" + n]);
                 ViewData["field" + n] = field;
-                string op = Request.Form["op" + n];
+                string op = (post ? Request.Form["op" + n] : Request["op" + n]);
                 ViewData["op" + n] = op;
-                string operand = Request.Form["operand" + n];
+                string operand = (post ? Request.Form["operand" + n] : Request["operand" + n]);
                 ViewData["operand" + n] = operand;
 
                 if (string.IsNullOrEmpty(field)) break;
@@ -94,6 +92,23 @@ namespace Volkswagen.Controllers
                 //[operandn]
                 Expression right = Expression.Constant(operand);
                 Expression result;
+
+                switch (field)
+                {
+                    case "ChangeTime":
+                    case "CreateTime":
+                    case "Birthday":
+                    case "EntryDate":
+                        right = Expression.Constant(Convert.ToDateTime(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "UserID":
+                        right = Expression.Constant(int.Parse(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    default:
+                        break;
+                }
 
                 switch (op)
                 {

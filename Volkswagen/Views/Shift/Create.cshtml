@@ -62,12 +62,12 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Record, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.Record, new { @class = "form-control" })
+                @Html.TextAreaFor(model => model.Record, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Record)
             </div>
             @Html.LabelFor(model => model.Urgency, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.Urgency, new { @class = "form-control" })
+                @Html.TextAreaFor(model => model.Urgency, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Urgency)
             </div>
         </div>

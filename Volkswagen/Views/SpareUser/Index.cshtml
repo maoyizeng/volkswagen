@@ -366,7 +366,7 @@
             </dl>
 
             @{ var em = Model.GetEnumerator();
-               var current_em = Model.Where(p => p.UserID == user_id).First();
+             var current_em = Model.Where(p => p.UserID == user_id).First();
              var prev_em = em.Current;
              string first_one = "", last_one = "";
              try
@@ -400,26 +400,27 @@
             </div>
 
         </div>
+    }
 
-        <p>
-            @Html.ActionLink("新建", "Create", "SpareUser", null, new { @class = "btn btn-default" })
-            @Html.ActionLink("导出", "ExportExcel", "SpareUser", null, new { @class = "btn btn-default" })
-        </p>
+    <p>
+        @Html.ActionLink("新建", "Create", "SpareUser", null, new { @class = "btn btn-default" })
+        @Html.ActionLink("导出", "ExportExcel", "SpareUser", null, new { @class = "btn btn-default" })
+    </p>
 
-        <div class="btn-group">
-            <input type="button" id="select_button" value="全选" onclick="select_all()" class="btn btn-default" />
-            <input type="button" id="select_button" value="反选" onclick="toggle_all()" class="btn btn-default" />
-        </div>
-        @Html.ActionLink("批量修改", "EditMultiple", "SpareUser", null, new { @class = "btn btn-default" })
-        @Html.ActionLink("批量删除", "DeleteMultiple", "SpareUser", null, new { @class = "btn btn-default" })
+    <div class="btn-group">
+        <input type="button" id="select_button" value="全选" onclick="select_all()" class="btn btn-default" />
+        <input type="button" id="select_button" value="反选" onclick="toggle_all()" class="btn btn-default" />
+    </div>
+    @Html.ActionLink("批量修改", "EditMultiple", "SpareUser", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("批量删除", "DeleteMultiple", "SpareUser", null, new { @class = "btn btn-default" })
 
-        <input type="hidden" name="selected_item" id="selected_item" />
+    <input type="hidden" name="selected_item" id="selected_item" />
 
-        @using MvcContrib.UI.Grid
-        @using MvcContrib.UI.Pager
-        @using MvcContrib.Pagination
-        @using MvcContrib
-        @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
+    @using MvcContrib.UI.Grid
+    @using MvcContrib.UI.Pager
+    @using MvcContrib.Pagination
+    @using MvcContrib
+    @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
 {
     column.For(p => Html.CheckBox("Checked" + p.UserID)).Sortable(false);
     column.For(p => new MvcHtmlString("<button class='btn btn-sm' onclick=\"var sel = document.getElementById('selected_item'); sel.value='" + @p.UserID + "';\" ><span class='glyphicon glyphicon-eye-open'></span></button>"));
@@ -440,5 +441,5 @@
     column.For(p => p.Creator).Sortable(true);
 }).Empty("无数据").Attributes(@width => "100%", @style => "align:left;border-collapse:collapse;white-space:nowrap;overflow:hidden;text-overflow:ellipsis", @class => "table table-striped table-hover table-condensed");
 
-        @Html.Pager(Model).First(" 首页 ").Next(" 下一页 ").Previous(" 上一页 ").Last(" 末页 ").Format("共{2}项, 当前{0}-{1} |")
-    </form>
+    @Html.Pager(Model).First(" 首页 ").Next(" 下一页 ").Previous(" 上一页 ").Last(" 末页 ").Format("共{2}项, 当前{0}-{1} |")
+</form>

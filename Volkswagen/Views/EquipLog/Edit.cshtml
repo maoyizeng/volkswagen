@@ -19,14 +19,9 @@
         @Html.HiddenFor(model => model.EquipmentID)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.EquipmentID, "EquipmentID", new { @class = "control-label col-md-2" })
-            <div class="col-md-2">
-                @Html.DropDownList("EquipmentID", String.Empty)
-                @Html.ValidationMessageFor(model => model.EquipmentID)
-            </div>
             @Html.LabelFor(model => model.EquipDes, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.DropDownList("EquipDes", String.Empty)
+                @Html.TextBoxFor(model => model.EquipDes, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.EquipDes)
             </div>
         </div>
@@ -42,12 +37,12 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Type, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.Type, new { @class = "form-control" })
+                @Html.TextAreaFor(model => model.Type, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Type)
             </div>
             @Html.LabelFor(model => model.Spec, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.Spec, new { @class = "form-control" })
+                @Html.TextAreaFor(model => model.Spec, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Spec)
             </div>
         </div>
@@ -102,7 +97,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
+                @Html.TextAreaFor(model => model.Remark, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Remark)
             </div>
         </div>

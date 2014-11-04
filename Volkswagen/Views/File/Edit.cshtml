@@ -19,11 +19,6 @@
         @Html.HiddenFor(model => model.FileName)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.FileName, new { @class = "control-label col-md-2" })
-            <div class="col-md-2">
-                @Html.TextBoxFor(model => model.FileName, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.FileName)
-            </div>
             @Html.LabelFor(model => model.Class, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
                 @Html.TextBoxFor(model => model.Class, new { @class = "form-control" })

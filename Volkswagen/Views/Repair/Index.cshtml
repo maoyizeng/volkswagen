@@ -99,6 +99,10 @@
         op.name = "op" + row;
         operand.name = "operand" + row;
 
+        field.id = "field" + row;
+        op.id = "op" + row;
+        operand.id = "operand" + row;
+
         //operand.className = "form-control"
 
         for (var i = 0; i < fieldMap.length; i++) {
@@ -111,11 +115,24 @@
         for (var i = 0; i < opMap.length; i++) {
             var ooption = document.createElement("option");
             ooption.text = opMap[i];
-            ooption.value = i;
+            ooption.value = i.toString();
             op.add(ooption);
         }
 
+        field.onchange = function () {
+            var operand = this.parentElement.children.item(this.parentElement.children.length - 1);
+            var id_placement = operand.id;
+            var name_placement = operand.name;
+            this.parentElement.removeChild(operand);
+            var new_operand = document.getElementById(this.value).cloneNode(true);
+            new_operand.id = id_placement;
+            new_operand.name = name_placement;
+            this.parentElement.appendChild(new_operand);
+            new_operand.name = name_placement;
+        }
+
         var cancel = document.createElement("button");
+        cancel.id = "cancel" + row;
         cancel.type = "button";
         cancel.className = "btn btn-default btn-xs";
         var cancelx = document.createElement("span");
@@ -126,10 +143,11 @@
         };
         cancel.appendChild(cancelx);
 
+        f.appendChild(cancel);
         f.appendChild(field);
         f.appendChild(op);
         f.appendChild(operand);
-        f.appendChild(cancel);
+
 
         fm.appendChild(f);
 
@@ -140,23 +158,46 @@
         var field = document.getElementsByName("field" + r)[0];
         var op = document.getElementsByName("op" + r)[0];
         var operand = document.getElementById("operand" + r);
-        for (var i = 0; i < field.options.length; i++) {
-            if (field.options[i].value == a) {
-                field.options[i].selected = true;
-                break;
-            }
+        var cancel = document.getElementById("cancel" + r)
+
+        field.value = a;
+
+        field.onchange = function () {
+            var operand = this.parentElement.children.item(this.parentElement.children.length - 1);
+            var id_placement = operand.id;
+            var name_placement = operand.name;
+            this.parentElement.removeChild(operand);
+            var new_operand = document.getElementById(this.value).cloneNode(true);
+            new_operand.id = id_placement;
+            new_operand.name = name_placement;
+            this.parentElement.appendChild(new_operand);
+            new_operand.name = name_placement;
         }
-        for (var i = 0; i < op.options.length; i++) {
-            if (op.options[i].value == b) {
-                op.options[i].selected = true;
-                break;
-            }
-        }
-        operand.value = c;
-        if (operand.value == "") {
-            operand.parentElement.hidden = true;
+
+        op.value = b;
+
+        cancel.onclick = function () {
+            this.parentElement.hidden = true;
+            this.parentElement.getElementsByTagName("input").value = null;
+        };
+
+        var id_placement = operand.id;
+        var name_placement = operand.name;
+        field.parentElement.removeChild(operand);
+        var new_operand = document.getElementById(field.value).cloneNode(true);
+        new_operand.id = id_placement;
+        new_operand.name = name_placement;
+        field.parentElement.appendChild(new_operand);
+        new_operand.name = name_placement;
+
+        new_operand.value = c;
+
+        if (new_operand.value == "") {
+            new_operand.parentElement.hidden = true;
         }
     }
+
+    var initial_value = new Array();
 
     function select_all() {
         var inputs = document.getElementById("query_form").getElementsByTagName("input");
@@ -175,6 +216,33 @@
         }
     }
 </script>
+
+<div hidden="hidden">
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).SheetID)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).RepairID)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).EquipmentID)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).EquipDes)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).RepairTime)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).FaultView)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).Repairman)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).Description)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).Problem)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).Checker)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).Remark)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).StopTime)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).RepairNum)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).StartTime, new { type = "datetime-local" })
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).FinishTime, new { type = "datetime-local" })
+    @Html.DropDownList("Class", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.RepairModels.ClassType))), String.Empty)
+    @Html.DropDownList("Line", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.WSNames))), String.Empty)
+    @Html.DropDownList("Section", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.RepairModels.SectionNames))), String.Empty)
+    @Html.DropDownList("FaultType", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.RepairModels.FaultTypeEnum))), String.Empty)
+    @Html.DropDownList("Result", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.YesNo))), String.Empty)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.SpareModels).Changer)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.SpareModels).ChangeTime, new { type = "datetime-local" })
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.SpareModels).Creator)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.SpareModels).CreateTime, new { type = "datetime-local" })
+</div>
 
 
 <form action="/Repair/" id="query_form" method="post">
@@ -202,18 +270,255 @@
                             }
 
                             <script>
+                                initial_value.push({ field_name: '@field', op_name: '@op', operand_name: '@operand', r_name: '@r' });
                                 append_input();
-                                add_input('@field' , '@op' , '@operand' , '@r' );
                             </script>
                             r++;
                         }
                     }
+                    <script>
+                        window.onload = function () {
+                            for (var i = 0; i < initial_value.length; i++) {
+                                add_input(initial_value[i].field_name, initial_value[i].op_name, initial_value[i].operand_name, initial_value[i].r_name);
+                            }
+                        }
+                    </script>
+
                 </div>
             </div>
         </div>
     </div>
 
     <br />
+
+    @if ((ViewData["selected"] != null) && (ViewData["selected"] != ""))
+    {
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">@ViewData["selected"]</h3>
+            </div>
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().EquipmentID)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().EquipmentID)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().RepairID)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().RepairID)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().EquipDes)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().EquipDes)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().StartTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().StartTime)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().FinishTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().FinishTime)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().RepairTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().RepairTime)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Class)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Class)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Line)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Line)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Section)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Section)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().FaultView)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().FaultView)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Repairman)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Repairman)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Description)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Description)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().FaultType)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().FaultType)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Result)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Result)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Problem)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Problem)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Checker)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Checker)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Remark)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Remark)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().StopTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().StopTime)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().RepairNum)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().RepairNum)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().ChangeTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().ChangeTime)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Changer)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Changer)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().CreateTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().CreateTime)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Creator)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"]).First().Creator)
+                </dd>
+
+            </dl>
+
+            @{ var em = Model.GetEnumerator();
+             var current_em = Model.Where(p => p.SheetID == ViewData["selected"] as string).First();
+             var prev_em = em.Current;
+             string first_one = "", last_one = "";
+             try
+             {
+                 em.MoveNext();
+                 while ((em.Current != null) && (em.Current != current_em))
+                 {
+                     prev_em = em.Current;
+                     em.MoveNext();
+                 }
+                 if (prev_em == null)
+                 {
+                     first_one = "disabled=\"disabled\"";
+                     prev_em = em.Current;
+                 }
+                 if (!em.MoveNext())
+                 {
+                     last_one = "disabled=\"disabled\"";
+                 }
+             }
+             catch (Exception) { }
+
+            }
+
+            <div class="btn-group">
+                <button class='btn btn-default' @first_one onclick="var sel=document.getElementById('selected_item'); sel.value='@prev_em.SheetID';"><span class='glyphicon glyphicon-chevron-left'></span>上一项</button>
+                @Html.ActionLink("详细", "Details", "Equipment", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
+                @Html.ActionLink("编辑", "Edit", "Equipment", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
+                @Html.ActionLink("删除", "Delete", "Equipment", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
+                <button class='btn btn-default' @last_one onclick="var sel=document.getElementById('selected_item'); sel.value='@em.Current.SheetID';"><span class='glyphicon glyphicon-chevron-right'></span>下一项</button>
+            </div>
+        </div>
+    }
 
     <p>
         @Html.ActionLink("新建", "Create", "Repair", null, new { @class = "btn btn-default" })
@@ -227,6 +532,8 @@
     @Html.ActionLink("批量修改", "EditMultiple", "Repair", null, new { @class = "btn btn-default" })
     @Html.ActionLink("批量删除", "DeleteMultiple", "Repair", null, new { @class = "btn btn-default" })
 
+    <input type="hidden" name="selected_item" id="selected_item" />
+
     @using MvcContrib.UI.Grid
     @using MvcContrib.UI.Pager
     @using MvcContrib.Pagination
@@ -234,6 +541,9 @@
     @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
 {
     column.For(p => Html.CheckBox("Checked" + p.SheetID)).Sortable(false);
+    column.For(p => new MvcHtmlString("<button class='btn btn-sm' onclick=\"var sel = document.getElementById('selected_item'); sel.value='" + @p.SheetID + "';\" ><span class='glyphicon glyphicon-eye-open'></span></button>"));
+    column.For(p => new MvcHtmlString("<a href='/Equipment/Edit/" + p.SheetID + "' class='btn btn-sm'><span class='glyphicon glyphicon-pencil'></span></a>"));
+    column.For(p => new MvcHtmlString("<a href='/Equipment/Delete/" + p.SheetID + "' class='btn btn-sm'><span class='glyphicon glyphicon-trash'></span></a>"));
     column.For(p => p.SheetID).Sortable(true);
     column.For(p => p.RepairID).Sortable(true);
     column.For(p => p.EquipmentID).Sortable(true);
@@ -258,10 +568,7 @@
     column.For(p => p.Changer).Sortable(true);
     column.For(p => p.CreateTime).Sortable(true);
     column.For(p => p.Creator).Sortable(true);
-    column.For(p => Html.ActionLink("编辑", "Edit", new { id = p.SheetID }));
-    column.For(p => Html.ActionLink("查看", "Details", new { id = p.SheetID }));
-    column.For(p => Html.ActionLink("删除", "Delete", new { id = p.SheetID }));
-}).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse;white-space:nowrap;overflow:hidden;text-overflow:ellipsis", @class => "table table-striped table-hover")
+}).Empty("无数据").Attributes(@width => "100%", @style => "align:left;border-collapse:collapse;white-space:nowrap;overflow:hidden;text-overflow:ellipsis", @class => "table table-striped table-hover table-condensed");
 
-@Html.Pager(Model).First(" 首页 ").Next(" 下一页 ").Previous(" 上一页 ").Last(" 末页 ").Format("共{2}项, 当前{0}-{1} |")
+    @Html.Pager(Model).First(" 首页 ").Next(" 下一页 ").Previous(" 上一页 ").Last(" 末页 ").Format("共{2}项, 当前{0}-{1} |")
 </form>

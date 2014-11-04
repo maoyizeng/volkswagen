@@ -87,21 +87,22 @@
         <div class="form-group">
             @Html.LabelFor(model => model.FaultView, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.FaultView, new { @class = "form-control" })
+                @Html.TextAreaFor(model => model.FaultView, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.FaultView)
             </div>
+            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Description)
+            </div>
+            
+        </div>
+
+        <div class="form-group">
             @Html.LabelFor(model => model.Repairman, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
                 @Html.TextBoxFor(model => model.Repairman, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Repairman)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
-            <div class="col-md-2">
-                @Html.TextBoxFor(model => model.Description, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Description)
             </div>
             @Html.LabelFor(model => model.FaultType, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
@@ -118,7 +119,7 @@
             </div>
             @Html.LabelFor(model => model.Problem, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.Problem, new { @class = "form-control" })
+                @Html.TextAreaFor(model => model.Problem, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Problem)
             </div>
         </div>
@@ -147,7 +148,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
+                @Html.TextAreaFor(model => model.Remark, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Remark)
             </div>
         </div>

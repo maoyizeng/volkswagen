@@ -24,11 +24,12 @@ namespace Volkswagen.Controllers
         private SVWContext db = new SVWContext();
 
         // GET: /Repair/
-        public async Task<ActionResult> Index(int? page, GridSortOptions model)
+        public async Task<ActionResult> Index(int? page, GridSortOptions model, string selected_item)
         {
             ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
 
-            IQueryable<RepairModels> list = db.Repairs.Where("1 = 1");
+            IQueryable<RepairModels> list = getQuery(false);
             if (!string.IsNullOrEmpty(model.Column))
             {
                 if (model.Direction == SortDirection.Descending)
@@ -40,20 +41,17 @@ namespace Volkswagen.Controllers
                     list = list.OrderBy(model.Column + " asc");
                 }
             }
-            else
-            {
-                return View(db.Repairs.ToList().AsPagination(page ?? 1, 200));
-            }
-            return View(list.ToList().AsPagination(page ?? 1, 200));
+            return View(list.ToList().AsPagination(page ?? 1, 100));
         }
 
         [HttpPost]
-        public async Task<ActionResult> Index(int? page)
+        public async Task<ActionResult> Index(int? page, string selected_item)
         {
             GridSortOptions model = new GridSortOptions();
             model.Column = Request.Form["Column"];
             model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
             ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
 
             IQueryable<RepairModels> list = getQuery();
 
@@ -69,21 +67,21 @@ namespace Volkswagen.Controllers
                 }
             }
 
-            return View(list.ToList().AsPagination(page ?? 1, 200));
+            return View(list.ToList().AsPagination(page ?? 1, 100));
         }
 
-        private IQueryable<RepairModels> getQuery()
+        private IQueryable<RepairModels> getQuery(bool post = true)
         {
             //p
             ParameterExpression param = Expression.Parameter(typeof(RepairModels), "p");
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
             {
-                string field = Request.Form["field" + n];
+                string field = (post ? Request.Form["field" + n] : Request["field" + n]);
                 ViewData["field" + n] = field;
-                string op = Request.Form["op" + n];
+                string op = (post ? Request.Form["op" + n] : Request["op" + n]);
                 ViewData["op" + n] = op;
-                string operand = Request.Form["operand" + n];
+                string operand = (post ? Request.Form["operand" + n] : Request["operand" + n]);
                 ViewData["operand" + n] = operand;
 
                 if (string.IsNullOrEmpty(field)) break;
@@ -94,6 +92,45 @@ namespace Volkswagen.Controllers
                 //[operandn]
                 Expression right = Expression.Constant(operand);
                 Expression result;
+
+                switch (field)
+                {
+                    case "Class":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(RepairModels.ClassType), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "Line":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.WSNames), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "Section":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(RepairModels.SectionNames), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "FaultType":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(RepairModels.FaultTypeEnum), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "Result":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.YesNo), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "ChangeTime":
+                    case "CreateTime":
+                    case "StartTime":
+                    case "FinishTime":
+                        right = Expression.Constant(Convert.ToDateTime(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "RepairTime":
+                    case "StopTime":
+                    case "RepairNum":
+                        right = Expression.Constant(int.Parse(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    default:
+                        break;
+                }
 
                 switch (op)
                 {
