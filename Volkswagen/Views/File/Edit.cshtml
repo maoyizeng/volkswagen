@@ -94,7 +94,7 @@
     arr = init.split('$');
     var init_arr = new Array();
     for (var i = 1; i < arr.length; i++) {
-        init_arr[i - 1] = "<img src='/file/" + arr[i] + "' class='file-preview-image'>";
+        init_arr[i - 1] = "<img src='/files/" + arr[i] + "' class='file-preview-image'>";
     }
 
     $("#photo-input").fileinput({

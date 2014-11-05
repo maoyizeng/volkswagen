@@ -395,7 +395,7 @@ namespace Volkswagen.Controllers
             {
                 if (file != null)
                 {
-                    string filePath = Path.Combine((AppDomain.CurrentDomain.BaseDirectory + @"file\"), Path.GetFileName(file.FileName));
+                    string filePath = Path.Combine((AppDomain.CurrentDomain.BaseDirectory + @"files\"), Path.GetFileName(file.FileName));
                     file.SaveAs(filePath);
                     fullname += "$" + file.FileName;
                 }

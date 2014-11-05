@@ -542,9 +542,9 @@
 
             <div class="btn-group">
                 <button class='btn btn-default' @first_one onclick="var sel=document.getElementById('selected_item'); sel.value='@prev_em.MaintainId';"><span class='glyphicon glyphicon-chevron-left'></span>上一项</button>
-                @Html.ActionLink("详细", "Details", "Equipment", new { id = maintain_id }, new { @class = "btn btn-default" })
-                @Html.ActionLink("编辑", "Edit", "Equipment", new { id = maintain_id }, new { @class = "btn btn-default" })
-                @Html.ActionLink("删除", "Delete", "Equipment", new { id = maintain_id }, new { @class = "btn btn-default" })
+                @Html.ActionLink("详细", "Details", "Maintain", new { id = maintain_id }, new { @class = "btn btn-default" })
+                @Html.ActionLink("编辑", "Edit", "Maintain", new { id = maintain_id }, new { @class = "btn btn-default" })
+                @Html.ActionLink("删除", "Delete", "Maintain", new { id = maintain_id }, new { @class = "btn btn-default" })
                 <button class='btn btn-default' @last_one onclick="var sel=document.getElementById('selected_item'); sel.value='@em.Current.MaintainId';"><span class='glyphicon glyphicon-chevron-right'></span>下一项</button>
             </div>
         </div>
@@ -572,8 +572,8 @@
 {
     column.For(p => Html.CheckBox("Checked" + p.MaintainId)).Sortable(false);
     column.For(p => new MvcHtmlString("<button class='btn btn-sm' onclick=\"var sel = document.getElementById('selected_item'); sel.value='" + @p.MaintainId + "';\" ><span class='glyphicon glyphicon-eye-open'></span></button>"));
-    column.For(p => new MvcHtmlString("<a href='/Equipment/Edit/" + p.MaintainId + "' class='btn btn-sm'><span class='glyphicon glyphicon-pencil'></span></a>"));
-    column.For(p => new MvcHtmlString("<a href='/Equipment/Delete/" + p.MaintainId + "' class='btn btn-sm'><span class='glyphicon glyphicon-trash'></span></a>"));
+    column.For(p => new MvcHtmlString("<a href='/Maintain/Edit/" + p.MaintainId + "' class='btn btn-sm'><span class='glyphicon glyphicon-pencil'></span></a>"));
+    column.For(p => new MvcHtmlString("<a href='/Maintain/Delete/" + p.MaintainId + "' class='btn btn-sm'><span class='glyphicon glyphicon-trash'></span></a>"));
     column.For(p => p.EquipmentID).Sortable(true);
     column.For(p => p.EquipDes).Sortable(true);
     column.For(p => p.Line).Sortable(true);
