@@ -237,16 +237,17 @@
                                 add_input(initial_value[i].field_name, initial_value[i].op_name, initial_value[i].operand_name, initial_value[i].r_name);
                             }
 
-                            var init = "@Model.Where(e => e.FileName == ViewData["selected"] as string).First().File";
-                            var arr = new Array();
-                            arr = init.split('$');
-                            for (var i = 1; i < arr.length; i++)
-                            {
-                                var e = document.createElement("a");
-                                e.href = "/files/" + arr[i];
-                                e.text = arr[i];
-                                var dd = document.getElementById("dd_file");
-                                dd.appendChild(e);
+                            var dd = document.getElementById("dd_file");
+                            if (dd !== null) {
+                                var arr = new Array();
+                                arr = init.split('$');
+                                for (var i = 1; i < arr.length; i++)
+                                {
+                                    var e = document.createElement("a");
+                                    e.href = "/files/" + arr[i];
+                                    e.text = arr[i];
+                                    dd.appendChild(e);
+                                }
                             }
                         }
                     </script>
@@ -260,6 +261,7 @@
 
     @if ((ViewData["selected"] != null) && (ViewData["selected"] != ""))
     {
+        
         <div class="panel">
             <div class="panel-heading">
                 <h3 class="panel-title">@ViewData["selected"]</h3>
@@ -374,6 +376,10 @@
                 @Html.ActionLink("删除", "Delete", "File", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
                 <button class='btn btn-default' @last_one onclick="var sel=document.getElementById('selected_item'); sel.value='@em.Current.FileName';"><span class='glyphicon glyphicon-chevron-right'></span>下一项</button>
             </div>
+
+            <script>
+                var init = "@Model.Where(e => e.FileName == ViewData["selected"] as string).First().File";
+            </script>
         </div>
     }
 
