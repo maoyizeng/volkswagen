@@ -90,8 +90,17 @@ namespace Volkswagen.Controllers
                 if (string.IsNullOrEmpty(field)) break;
                 if (string.IsNullOrEmpty(operand)) continue;
 
-                //p.[filedn]
-                Expression left = Expression.Property(param, typeof(InspectionModels).GetProperty(field));
+                Expression left;
+                if (field == "Person")
+                {
+                    //p.Equipments.Person
+                    left = Expression.Property(Expression.Property(param, typeof(InspectionModels).GetProperty("Equipments")), typeof(EquipmentModels).GetProperty(field));
+                }
+                else
+                {
+                    //p.[filedn]
+                    left = Expression.Property(param, typeof(InspectionModels).GetProperty(field));
+                }
                 //[operandn]
                 Expression right = Expression.Constant(operand);
                 Expression result;

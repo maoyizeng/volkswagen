@@ -21,6 +21,7 @@
 <script type="text/javascript">
     var row = 0;
     var fieldMap = new Array(
+        "负责人",
         "设备编号",
         "设备名称",
         "维护类别",
@@ -48,6 +49,7 @@
          );
 
     var valueMap = new Array(
+        "Person",
     "EquipmentID",
     "EquipDes",
     "Class",
@@ -198,6 +200,7 @@
 </script>
 
 <div hidden="hidden">
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.EquipmentModels).Person)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).EquipmentID)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).EquipDes)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).Position)
