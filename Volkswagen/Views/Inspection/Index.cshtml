@@ -31,6 +31,7 @@
         "保养周期",
         "注意事项",
         "备注",
+        "编号",
         "保养计划编号",
         "最后修改时间",
         "修改人",
@@ -60,6 +61,7 @@
     "Caution",
     "Remark",
     "InspectionId",
+    "PlanID",
     "ChangeTime",
     "Changer",
     "CreateTime",
@@ -210,6 +212,7 @@
     @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).Period)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).Caution)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).InspectionId)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).PlanID)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).Changer)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).ChangeTime, new { type = "datetime-local" })
     @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).Creator)
@@ -336,6 +339,14 @@
                 </dd>
 
                 <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.InspectionId == ins_id).First().PlanID)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.InspectionId == ins_id).First().PlanID)
+                </dd>
+
+                <dt>
                     @Html.DisplayNameFor(model => model.Where(e => e.InspectionId == ins_id).First().Remark)
                 </dt>
 
@@ -446,6 +457,7 @@
     column.For(p => p.Period).Sortable(true);
     column.For(p => p.Caution).Sortable(true);
     column.For(p => p.InspectionId).Sortable(true);
+    column.For(p => p.PlanID).Sortable(true);
     column.For(p => p.ChangeTime).Sortable(true);
     column.For(p => p.Changer).Sortable(true);
     column.For(p => p.CreateTime).Sortable(true);

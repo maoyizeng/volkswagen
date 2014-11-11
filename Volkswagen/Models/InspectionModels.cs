@@ -59,9 +59,13 @@ namespace Volkswagen.Models
         public string Remark { get; set; }
 
         [Key]
-        [Display(Name = "保养计划编号")]
+        [Display(Name = "编号")]
  //       [StringLength(15)]
         public int InspectionId { get; set; }
+
+        [Display(Name = "保养计划编号")]
+        //       [StringLength(15)]
+        public Nullable<int> PlanID { get; set; }
 
   //      [Display(Name = "年度保养文件")]
   //      [StringLength(15)]
@@ -111,6 +115,7 @@ namespace Volkswagen.Models
             Caution = md.Caution;
             Remark = md.Remark;
             InspectionId = md.InspectionId;
+            PlanID = md.PlanID;
             ChangeTime = md.ChangeTime;
             Changer = md.Changer;
             CreateTime = md.CreateTime;

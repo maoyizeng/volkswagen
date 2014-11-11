@@ -128,6 +128,7 @@ namespace Volkswagen.Controllers
                         right = Expression.Convert(right, left.Type);
                         break;
                     case "InspectionId":
+                    case "PlanID":
                         right = Expression.Constant(int.Parse(operand));
                         right = Expression.Convert(right, left.Type);
                         break;
@@ -220,7 +221,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "InspectionId,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
+        public async Task<ActionResult> Create([Bind(Include = "InspectionId,PlanID,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
         {
             if (ModelState.IsValid)
             {
@@ -267,7 +268,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "InspectionId,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
+        public async Task<ActionResult> Edit([Bind(Include = "InspectionId,PlanID,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
         {
             if (ModelState.IsValid)
             {
@@ -314,7 +315,7 @@ namespace Volkswagen.Controllers
         // POST: /Inspection/ChangeMultiple/
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> ChangeMultiple([Bind(Include = "InspectionId,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
+        public async Task<ActionResult> ChangeMultiple([Bind(Include = "InspectionId,PlanID,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
         {
             bool changed = false;
             List<InspectionModels> l = new List<InspectionModels>();
@@ -444,12 +445,13 @@ namespace Volkswagen.Controllers
                 "保养内容",
                 "保养周期",
                 "注意事项",
-                "备注",
                 "编号",
+                "保养计划编号",                
                 "最后修改时间",
                 "修改人",
                 "创建时间",
-                "创建人" };
+                "创建人",
+                "备注"};
             foreach (var item in lstTitle)
             {
                 sbHtml.AppendFormat("<td style='font-size: 14px;text-align:center;background-color: #DCE0E2; font-weight:bold;' height='25'>{0}</td>", item);
@@ -468,6 +470,7 @@ namespace Volkswagen.Controllers
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Period);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Caution);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.InspectionId);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.PlanID);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.ChangeTime);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Changer);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.CreateTime);
