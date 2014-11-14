@@ -25,23 +25,16 @@
     }
 }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.RepairID, new { @class = "control-label col-md-2" })
-            <div class="col-md-2">
-                @Html.TextBoxFor(model => model.RepairID, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.RepairID)
-            </div>
-        </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.EquipmentID, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.DropDownList("EquipmentID", String.Empty)
+                @Html.TextBoxFor(model => model.EquipmentID, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.EquipmentID)
             </div>
             @Html.LabelFor(model => model.EquipDes, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.DropDownList("EquipDes", String.Empty)
+                @Html.TextBoxFor(model => model.EquipDes, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.EquipDes)
             </div>
         </div>

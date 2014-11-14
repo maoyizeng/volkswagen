@@ -21,8 +21,7 @@
 <script type="text/javascript">
     var row = 0;
     var fieldMap = new Array(
-        "原单据编号",
-        "保修单号",
+        "报修单号",
         "设备名称",
         "设备编号",
         "保修时刻",
@@ -59,7 +58,6 @@
 
     var valueMap = new Array(
         "SheetID",
-        "RepairID",
         "EquipmentID",
         "EquipDes",
         "StartTime",
@@ -219,7 +217,6 @@
 
 <div hidden="hidden">
     @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).SheetID)
-    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).RepairID)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).EquipmentID)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).EquipDes)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).RepairTime)
@@ -304,14 +301,6 @@
 
                 <dd>
                     @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"] as string).First().EquipmentID)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.Where(e => e.SheetID == ViewData["selected"] as string).First().RepairID)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.Where(e => e.SheetID == ViewData["selected"] as string).First().RepairID)
                 </dd>
 
                 <dt>
@@ -545,7 +534,6 @@
     column.For(p => new MvcHtmlString("<a href='/Repair/Edit/" + p.SheetID + "' class='btn btn-sm'><span class='glyphicon glyphicon-pencil'></span></a>"));
     column.For(p => new MvcHtmlString("<a href='/Repair/Delete/" + p.SheetID + "' class='btn btn-sm'><span class='glyphicon glyphicon-trash'></span></a>"));
     column.For(p => p.SheetID).Sortable(true);
-    column.For(p => p.RepairID).Sortable(true);
     column.For(p => p.EquipmentID).Sortable(true);
     column.For(p => p.EquipDes).Sortable(true);
     column.For(p => p.StartTime).Sortable(true);

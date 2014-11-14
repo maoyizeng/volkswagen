@@ -217,7 +217,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="SheetID,RepairID,EquipmentID,EquipDes,StartTime,FinishTime,RepairTime,Class,Line,Section,FaultView,Repairman,Description,FaultType,Result,Problem,Checker,Remark,StopTime,File,RepairNum,ChangeTime,Changer,CreateTime,Creator")] RepairModels repairmodels)
+        public async Task<ActionResult> Create([Bind(Include="SheetID,EquipmentID,EquipDes,StartTime,FinishTime,RepairTime,Class,Line,Section,FaultView,Repairman,Description,FaultType,Result,Problem,Checker,Remark,StopTime,File,RepairNum,ChangeTime,Changer,CreateTime,Creator")] RepairModels repairmodels)
         {
             if (ModelState.IsValid)
             {
@@ -265,7 +265,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include="SheetID,RepairID,EquipmentID,EquipDes,StartTime,FinishTime,RepairTime,Class,Line,Section,FaultView,Repairman,Description,FaultType,Result,Problem,Checker,Remark,StopTime,File,RepairNum,ChangeTime,Changer,CreateTime,Creator")] RepairModels repairmodels)
+        public async Task<ActionResult> Edit([Bind(Include="SheetID,EquipmentID,EquipDes,StartTime,FinishTime,RepairTime,Class,Line,Section,FaultView,Repairman,Description,FaultType,Result,Problem,Checker,Remark,StopTime,File,RepairNum,ChangeTime,Changer,CreateTime,Creator")] RepairModels repairmodels)
         {
             if (ModelState.IsValid)
             {
@@ -302,8 +302,6 @@ namespace Volkswagen.Controllers
             IQueryable<RepairModels> l = getQuery();
             List<RepairModels> list = getSelected(l);
             if (ViewData["list"] == null) ViewData["list"] = list;
-            //string key = list.First().RepairID;
-            //return RedirectToAction("Edit", new { id = key });
             ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
             ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes");
             return RedirectToAction("ChangeMultiple", new { Repairmodels = new RepairModels() });
@@ -312,7 +310,7 @@ namespace Volkswagen.Controllers
         // POST: /Repair/ChangeMultiple/
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> ChangeMultiple([Bind(Include = "SheetID,RepairID,EquipmentID,EquipDes,StartTime,FinishTime,RepairTime,Class,Line,Section,FaultView,Repairman,Description,FaultType,Result,Problem,Checker,Remark,StopTime,File,RepairNum,ChangeTime,Changer,CreateTime,Creator")] RepairModels repairmodels)
+        public async Task<ActionResult> ChangeMultiple([Bind(Include = "SheetID,EquipmentID,EquipDes,StartTime,FinishTime,RepairTime,Class,Line,Section,FaultView,Repairman,Description,FaultType,Result,Problem,Checker,Remark,StopTime,File,RepairNum,ChangeTime,Changer,CreateTime,Creator")] RepairModels repairmodels)
         {
             bool changed = false;
             List<RepairModels> l = new List<RepairModels>();
@@ -326,7 +324,6 @@ namespace Volkswagen.Controllers
                 if (repairmodels.EquipmentID != null && ModelState.IsValidField("EquipmentID")) e.EquipmentID = repairmodels.EquipmentID;
                 if (repairmodels.EquipDes != null && ModelState.IsValidField("EquipDes")) e.EquipDes = repairmodels.EquipDes;
                 if (repairmodels.Class != null && ModelState.IsValidField("Class")) e.Class = repairmodels.Class;
-                if (repairmodels.RepairID != null && ModelState.IsValidField("RepairID")) e.RepairID = repairmodels.RepairID;
                 if (repairmodels.StartTime != null && ModelState.IsValidField("StartTime")) e.StartTime = repairmodels.StartTime;
                 if (repairmodels.FinishTime != null && ModelState.IsValidField("FinishTime")) e.FinishTime = repairmodels.FinishTime;
                 if (repairmodels.RepairTime != null && ModelState.IsValidField("RepairTime")) e.RepairTime = repairmodels.RepairTime;
@@ -445,8 +442,7 @@ namespace Volkswagen.Controllers
             sbHtml.Append("<table border='1' cellspacing='0' cellpadding='0'>");
             sbHtml.Append("<tr>");
             var lstTitle = new List<string> { 
-                "原单据编号",
-        "保修单号",
+        "报修单号",
         "设备名称",
         "设备编号",
         "保修时刻",
@@ -479,7 +475,6 @@ namespace Volkswagen.Controllers
             {
                 sbHtml.Append("<tr>");
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.SheetID);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.RepairID);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.EquipmentID);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.EquipDes);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.StartTime);

@@ -21,8 +21,7 @@
 <script type="text/javascript">
     var row = 0;
     var fieldMap = new Array(
-        "原单据编号",
-        "保修单号",
+        "报修单号",
         "设备名称",
         "设备编号",
         "保修时刻",
@@ -61,7 +60,6 @@
 
     var valueMap = new Array(
         "SheetID",
-        "RepairID",
         "EquipmentID",
         "EquipDes",
         "StartTime",
@@ -237,7 +235,6 @@
 {
     column.For(p => Html.CheckBox("Checked" + p.SheetID + p.OperateTime.ToBinary())).Sortable(false);
     column.For(p => p.SheetID).Sortable(true);
-    column.For(p => p.RepairID).Sortable(true);
     column.For(p => p.EquipmentID).Sortable(true);
     column.For(p => p.EquipDes).Sortable(true);
     column.For(p => p.StartTime).Sortable(true);

@@ -13,6 +13,63 @@
     @Scripts.Render("~/bundles/app")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("Scripts", required: false)
+
+    <style type="text/css" media="screen">
+        #menu {
+            float: left;
+            z-index: 2;
+        }
+            /*1级*/
+            #menu ul {
+                list-style: none;
+                margin: 0px;
+                padding: 0px;
+            }
+
+                #menu ul li {
+                    position: relative;
+                }
+        /*2级*/
+        div ul li ul {
+            background: #ffffff;
+            display: none;
+            position: absolute;
+            left: 100%;
+            top: 0px;
+            width: 200px;
+            margin-left: 0px;
+            border: 1px solid #CCC;
+            border-left: none;
+            border-right: none;
+        }
+
+            div ul li ul li {
+                position: relative;
+            }
+
+        div ul li:hover ul {
+            display: block;
+        }
+        /*3级*/
+        #menu ul li ul li ul {
+            display: none;
+            position: absolute;
+            left: 100%;
+            top: 0px;
+            width: 200px;
+            margin-left: 0px;
+            border: 1px solid #CCC;
+            border-left: none;
+        }
+
+            #menu ul li ul li ul li {
+                position: relative;
+            }
+
+        #menu ul li ul li:hover ul {
+            display: block;
+        }
+    </style>
 </head>
 <body>
 
@@ -46,7 +103,7 @@
                         <li>@Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { area = "" }, null)</li>
                     </ul>
                 </li>
-                <li>@Html.ActionLink("设备保修单", "Index", "Repair", new { area = "" }, null)</li>
+                <li>@Html.ActionLink("设备报修单", "Index", "Repair", new { area = "" }, null)</li>
                 <li>@Html.ActionLink("交班记录", "Index", "Shift", new { area = "" }, null)</li>
                 <li>@Html.ActionLink("设备维护", "Index", "Maintain", new { area = "" }, null)</li>
                 <li>@Html.ActionLink("人员信息", "Index", "User", new { area = "" }, null)</li>
@@ -59,7 +116,7 @@
                         <li>@Html.ActionLink("备件库存", "Index", "ArSpare", new { area = "" }, null)</li>
                         <li>@Html.ActionLink("备件领用记录", "Index", "ArSpareUser", new { area = "" }, null)</li>
                         <li>@Html.ActionLink("备件订购信息", "Index", "ArSpareOrder", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("设备保修单", "Index", "ArRepair", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("设备报修单", "Index", "ArRepair", new { area = "" }, null)</li>
                         <li>@Html.ActionLink("交班记录", "Index", "ArShift", new { area = "" }, null)</li>
                         <li>@Html.ActionLink("设备台账", "Index", "ArEquipLog", new { area = "" }, null)</li>
                         <li>@Html.ActionLink("设备维护", "Index", "ArMaintain", new { area = "" }, null)</li>
@@ -77,42 +134,47 @@
         </div>
     </div>
 
-    <div data-bind="foreach: errors" class="padding-error">
-        <p class="text-danger" data-bind="text: $data"></p>
-    </div>
     <!-- <div class="body-content"> -->
     <div class="row">
-        <div class="col-md-1">
+        <div class="col-md-1" id="menu">
+            <br />
             <ul class="nav nav-stacked nav-pills">
+
+                <li class="active"><a>设备列表</a></li>
 
                 @using Volkswagen.Controllers;
                 @using Volkswagen.Models;
                 @{
                     var db = new Volkswagen.DAL.SVWContext();
-
-                    foreach (string s in db.Equipments.OrderByDescending(p => p.Section).Select(p => p.Section).Distinct())
+                    foreach (EquipmentModels.WSNames ws in typeof(EquipmentModels.WSNames).GetEnumValues())
                     {
-                        <li style="padding-left:5px"><span class="label label-default">@(s.IsEmpty() ? "无工段" : s)</span></li>
+                        <li>
+                            <a>@ws.ToString()</a>
+                            <ul class="nav nav-stacked nav-pills">
+                                @foreach (string s in db.Equipments.OrderByDescending(p => p.Section).Select(p => p.Section).Distinct())
+                                {
+                                    if (db.Equipments.Any(p => (p.Section == s) && (p.WSArea == ws)))
+                                    {
+                                        <li>
+                                            <a>@(s.IsEmpty() ? "无工段" : s)</a>
+                                            <ul class="nav nav-stacked nav-pills">
 
-                        foreach (EquipmentModels e in db.Equipments.Where(p => (p.Section == s) && (p.WSArea == null)).ToList())
-                        {
-                            string path = "/Equipment/Details/" + e.EquipmentID;
-                            <li><a href=@path>@e.EquipDes</a></li>
-                        }
+                                                @foreach (EquipmentModels e in db.Equipments.Where(p => (p.Section == s) && (p.WSArea == ws)).ToList())
+                                                {
+                                                    string path = "/Equipment/Details/" + e.EquipmentID;
+                                                    <li><a href=@path>@e.EquipDes</a></li>
+                                                }
+                                            </ul>
+                                        </li>
+                                    }
+                                }
 
-                        foreach (EquipmentModels e in db.Equipments.Where(p => (p.Section == s) && (p.WSArea == EquipmentModels.WSNames.一线)).ToList())
-                        {
-                            string path = "/Equipment/Details/" + e.EquipmentID;
-                            <li><a href=@path>@e.EquipDes</a></li>
-                        }
-
-                        foreach (EquipmentModels e in db.Equipments.Where(p => (p.Section == s) && (p.WSArea == EquipmentModels.WSNames.二线)).ToList())
-                        {
-                            string path = "/Equipment/Details/" + e.EquipmentID;
-                            <li><a href=@path>@e.EquipDes</a></li>
-                        }
+                            </ul>
+                        </li>
 
                     }
+
+
                     db.Dispose();
                 }
             </ul>

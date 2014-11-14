@@ -14,13 +14,9 @@ namespace Volkswagen.Models
     {
         [Key]
         [Required]
-        [Display(Name = "原单据编号")]
+        [Display(Name = "报修单号")]
         [StringLength(15)]
         public string SheetID { get; set; }
-
-        [Display(Name = "报修单号编号")]
-        [StringLength(15)]
-        public string RepairID { get; set; }
 
         [Display(Name = "设备编号")]
         [StringLength(15)]
@@ -156,7 +152,6 @@ namespace Volkswagen.Models
         public void upcast(ArRepairModels md)
         {
             SheetID = md.SheetID;
-            RepairID = md.RepairID;
             EquipDes = md.EquipDes;
             EquipmentID = md.EquipmentID;
             StartTime = md.StartTime;

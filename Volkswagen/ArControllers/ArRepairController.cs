@@ -271,8 +271,7 @@ namespace Volkswagen.ArControllers
             sbHtml.Append("<table border='1' cellspacing='0' cellpadding='0'>");
             sbHtml.Append("<tr>");
             var lstTitle = new List<string> { 
-                "原单据编号",
-        "保修单号",
+        "报修单号",
         "设备名称",
         "设备编号",
         "保修时刻",
@@ -305,7 +304,6 @@ namespace Volkswagen.ArControllers
             {
                 sbHtml.Append("<tr>");
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.SheetID);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.RepairID);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.EquipmentID);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.EquipDes);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.StartTime);
