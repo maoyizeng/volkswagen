@@ -388,7 +388,7 @@
 
             </dl>
             @{ var em = Model.GetEnumerator();
-               var current_em = Model.Where(p => p.InspectionId == ins_id).First();
+             var current_em = Model.Where(p => p.InspectionId == ins_id).First();
              var prev_em = em.Current;
              string first_one = "", last_one = "";
              try
@@ -426,15 +426,34 @@
     <p>
         @Html.ActionLink("新建", "Create", "Inspection", null, new { @class = "btn btn-default" })
         @Html.ActionLink("导出", "ExportExcel", "Inspection", null, new { @class = "btn btn-default" })
-        @Html.ActionLink("生成年度保养计划", "ExportYearPlan", "Inspection", null, new { @class = "btn btn-default" })
+        <div class="row">
+            <div class="input-group col-md-2">
+                <input type="text" class="form-control" placeholder="年份" name="year_file" />
+                <span class="input-group-btn">
+                    <input type="submit" class="btn btn-default" formaction="/Inspection/ExportYearPlan" value="生成年度保养计划">
+                </span>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="input-group col-md-2">
+
+                <input type="text" class="form-control col-md-1" placeholder="年份" name="month_file_year" />
+                <input type="text" class="form-control col-md-1" placeholder="月份" name="month_file_month" />
+                <span class="input-group-btn">
+                    <input type="submit" class="btn btn-default" formaction="/Inspection/ExportMonthPlan" value="生成月度保养计划">
+                </span>
+            </div>
+        </div>
     </p>
 
     <div class="btn-group">
         <input type="button" id="select_button" value="全选" onclick="select_all()" class="btn btn-default" />
         <input type="button" id="select_button" value="反选" onclick="toggle_all()" class="btn btn-default" />
     </div>
-    @Html.ActionLink("批量修改", "EditMultiple", "Inspection", null, new { @class = "btn btn-default" })
-    @Html.ActionLink("批量删除", "DeleteMultiple", "Inspection", null, new { @class = "btn btn-default" })
+
+    <input type="submit" class="btn btn-default" formaction="/Inspection/EditMultiple" value="批量修改">
+    <input type="submit" class="btn btn-default" formaction="/Inspection/DeleteMultiple" value="批量删除">
 
     <input type="hidden" name="selected_item" id="selected_item" />
 
