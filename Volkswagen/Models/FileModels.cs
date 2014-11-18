@@ -13,6 +13,7 @@ namespace Volkswagen.Models
     public class FileModels
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name = "文件名")]
 //        [StringLength(255)]
         public string FileName { get; set; }

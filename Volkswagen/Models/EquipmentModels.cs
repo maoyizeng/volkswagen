@@ -16,6 +16,7 @@ namespace Volkswagen.Models
         [Key]
         [Required]
         [Display(Name = "设备编号")]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [StringLength(15, MinimumLength = 7)]
         public string EquipmentID { get; set; }
 

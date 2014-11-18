@@ -16,6 +16,7 @@ namespace Volkswagen.Models
 
         [Key]
         [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name = "备件物流编号")]
         [StringLength(30)]
         public string SpareID { get; set; }

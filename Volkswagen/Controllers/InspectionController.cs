@@ -129,7 +129,6 @@ namespace Volkswagen.Controllers
                         right = Expression.Convert(right, left.Type);
                         break;
                     case "InspectionId":
-                    case "PlanID":
                         right = Expression.Constant(int.Parse(operand));
                         right = Expression.Convert(right, left.Type);
                         break;
@@ -493,97 +492,109 @@ namespace Volkswagen.Controllers
             IQueryable<InspectionModels> l = getQuery();
             var data = l.ToList();
             int year = int.Parse(Request.Form["year_file"]);
-            if (l.Select(p => p.EquipmentID).Distinct().Count() > 1)
+
+            Random ranfolder = new Random();
+            ranfolder.Next();
+            string folder = AppDomain.CurrentDomain.BaseDirectory + @"files\tmp\" + ranfolder;
+            Directory.CreateDirectory(folder);            
+
+            foreach (string equip_number in l.Select(p => p.EquipmentID).Distinct())
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "不能为多个设备生成计划");
-            }
-            string equip_name = data.First().EquipDes;
-            string equip_person = data.First().Equipments.Person;
-            string equip_number = data.First().EquipmentID;
-            string equip_line = data.First().Equipments.WSArea.ToString();
+                var data_now = data.Where(p => p.EquipmentID == equip_number).ToList();
 
-            Application app = new Application();
-            Workbooks wbks = app.Workbooks;
-            _Workbook wbk = wbks.Add(AppDomain.CurrentDomain.BaseDirectory + @"files\file_template\设备年度保养计划表.xls");
-            Sheets shs = wbk.Sheets;
-            //_Worksheet sh = shs.Add();
+                string equip_name = data_now.First().EquipDes;
+                string equip_person = data_now.First().Equipments.Person;
+                string equip_line = data_now.First().Equipments.WSArea.ToString();
 
-            // http://www.cnblogs.com/wang_yb/articles/1750419.html
-            // TODO - generate excel data
-            int sheet = 1;
-            for (sheet = 1; sheet <= 15; sheet++)
-            {
-                bool finished = false;
-                _Worksheet _wsh = (_Worksheet)shs.get_Item(sheet);
-                _wsh.Cells[2, 3] = year + "年度设备保养计划";
-                _wsh.Cells[4, 3] = "设备名称: " + equip_name;
-                _wsh.Cells[4, 15] = "设备技术员: " + equip_person;
-                _wsh.Cells[5, 3] = "设备编号: " + equip_number;
-                _wsh.Cells[5, 15] = "编制日期: " + DateTime.Now.Year + "." + DateTime.Now.Month;
-                _wsh.Cells[5, 25] = "车间: " + equip_line;
+                Application app = new Application();
+                Workbooks wbks = app.Workbooks;
+                _Workbook wbk = wbks.Add(AppDomain.CurrentDomain.BaseDirectory + @"files\file_template\设备年度保养计划表.xls");
+                Sheets shs = wbk.Sheets;
+                //_Worksheet sh = shs.Add();
 
-                for (int i = 1; i <= 15; i++)
+                // http://www.cnblogs.com/wang_yb/articles/1750419.html
+                // TODO - generate excel data
+                int sheet = 1;
+                for (sheet = 1; sheet <= 15; sheet++)
                 {
-                    int line = i + 8;
-                    InspectionModels current;
-                    if (data.Count == ((sheet - 1) * 15 + i - 1)) {
-                        finished = true;
-                        break;
-                    } else {
-                        current = data.ElementAt((sheet - 1) * 15 + i - 1);
-                    }
+                    bool finished = false;
+                    _Worksheet _wsh = (_Worksheet)shs.get_Item(sheet);
+                    _wsh.Cells[2, 3] = year + "年度设备保养计划";
+                    _wsh.Cells[4, 3] = "设备名称: " + equip_name;
+                    _wsh.Cells[4, 15] = "设备技术员: " + equip_person;
+                    _wsh.Cells[5, 3] = "设备编号: " + equip_number;
+                    _wsh.Cells[5, 15] = "编制日期: " + DateTime.Now.Year + "." + DateTime.Now.Month;
+                    _wsh.Cells[5, 25] = "车间: " + equip_line;
 
-                    _wsh.Cells[line, 1] = i;
-                    _wsh.Cells[line, 2] = current.Part;
-                    _wsh.Cells[line, 3] = current.Position;
-                    _wsh.Cells[line, 4] = current.Content;
-                    string[] s_months = { };
-                    if (current.Period != null) {
-                        s_months = Regex.Split(current.Period, ",", RegexOptions.IgnorePatternWhitespace);
-                    }
-                    
-
-                    foreach (string str in s_months)
+                    for (int i = 1; i <= 15; i++)
                     {
-                        if (str == "1-12")
+                        int line = i + 8;
+                        InspectionModels current;
+                        if (data_now.Count == ((sheet - 1) * 15 + i - 1))
                         {
-                            for (int m = 21; m <= 32; m++)
-                            {
-                                _wsh.Cells[line, m] = "x";
-                            }
+                            finished = true;
                             break;
                         }
-                        int mm = int.Parse(str);
-                        _wsh.Cells[line, mm + 20] = "x";
+                        else
+                        {
+                            current = data_now.ElementAt((sheet - 1) * 15 + i - 1);
+                        }
+
+                        _wsh.Cells[line, 1] = i;
+                        _wsh.Cells[line, 2] = current.Part;
+                        _wsh.Cells[line, 3] = current.Position;
+                        _wsh.Cells[line, 4] = current.Content;
+                        string[] s_months = { };
+                        if (current.Period != null)
+                        {
+                            s_months = Regex.Split(current.Period, ",", RegexOptions.IgnorePatternWhitespace);
+                        }
+
+
+                        foreach (string str in s_months)
+                        {
+                            if (str == "1-12")
+                            {
+                                for (int m = 21; m <= 32; m++)
+                                {
+                                    _wsh.Cells[line, m] = "x";
+                                }
+                                break;
+                            }
+                            int mm = int.Parse(str);
+                            _wsh.Cells[line, mm + 20] = "x";
+                        }
                     }
+
+                    _wsh.Cells[33, 28] = DateTime.Now.Year + "年" + DateTime.Now.Month + "月至" + DateTime.Now.Year + "年12月";
+                    if (finished)
+                    {
+                        break;
+                    }
+
                 }
 
-                _wsh.Cells[33, 28] = DateTime.Now.Year + "年" + DateTime.Now.Month + "月至" + DateTime.Now.Year + "年12月";
-                if (finished)
+                for (int i = 1; i <= sheet; i++)
                 {
-                    break;
+                    ((_Worksheet)shs.get_Item(i)).Cells[35, 31] = i + "/" + sheet;
                 }
 
+                Random random = new Random();
+                int ran = random.Next();
+
+                //保存到指定目录
+                wbk.SaveAs(folder + @"\" + equip_name + ".xls", Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+
+                wbk.Close(null, null, null);
+                wbks.Close();
+                app.Quit();
+
+                //释放掉多余的excel进程
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(app);
+                app = null;
             }
 
-            for (int i = 1; i <= sheet; i++)
-            {
-                ((_Worksheet)shs.get_Item(i)).Cells[35, 31] = i + "/" + sheet;
-            }
 
-            Random random = new Random();
-            int ran = random.Next();
-
-            //保存到指定目录
-           wbk.SaveAs(AppDomain.CurrentDomain.BaseDirectory + @"files\tmp\年度设备保养计划" + ran + ".xls", Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
-
-            wbk.Close(null, null, null);
-            wbks.Close();
-            app.Quit();
-
-            //释放掉多余的excel进程
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(app);
-            app = null;
             return File(AppDomain.CurrentDomain.BaseDirectory + @"files\tmp\年度设备保养计划" + ran + ".xls", "application/ms-excel", year + "年度设备保养计划.xls");
         }
 
@@ -596,7 +607,7 @@ namespace Volkswagen.Controllers
             int month = int.Parse(Request.Form["month_file_month"]);
             if (l.Select(p => p.EquipmentID).Distinct().Count() > 1)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "不能为多个设备生成计划");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Can't generate for multiple equipments.");
             }
             string equip_name = data.First().EquipDes;
             string equip_person = data.First().Equipments.Person;
@@ -670,6 +681,117 @@ namespace Volkswagen.Controllers
             System.Runtime.InteropServices.Marshal.ReleaseComObject(app);
             app = null;
             return File(AppDomain.CurrentDomain.BaseDirectory + @"files\tmp\月度设备保养计划" + ran + ".xls", "application/ms-excel", year + "年" + month + "月设备保养计划.xls");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ImportTable(HttpPostedFileBase[] tables)
+        {
+            string key = Request.Form["tables"];
+            Random random = new Random();
+
+            foreach (HttpPostedFileBase file in tables)
+            {
+                if (file != null)
+                {
+                    int ran = random.Next();
+                    string filePath = Path.Combine((AppDomain.CurrentDomain.BaseDirectory + @"files\tmp\"), ran + Path.GetFileName(file.FileName));
+                    
+                    file.SaveAs(filePath);
+
+                    Application app = new Application();
+                    Workbooks wbks = app.Workbooks;
+                    _Workbook wbk = wbks.Add(filePath);
+                    Sheets shs = wbk.Sheets;
+                    Range range = null;
+
+                    foreach (_Worksheet _wsh in shs)
+                    {
+                        range = _wsh.get_Range("C4", Missing.Value);
+                        if ((range.Value2 as string).Length < 6) {
+                            break;
+                        }
+                        string equip_name = (range.Value2 as string).Substring(5).Trim();
+                        range = _wsh.get_Range("C5", Missing.Value);
+                        string equip_number = (range.Value2 as string).Substring(5).Trim();
+
+                        for (int i = 0; i < 15; i++)
+                        {
+                            int line = i + 9;
+                            range = _wsh.Range[_wsh.Cells[line, 1], _wsh.Cells[line, 1]];
+                            if (!(range.Value2 is double))
+                            {
+                                break;
+                            }
+
+                            InspectionModels im = new InspectionModels();
+                            im.EquipmentID = equip_number;
+                            im.EquipDes = equip_name;
+                            range = _wsh.Range[_wsh.Cells[line, 2], _wsh.Cells[line, 2]];
+                            im.Part = range.Value2 as string;
+                            range = _wsh.Range[_wsh.Cells[line, 3], _wsh.Cells[line, 3]];
+                            im.Position = range.Value2 as string;
+                            range = _wsh.Range[_wsh.Cells[line, 4], _wsh.Cells[line, 4]];
+                            im.Content = range.Value2 as string;
+
+                            string period = "";
+                            bool period_all = true;
+                            for (int month = 1; month <= 12; month++)
+                            {
+                                range = _wsh.Range[_wsh.Cells[line, month + 20], _wsh.Cells[line, month + 20]];
+                                string hasx = range.Value2 as string;
+                                if ((hasx != null) && (hasx.Length != 0))
+                                {
+                                    if (period != "")
+                                    {
+                                        period += ",";
+                                    }
+                                    period += month;
+                                }
+                                else
+                                {
+                                    period_all = false;
+                                }
+                            }
+                            if (period_all)
+                            {
+                                period = "1-12";
+                            }
+
+                            im.Period = period;
+                            im.InspectionId = db.Inspections.Max(p => p.InspectionId) + 1;
+
+                            im.Changer = User.Identity.Name;
+                            im.Creator = User.Identity.Name;
+                            im.CreateTime = DateTime.Now;
+                            im.ChangeTime = DateTime.Now;
+                            db.Inspections.Add(im);
+                            int x = await db.SaveChangesAsync();
+                            if (x != 0)
+                            {
+                                ArInspectionModels ar = new ArInspectionModels(im);
+                                ar.Operator = "Create";
+                                db.ArInspections.Add(ar);
+                                await db.SaveChangesAsync();
+                            }
+                            else
+                            {
+                                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad Input!");
+                            }
+                        }
+                        
+                    }
+
+                    range = null;
+                    wbk.Close(null, null, null);
+                    wbks.Close();
+                    app.Quit();
+
+                    //释放掉多余的excel进程
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(app);
+                    app = null;
+                }
+            }
+            return RedirectToAction("Index");
         }
     }
 }

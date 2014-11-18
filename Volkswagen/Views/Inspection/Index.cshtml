@@ -445,6 +445,13 @@
                 </span>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-2">
+                <button class="btn btn-default" data-toggle="modal" data-target="#myModal">
+                    导入年度保养计划
+                </button>
+            </div>
+        </div>
     </p>
 
     <div class="btn-group">
@@ -472,11 +479,11 @@
     column.For(p => p.Class).Sortable(true);
     column.For(p => p.Part).Sortable(true);
     column.For(p => p.Position).Sortable(true);
-    column.For(p => p.Content).Sortable(true);
     column.For(p => p.Period).Sortable(true);
     column.For(p => p.Caution).Sortable(true);
     column.For(p => p.InspectionId).Sortable(true);
     column.For(p => p.PlanID).Sortable(true);
+    column.For(p => p.Content).Sortable(true);
     column.For(p => p.ChangeTime).Sortable(true);
     column.For(p => p.Changer).Sortable(true);
     column.For(p => p.CreateTime).Sortable(true);
@@ -486,3 +493,26 @@
 
     @Html.Pager(Model).First(" 首页 ").Next(" 下一页 ").Previous(" 上一页 ").Last(" 末页 ").Format("共{2}项, 当前{0}-{1} |")
 </form>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">新建确认</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("ImportTable", "Inspection", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+                    <div class="form-group">
+                        <input id="file-input" type="file" class="file" name="tables" multiple="multiple">
+                    </div>
+        }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>

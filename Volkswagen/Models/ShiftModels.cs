@@ -14,6 +14,7 @@ namespace Volkswagen.Models
     {
         [Key]
         [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name = "记录编号")]
         [StringLength(15)]
         public string ShiftID { get; set; }

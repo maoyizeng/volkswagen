@@ -53,13 +53,14 @@ namespace Volkswagen.Models
         public string Remark { get; set; }
 
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name = "编号")]
  //       [StringLength(15)]
         public int InspectionId { get; set; }
 
         [Display(Name = "保养计划编号")]
-        //       [StringLength(15)]
-        public Nullable<int> PlanID { get; set; }
+        [StringLength(50)]
+        public string PlanID { get; set; }
 
 
 

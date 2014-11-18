@@ -84,6 +84,7 @@ namespace Volkswagen.Models
 
         [Key]
         [Display(Name = "编号")]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Column(TypeName = "bigint")]
         public int OrderID { get; set; }
 

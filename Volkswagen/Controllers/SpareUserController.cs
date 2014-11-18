@@ -205,12 +205,30 @@ namespace Volkswagen.Controllers
                 spareusermodels.CreateTime = DateTime.Now;
                 spareusermodels.ChangeTime = DateTime.Now;
                 db.SpareUsers.Add(spareusermodels);
+
+                var sp = db.Spares.Find(spareusermodels.SpareID);
+                if (spareusermodels.InValue != null)
+                {
+                    sp.PresentValue += spareusermodels.InValue;
+                }
+                if (spareusermodels.OutValue != null)
+                {
+                    sp.PresentValue -= spareusermodels.OutValue;
+                }
+                db.Entry(sp).State = EntityState.Modified;
+
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
                     ArSpareUserModels ar = new ArSpareUserModels(spareusermodels);
                     ar.Operator = "Create";
                     db.ArSpareUsers.Add(ar);
+                    
+
+                    ArSpareModels arsp = new ArSpareModels(sp);
+                    arsp.Operator = "Update";
+                    db.ArSpares.Add(arsp);
+
                     await db.SaveChangesAsync();
                 }
                 return RedirectToAction("Index");
@@ -257,6 +275,17 @@ namespace Volkswagen.Controllers
                 db.Entry(toUpdate).State = EntityState.Detached;
                 db.Entry(spareusermodels).State = EntityState.Modified;
 
+                var sp = db.Spares.Find(spareusermodels.SpareID);
+                if (spareusermodels.InValue != null)
+                {
+                    sp.PresentValue += spareusermodels.InValue;
+                }
+                if (spareusermodels.OutValue != null)
+                {
+                    sp.PresentValue -= spareusermodels.OutValue;
+                }
+                db.Entry(sp).State = EntityState.Modified;
+
                 int x = await db.SaveChangesAsync();
 
                 if (x != 0)
@@ -264,6 +293,11 @@ namespace Volkswagen.Controllers
                     ArSpareUserModels ar = new ArSpareUserModels(toUpdate);
                     ar.Operator = "Update";
                     db.ArSpareUsers.Add(ar);
+
+                    ArSpareModels arsp = new ArSpareModels(sp);
+                    arsp.Operator = "Update";
+                    db.ArSpares.Add(arsp);
+
                     await db.SaveChangesAsync();
                 }
                 return RedirectToAction("Index");

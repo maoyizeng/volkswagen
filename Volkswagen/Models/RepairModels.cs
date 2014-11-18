@@ -15,6 +15,7 @@ namespace Volkswagen.Models
         [Key]
         [Required]
         [Display(Name = "报修单号")]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [StringLength(15)]
         public string SheetID { get; set; }
 

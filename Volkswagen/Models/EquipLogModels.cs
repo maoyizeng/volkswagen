@@ -14,6 +14,7 @@ namespace Volkswagen.Models
     public class EquipLogModels
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [ForeignKey ("Equipments")]
         [Required]
         [Display(Name = "设备编号")]
