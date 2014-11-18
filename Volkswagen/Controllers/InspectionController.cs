@@ -601,7 +601,7 @@ namespace Volkswagen.Controllers
             {
                 FastZip fz = new FastZip();
                 fz.CreateEmptyDirectories = true;
-                fz.CreateZip(ranfolder + ".zip", folder, true, "");
+                fz.CreateZip(folder + @"\" + ranfolder + ".zip", folder, true, "");
                 fz = null;
             }
             catch (Exception)
@@ -609,7 +609,7 @@ namespace Volkswagen.Controllers
                 throw;
             }
 
-            return File(folder + ranfolder + ".zip", "", year + "年度设备保养计划.zip");
+            return File(folder + @"\" + ranfolder + ".zip", "application/zip", year + "年度设备保养计划.zip");
         }
 
         [HttpPost]
