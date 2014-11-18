@@ -20,6 +20,9 @@ using Microsoft.Office.Core;
 using Microsoft.Office.Interop.Excel;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using ICSharpCode.SharpZipLib.Checksums;
+using ICSharpCode.SharpZipLib.Zip;
+using ICSharpCode.SharpZipLib.GZip;
 
 namespace Volkswagen.Controllers
 {
@@ -594,8 +597,19 @@ namespace Volkswagen.Controllers
                 app = null;
             }
 
+            try
+            {
+                FastZip fz = new FastZip();
+                fz.CreateEmptyDirectories = true;
+                fz.CreateZip(ranfolder + ".zip", folder, true, "");
+                fz = null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
-            return File(AppDomain.CurrentDomain.BaseDirectory + @"files\tmp\年度设备保养计划" + ran + ".xls", "application/ms-excel", year + "年度设备保养计划.xls");
+            return File(folder + ranfolder + ".zip", "", year + "年度设备保养计划.zip");
         }
 
         [HttpPost]
@@ -793,5 +807,7 @@ namespace Volkswagen.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        
     }
 }
