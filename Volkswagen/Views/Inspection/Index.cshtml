@@ -414,11 +414,11 @@
             }
 
             <div class="btn-group">
-                <button class='btn btn-default' @first_one onclick="var sel=document.getElementById('selected_item'); sel.value='@prev_em.InspectionId';"><span class='glyphicon glyphicon-chevron-left'></span>上一项</button>
+                <button class='btn btn-default' @first_one onclick="var sel=document.getElementById('selected_item'); sel.value='@prev_em.InspectionId'; var pg=document.getElementById('page'); pg.value='@Model.PageNumber';"><span class='glyphicon glyphicon-chevron-left'></span>上一项</button>
                 @Html.ActionLink("详细", "Details", "Inspection", new { id = ins_id }, new { @class = "btn btn-default" })
                 @Html.ActionLink("编辑", "Edit", "Inspection", new { id = ins_id }, new { @class = "btn btn-default" })
                 @Html.ActionLink("删除", "Delete", "Inspection", new { id = ins_id }, new { @class = "btn btn-default" })
-                <button class='btn btn-default' @last_one onclick="var sel=document.getElementById('selected_item'); sel.value='@em.Current.InspectionId';"><span class='glyphicon glyphicon-chevron-right'></span>下一项</button>
+                <button class='btn btn-default' @last_one onclick="var sel=document.getElementById('selected_item'); sel.value='@em.Current.InspectionId'; var pg=document.getElementById('page'); pg.value='@Model.PageNumber';"><span class='glyphicon glyphicon-chevron-right'></span>下一项</button>
             </div>
         </div>
     }
@@ -463,6 +463,7 @@
     <input type="submit" class="btn btn-default" formaction="/Inspection/DeleteMultiple" value="批量删除">
 
     <input type="hidden" name="selected_item" id="selected_item" />
+    <input type="hidden" name="page" id="page" />
 
     @using MvcContrib.UI.Grid
     @using MvcContrib.UI.Pager
@@ -471,7 +472,7 @@
     @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
 {
     column.For(p => Html.CheckBox("Checked" + p.InspectionId)).Sortable(false);
-    column.For(p => new MvcHtmlString("<button class='btn btn-sm' onclick=\"var sel = document.getElementById('selected_item'); sel.value='" + @p.InspectionId + "';\" ><span class='glyphicon glyphicon-eye-open'></span></button>"));
+    column.For(p => new MvcHtmlString("<button class='btn btn-sm' onclick=\"var sel = document.getElementById('selected_item'); sel.value='" + @p.InspectionId + "';var pg = document.getElementById('page'); pg.value='" + @Model.PageNumber + "';\" ><span class='glyphicon glyphicon-eye-open'></span></button>"));
     column.For(p => new MvcHtmlString("<a href='/Inspection/Edit/" + p.InspectionId + "' class='btn btn-sm'><span class='glyphicon glyphicon-pencil'></span></a>"));
     column.For(p => new MvcHtmlString("<a href='/Inspection/Delete/" + p.InspectionId + "' class='btn btn-sm'><span class='glyphicon glyphicon-trash'></span></a>"));
     column.For(p => p.EquipmentID).Sortable(true);
@@ -491,7 +492,28 @@
     column.For(p => p.Remark).Sortable(true);
 }).Empty("无数据").Attributes(@width => "100%", @style => "align:left;border-collapse:collapse;white-space:nowrap;overflow:hidden;text-overflow:ellipsis", @class => "table table-striped table-hover table-condensed");
 
-    @Html.Pager(Model).First(" 首页 ").Next(" 下一页 ").Previous(" 上一页 ").Last(" 末页 ").Format("共{2}项, 当前{0}-{1} |")
+
+    <nav>
+        <ul class="pager">
+            @if (Model.HasPreviousPage)
+            {
+                <li><button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='1';">首页</button></li>
+                <li>
+                    <button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='@(Model.PageNumber - 1)';"><span class='glyphicon glyphicon-chevron-left'></span>上一页</button>
+                </li>
+            }
+            <li>共 @Model.TotalItems 项 | 当前 @Model.PageNumber 页 | 全 @Model.TotalPages 页</li>
+            @if (Model.HasNextPage)
+            {
+                <li>
+                    <button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='@(Model.PageNumber + 1)';"><span class='glyphicon glyphicon-chevron-right'></span>下一页</button>
+                </li>
+                <li><button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='@Model.TotalPages';">末页</button></li>
+            }
+        </ul>
+    </nav>
+
+
 </form>
 
 <!-- Modal -->
@@ -504,11 +526,11 @@
             </div>
             <div class="modal-body">
                 @using (Html.BeginForm("ImportTable", "Inspection", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
+                {
                     <div class="form-group">
                         <input id="file-input" type="file" class="file" name="tables" multiple="multiple">
                     </div>
-        }
+                }
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
