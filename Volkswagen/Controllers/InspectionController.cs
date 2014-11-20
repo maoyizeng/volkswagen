@@ -56,6 +56,7 @@ namespace Volkswagen.Controllers
         {
             GridSortOptions model = new GridSortOptions();
             model.Column = Request.Form["Column"];
+            string newone = Request.Form["Direction"];
             model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
             ViewData["model"] = model;
             ViewData["selected"] = selected_item;

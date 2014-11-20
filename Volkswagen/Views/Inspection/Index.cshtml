@@ -67,6 +67,40 @@
     "CreateTime",
     "Creator");
 
+    var fieldSortMap = new Array(
+        "",
+        "负责人",
+        "设备编号",
+        "设备名称",
+        "维护类别",
+        "保养部件",
+        "保养位置",
+        "保养内容",
+        "保养周期",
+        "编号",
+        "保养计划编号",
+        "最后修改时间",
+        "修改人",
+        "创建时间",
+        "创建人"
+    );
+
+    var valueSortMap = new Array(
+        "",
+    "EquipmentID",
+    "EquipDes",
+    "Class",
+    "Part",
+    "Position",
+    "Content",
+    "Period",
+    "InspectionId",
+    "PlanID",
+    "ChangeTime",
+    "Changer",
+    "CreateTime",
+    "Creator");
+
     function append_input() {
 
         var fm = document.getElementById("query_panel");
@@ -228,8 +262,6 @@
                     <h3 class="panel-title">查询</h3>
                 </div>
                 <div id="query_panel" class="panel-body">
-                    <input type="hidden" name="Colu" value=@col />
-                    <input type="hidden" name="Direction" value=@dir />
                     <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
                     <input type="submit" id="query" value="确定" class="btn btn-sm" />
                     @{
@@ -256,6 +288,8 @@
                             for (var i = 0; i < initial_value.length; i++) {
                                 add_input(initial_value[i].field_name, initial_value[i].op_name, initial_value[i].operand_name, initial_value[i].r_name);
                             }
+                            order_by.value = '@col';
+                            order_by.value = '@dir';
                         }
                     </script>
 
@@ -465,11 +499,32 @@
     <input type="hidden" name="selected_item" id="selected_item" />
     <input type="hidden" name="page" id="page" />
 
+    <script>
+        var order_by = document.createElement("select");
+        order_by.name = "Column";
+        order_by.id = "order_by";
+
+        for (var i = 0; i < fieldSortMap.length; i++) {
+            var option = document.createElement("option");
+            option.text = fieldSortMap[i];
+            option.value = valueSortMap[i];
+            order_by.add(option);
+        }
+        var f = document.getElementById("query_form");
+        f.appendChild(order_by);
+    </script>
+    <select id="order_as" name="Direction">
+        <option value=""></option>
+        <option value="Ascending">升序</option>
+        <option value="Descending">降序</option>
+    </select>
+    <input type="submit" class="btn btn-default" value="排序">
+
     @using MvcContrib.UI.Grid
     @using MvcContrib.UI.Pager
     @using MvcContrib.Pagination
     @using MvcContrib
-    @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
+    @Html.Grid(Model).Columns(column =>
 {
     column.For(p => Html.CheckBox("Checked" + p.InspectionId)).Sortable(false);
     column.For(p => new MvcHtmlString("<button class='btn btn-sm' onclick=\"var sel = document.getElementById('selected_item'); sel.value='" + @p.InspectionId + "';var pg = document.getElementById('page'); pg.value='" + @Model.PageNumber + "';\" ><span class='glyphicon glyphicon-eye-open'></span></button>"));
