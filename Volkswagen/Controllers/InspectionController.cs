@@ -589,6 +589,11 @@ namespace Volkswagen.Controllers
                 //保存到指定目录
                 wbk.SaveAs(folder + @"\" + equip_name + ".xls", Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
 
+                if (Request.Form["print_year"] != "false")
+                {
+                    wbk.PrintOutEx(Type.Missing, sheet, Type.Missing, false, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                }
+
                 wbk.Close(null, null, null);
                 wbks.Close();
                 app.Quit();
@@ -727,6 +732,11 @@ namespace Volkswagen.Controllers
 
                 //保存到指定目录
                 wbk.SaveAs(folder + @"\" + equip_name + ".xls", Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+
+                if (Request.Form["print_month"] != "false")
+                {
+                    wbk.PrintOutEx(Type.Missing, sheet, Type.Missing, false, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                }
                 
                 wbk.Close(null, null, null);
                 wbks.Close();
