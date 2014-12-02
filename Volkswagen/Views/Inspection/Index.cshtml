@@ -157,7 +157,7 @@
         cancelx.className = "glyphicon glyphicon-remove"
         cancel.onclick = function () {
             this.parentElement.hidden = true;
-            this.parentElement.getElementsByTagName("input").value = null;
+            this.parentElement.lastChild.value = "";
         };
         cancel.appendChild(cancelx);
 
@@ -196,7 +196,7 @@
 
         cancel.onclick = function () {
             this.parentElement.hidden = true;
-            this.parentElement.getElementsByTagName("input").value = null;
+            this.parentElement.lastChild.value = "";
         };
 
         var id_placement = operand.id;
@@ -263,7 +263,7 @@
                 </div>
                 <div id="query_panel" class="panel-body">
                     <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
-                    <input type="submit" id="query" value="确定" class="btn btn-sm" />
+                    <input type="submit" id="query" value="确定" onclick="var sel=document.getElementById('Column'); sel.value='';" class=" btn btn-sm" />
                     @{
                         int r = 0;
                         while (true)

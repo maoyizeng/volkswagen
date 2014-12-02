@@ -327,15 +327,7 @@ namespace Volkswagen.Controllers
             {
                 UserName = model.UserName
             };
-/*
-            ApplicationUser user = new ApplicationUser() 
-            {
-                UserName = model.UserName,
- //               FirstName = model.FirstName,
- //               LastName = model.LastName,
- //               Email = model.Email,
-            };
- * */
+
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
             IHttpActionResult errorResult = GetErrorResult(result);
 
