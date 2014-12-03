@@ -148,22 +148,14 @@ namespace Volkswagen.Models
 
     public class SelectUserRolesViewModel
     {
-        public SelectUserRolesViewModel()       
-        {
-            this.Roles = new List<SelectRoleEditorViewModel>();         
-        }
-        
         // Enable initialization with an instance of ApplicationUser:
-        public SelectUserRolesViewModel(ApplicationUser user)
-            : this()
+        public SelectUserRolesViewModel(string user, IList<string> role)
         {
-            this.UserName = user.UserName;
-//            this.FirstName = user.FirstName;
-//            this.LastName = user.LastName;
-            var Db = new ApplicationDbContext();
+            this.UserName = user;
+            //var Db = new ApplicationDbContext();
             // Add all available roles to the list of EditorViewModels:
-            var allRoles = Db.Roles;
-            foreach (var role in allRoles)
+            //var allRoles = Db.Roles;
+            /*foreach (var role in allRoles)
             {
                 // An EditorViewModel will be used by Editor Template:
                 var rvm = new SelectRoleEditorViewModel(role);
@@ -178,13 +170,12 @@ namespace Volkswagen.Models
                     this.Roles.Find(r => r.RoleName == userRole.Role.Name);
                 checkUserRole.Selected = true;
                 
-            }
-            
+            }*/
+            Roles = role;
         }
         public string UserName { get; set; }
-//        public string FirstName { get; set; }
-//        public string LastName { get; set; }
-        public List<SelectRoleEditorViewModel> Roles { get; set; }
+        //public List<SelectRoleEditorViewModel> Roles { get; set; }
+        public IList<string> Roles { get; set; }
         
     }
     
@@ -192,11 +183,12 @@ namespace Volkswagen.Models
     public class SelectRoleEditorViewModel
     {
         public SelectRoleEditorViewModel() { }
-        public SelectRoleEditorViewModel(IdentityRole role)
+        public SelectRoleEditorViewModel(string name, string role)
         {
-            this.RoleName = role.Name;
+            this.RoleName = role;
+            this.UserName = name;
         }
-        public bool Selected { get; set; }
+        public string UserName { get; set; }
 
         [Required]
         public string RoleName { get; set; }

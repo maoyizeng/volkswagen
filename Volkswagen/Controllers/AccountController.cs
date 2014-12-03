@@ -419,7 +419,6 @@ namespace Volkswagen.Controllers
         [Authorize(Roles = "Admin")]
         public System.Web.Mvc.ActionResult UserRoles(string id)
         {
-            
             var Db = new ApplicationDbContext();
             var user = Db.Users.First(u => u.UserName == id);
             var model = new SelectUserRolesViewModel(user);
