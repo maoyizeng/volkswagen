@@ -413,8 +413,6 @@ namespace Volkswagen.Controllers
             Db.SaveChanges();
             return RedirectToAction("Index");
             }
-         * 
-         */
         // GEG: /Account/UserRoles
         [Authorize(Roles = "Admin")]
         public System.Web.Mvc.ActionResult UserRoles(string id)
@@ -465,7 +463,7 @@ private IHttpActionResult RedirectToAction(string p)
 {
  	throw new NotImplementedException();
 }
-
+        */
 
 
 
