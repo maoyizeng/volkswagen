@@ -41,12 +41,19 @@ namespace Volkswagen.Controllers
 
         //
         // GET: /Authorize/
-        public ActionResult Index(string name)
+        public ActionResult Index(string UserName)
         {
-            if ((name == "") || (name == null)) {
-                name = User.Identity.Name;
+            if ((UserName == "") || (UserName == null))
+            {
+                UserName = User.Identity.Name;
             }
-            var user = UserManager.FindByName(name);
+            var user = UserManager.FindByName(UserName);
+
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
             var role = UserManager.GetRoles(user.Id);
             var model = new SelectUserRolesViewModel(user.UserName, role);
             return View(model);

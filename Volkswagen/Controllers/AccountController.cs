@@ -313,8 +313,8 @@ namespace Volkswagen.Controllers
         }
 
         // POST api/Account/Register
-//        [AllowAnonymous]
-        [Authorize(Roles="Admin")]
+        [AllowAnonymous]
+//        [Authorize(Roles="Admin")]
         [Route("Register")]
         public async Task<IHttpActionResult> Register(RegisterBindingModel model)
         {
@@ -330,6 +330,15 @@ namespace Volkswagen.Controllers
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
             IHttpActionResult errorResult = GetErrorResult(result);
+
+            if (errorResult != null)
+            {
+                return errorResult;
+            }
+
+            result = await UserManager.AddToRoleAsync(user.Id, "User");
+
+            errorResult = GetErrorResult(result);
 
             if (errorResult != null)
             {
