@@ -59,7 +59,7 @@ namespace Volkswagen.Models
         public string Remark { get; set; }
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name = "编号")]
  //       [StringLength(15)]
         public int InspectionId { get; set; }

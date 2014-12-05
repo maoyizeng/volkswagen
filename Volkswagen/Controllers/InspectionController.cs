@@ -26,6 +26,8 @@ using ICSharpCode.SharpZipLib.GZip;
 
 namespace Volkswagen.Controllers
 {
+    [UserAuthorized]
+    
     public class InspectionController : Controller
     {
         private SVWContext db = new SVWContext();
@@ -225,7 +227,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "InspectionId,PlanID,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
+        public async Task<ActionResult> Create([Bind(Include = "PlanID,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
         {
             if (ModelState.IsValid)
             {
@@ -237,7 +239,8 @@ namespace Volkswagen.Controllers
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArInspectionModels ar = new ArInspectionModels(inspectionmodels);
+                    var new_ins = db.Inspections.OrderByDescending(p => p.InspectionId).First();
+                    ArInspectionModels ar = new ArInspectionModels(new_ins);
                     ar.Operator = "Create";
                     db.ArInspections.Add(ar);
                     await db.SaveChangesAsync();
@@ -829,7 +832,7 @@ namespace Volkswagen.Controllers
                             }
 
                             im.Period = period;
-                            im.InspectionId = db.Inspections.Max(p => p.InspectionId) + 1;
+                            //im.InspectionId = db.Inspections.Max(p => p.InspectionId) + 1;
 
                             im.Changer = User.Identity.Name;
                             im.Creator = User.Identity.Name;
@@ -839,7 +842,7 @@ namespace Volkswagen.Controllers
                             int x = await db.SaveChangesAsync();
                             if (x != 0)
                             {
-                                ArInspectionModels ar = new ArInspectionModels(im);
+                                ArInspectionModels ar = new ArInspectionModels(db.Inspections.OrderByDescending(p => p.InspectionId).First());
                                 ar.Operator = "Create";
                                 db.ArInspections.Add(ar);
                                 await db.SaveChangesAsync();

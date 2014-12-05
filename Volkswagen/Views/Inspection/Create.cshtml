@@ -39,11 +39,6 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.InspectionId, new { @class = "control-label col-md-2" })
-            <div class="col-md-2">
-                @Html.TextBoxFor(model => model.InspectionId, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.InspectionId)
-            </div>
             @Html.LabelFor(model => model.Class, new { @class = "control-label col-md-1" })
             <div class="col-md-2">
                 @Html.DropDownList("Class", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.InspectionModels.InspectionClass))), String.Empty)
