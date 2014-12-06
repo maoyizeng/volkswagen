@@ -69,6 +69,45 @@
     "Creator",
     "Remark");
 
+    var fieldSortMap = new Array(
+        "",
+        "设备编号",
+        "设备名称",
+        "负责人",
+        "所在工段",
+        "车间生产线",
+        "点检",
+        "点检编号",
+        "日常保养",
+        "日常保养编号",
+        "巡检",
+        "巡检编号",
+        "需更新否",
+        "最后修改时间",
+        "修改人",
+        "创建时间",
+        "创建人"
+    );
+
+    var valueSortMap = new Array(
+        "",
+    "EquipmentID",
+    "EquipDes",
+    "Person",
+    "Section",
+    "WSArea",
+    "ItemInspect",
+    "ItemInspectNum",
+    "RegularCare",
+    "RegularCareNum",
+    "Check",
+    "CheckNum",
+    "RoutingInspect",
+    "ChangeTime",
+    "Changer",
+    "CreateTime",
+    "Creator");
+
     function append_input() {
 
         var fm = document.getElementById("query_panel");
@@ -125,7 +164,7 @@
         cancelx.className = "glyphicon glyphicon-remove"
         cancel.onclick = function () {
             this.parentElement.hidden = true;
-            this.parentElement.getElementsByTagName("input").value = null;
+            this.parentElement.lastChild.value = "";
         };
         cancel.appendChild(cancelx);
 
@@ -164,7 +203,7 @@
 
         cancel.onclick = function () {
             this.parentElement.hidden = true;
-            this.parentElement.getElementsByTagName("input").value = null;
+            this.parentElement.lastChild.value = "";
         };
 
         var id_placement = operand.id;
@@ -232,10 +271,8 @@
                     <h3 class="panel-title">查询</h3>
                 </div>
                 <div id="query_panel" class="panel-body">
-                    <input type="hidden" name="Colu" value=@col />
-                    <input type="hidden" name="Direction" value=@dir />
                     <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
-                    <input type="submit" id="query" value="确定" class="btn btn-sm" />
+                    <input type="submit" id="query" value="确定" onclick="var sel=document.getElementById('Column'); sel.value='';" class="btn btn-sm" />
                     @{
                         int r = 0;
                         while (true)
@@ -260,6 +297,9 @@
                             for (var i = 0; i < initial_value.length; i++) {
                                 add_input(initial_value[i].field_name, initial_value[i].op_name, initial_value[i].operand_name, initial_value[i].r_name);
                             }
+
+                            order_by.value = '@col';
+                            order_by.value = '@dir';
                         }
                     </script>
                     <!-- </form> -->
@@ -401,10 +441,10 @@
         {
             <a class="thumbnail">
                 @{string[] sArray = Regex.Split(init, "[$]");//, RegexOptions.IgnoreCase);
-                for (var i = 1; i < sArray.Length; i++)
-                {
+                  for (var i = 1; i < sArray.Length; i++)
+                  {
                     <img src='/img/equipments/@sArray[i]'>
-                }
+                  }
                 }
             </a>
         }
@@ -416,37 +456,37 @@
 
             </dl>
             @{ var em = Model.GetEnumerator();
-             var current_em = Model.Where(p => p.EquipmentID == ViewData["selected"] as string).First();
-             var prev_em = em.Current;
-             string first_one = "", last_one = "";
-             try
-             {
-                 em.MoveNext();
-                 while ((em.Current != null) && (em.Current != current_em))
-                 {
-                     prev_em = em.Current;
-                     em.MoveNext();
-                 }
-                 if (prev_em == null)
-                 {
-                     first_one = "disabled=\"disabled\"";
-                     prev_em = em.Current;
-                 }
-                 if (!em.MoveNext())
-                 {
-                     last_one = "disabled=\"disabled\"";
-                 }
-             }
-             catch (Exception) { }
+               var current_em = Model.Where(p => p.EquipmentID == ViewData["selected"] as string).First();
+               var prev_em = em.Current;
+               string first_one = "", last_one = "";
+               try
+               {
+                   em.MoveNext();
+                   while ((em.Current != null) && (em.Current != current_em))
+                   {
+                       prev_em = em.Current;
+                       em.MoveNext();
+                   }
+                   if (prev_em == null)
+                   {
+                       first_one = "disabled=\"disabled\"";
+                       prev_em = em.Current;
+                   }
+                   if (!em.MoveNext())
+                   {
+                       last_one = "disabled=\"disabled\"";
+                   }
+               }
+               catch (Exception) { }
 
             }
 
             <div class="btn-group">
-                <button class='btn btn-default' @first_one onclick="var sel=document.getElementById('selected_item'); sel.value='@prev_em.EquipmentID';"><span class='glyphicon glyphicon-chevron-left'></span>上一项</button>
+                <button class='btn btn-default' @first_one onclick="var sel=document.getElementById('selected_item'); sel.value='@prev_em.EquipmentID'; var pg=document.getElementById('page'); pg.value='@Model.PageNumber';"><span class='glyphicon glyphicon-chevron-left'></span>上一项</button>
                 @Html.ActionLink("详细", "Details", "Equipment", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
                 @Html.ActionLink("编辑", "Edit", "Equipment", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
                 @Html.ActionLink("删除", "Delete", "Equipment", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
-                <button class='btn btn-default' @last_one onclick="var sel=document.getElementById('selected_item'); sel.value='@em.Current.EquipmentID';"><span class='glyphicon glyphicon-chevron-right'></span>下一项</button>
+                <button class='btn btn-default' @last_one onclick="var sel=document.getElementById('selected_item'); sel.value='@em.Current.EquipmentID'; var pg=document.getElementById('page'); pg.value='@Model.PageNumber';"><span class='glyphicon glyphicon-chevron-right'></span>下一项</button>
             </div>
 
             <div class="btn-group">
@@ -471,10 +511,32 @@
         <input type="button" id="select_button" value="全选" onclick="select_all()" class="btn btn-default" />
         <input type="button" id="select_button" value="反选" onclick="toggle_all()" class="btn btn-default" />
     </div>
-    @Html.ActionLink("批量修改", "EditMultiple", "Equipment", null, new { @class = "btn btn-default" })
-    @Html.ActionLink("批量删除", "DeleteMultiple", "Equipment", null, new { @class = "btn btn-default" })
+    <input type="submit" class="btn btn-default" formaction="/Equipment/EditMultiple" value="批量修改">
+    <input type="submit" class="btn btn-default" formaction="/Equipment/DeleteMultiple" value="批量删除">
 
     <input type="hidden" name="selected_item" id="selected_item" />
+    <input type="hidden" name="page" id="page" />
+
+    <script>
+        var order_by = document.createElement("select");
+        order_by.name = "Column";
+        order_by.id = "order_by";
+
+        for (var i = 0; i < fieldSortMap.length; i++) {
+            var option = document.createElement("option");
+            option.text = fieldSortMap[i];
+            option.value = valueSortMap[i];
+            order_by.add(option);
+        }
+        var f = document.getElementById("query_form");
+        f.appendChild(order_by);
+    </script>
+    <select id="order_as" name="Direction">
+        <option value=""></option>
+        <option value="Ascending">升序</option>
+        <option value="Descending">降序</option>
+    </select>
+    <input type="submit" class="btn btn-default" value="排序">
 
     @using MvcContrib.UI.Grid
     @using MvcContrib.UI.Pager
@@ -482,31 +544,49 @@
     @using MvcContrib.Pagination
 
 
-    @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
-            {
-                column.For(p => Html.CheckBox("Checked" + p.EquipmentID)).Sortable(false);
-                column.For(p => new MvcHtmlString("<button class='btn btn-sm' onclick=\"var sel = document.getElementById('selected_item'); sel.value='" + @p.EquipmentID + "';\" ><span class='glyphicon glyphicon-eye-open'></span></button>"));
-                column.For(p => new MvcHtmlString("<a href='/Equipment/Edit/" + p.EquipmentID + "' class='btn btn-sm'><span class='glyphicon glyphicon-pencil'></span></a>"));
-                column.For(p => new MvcHtmlString("<a href='/Equipment/Delete/" + p.EquipmentID + "' class='btn btn-sm'><span class='glyphicon glyphicon-trash'></span></a>"));
-                column.For(p => p.EquipmentID).Sortable(true);
-                column.For(p => p.EquipDes).Sortable(true);
-                column.For(p => p.Person).Sortable(true);
-                column.For(p => p.Section).Sortable(true);
-                column.For(p => p.WSArea).Sortable(true);
-                column.For(p => p.Photo.IsEmpty() ? "无" : "有").Named("设备图片").Sortable(false);
-                column.For(p => p.ItemInspect).Sortable(true);
-                column.For(p => p.ItemInspectNum).Sortable(true);
-                column.For(p => p.RegularCare).Sortable(true);
-                column.For(p => p.RegularCareNum).Sortable(true);
-                column.For(p => p.Check).Sortable(true);
-                column.For(p => p.CheckNum).Sortable(true);
-                column.For(p => p.RoutingInspect).Sortable(true);
-                column.For(p => p.ChangeTime).Sortable(true);
-                column.For(p => p.Changer).Sortable(true);
-                column.For(p => p.CreateTime).Sortable(true);
-                column.For(p => p.Creator).Sortable(true);
-                column.For(p => p.Remark).Sortable(true);
-            }).Empty("无数据").Attributes(@width => "100%", @style => "align:left;border-collapse:collapse;white-space:nowrap;overflow:hidden;text-overflow:ellipsis", @class => "table table-striped table-hover table-condensed");
+    @Html.Grid(Model).Columns(column =>
+{
+    column.For(p => Html.CheckBox("Checked" + p.EquipmentID)).Sortable(false);
+    column.For(p => new MvcHtmlString("<button class='btn btn-sm' onclick=\"var sel = document.getElementById('selected_item'); sel.value='" + @p.EquipmentID + "'; var pg = document.getElementById('page'); pg.value='" + @Model.PageNumber + "';\" ><span class='glyphicon glyphicon-eye-open'></span></button>"));
+    column.For(p => new MvcHtmlString("<a href='/Equipment/Edit/" + p.EquipmentID + "' class='btn btn-sm'><span class='glyphicon glyphicon-pencil'></span></a>"));
+    column.For(p => new MvcHtmlString("<a href='/Equipment/Delete/" + p.EquipmentID + "' class='btn btn-sm'><span class='glyphicon glyphicon-trash'></span></a>"));
+    column.For(p => p.EquipmentID).Sortable(true);
+    column.For(p => p.EquipDes).Sortable(true);
+    column.For(p => p.Person).Sortable(true);
+    column.For(p => p.Section).Sortable(true);
+    column.For(p => p.WSArea).Sortable(true);
+    column.For(p => p.Photo.IsEmpty() ? "无" : "有").Named("设备图片").Sortable(false);
+    column.For(p => p.ItemInspect).Sortable(true);
+    column.For(p => p.ItemInspectNum).Sortable(true);
+    column.For(p => p.RegularCare).Sortable(true);
+    column.For(p => p.RegularCareNum).Sortable(true);
+    column.For(p => p.Check).Sortable(true);
+    column.For(p => p.CheckNum).Sortable(true);
+    column.For(p => p.RoutingInspect).Sortable(true);
+    column.For(p => p.ChangeTime).Sortable(true);
+    column.For(p => p.Changer).Sortable(true);
+    column.For(p => p.CreateTime).Sortable(true);
+    column.For(p => p.Creator).Sortable(true);
+    column.For(p => p.Remark).Sortable(true);
+}).Empty("无数据").Attributes(@width => "100%", @style => "align:left;border-collapse:collapse;white-space:nowrap;overflow:hidden;text-overflow:ellipsis", @class => "table table-striped table-hover table-condensed");
     <!--;table-layout:fixed-->
-    @Html.Pager(Model).First(" 首页 ").Next(" 下一页 ").Previous(" 上一页 ").Last(" 末页 ").Format("共{2}项, 当前{0}-{1} |")
+    <nav>
+        <ul class="pager">
+            @if (Model.HasPreviousPage)
+            {
+                <li><button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='1';">首页</button></li>
+                <li>
+                    <button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='@(Model.PageNumber - 1)';"><span class='glyphicon glyphicon-chevron-left'></span>上一页</button>
+                </li>
+            }
+            <li>共 @Model.TotalItems 项 | 当前 @Model.PageNumber 页 | 全 @Model.TotalPages 页</li>
+            @if (Model.HasNextPage)
+            {
+                <li>
+                    <button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='@(Model.PageNumber + 1)';"><span class='glyphicon glyphicon-chevron-right'></span>下一页</button>
+                </li>
+                <li><button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='@Model.TotalPages';">末页</button></li>
+            }
+        </ul>
+    </nav>
 </form>
