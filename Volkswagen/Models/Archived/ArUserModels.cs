@@ -14,7 +14,10 @@ namespace Volkswagen.Models
 
     public class ArUserModels
     {
-        
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Display(Name = "记录编号")]
+        public int RecordID { get; set; }
         
         [Display(Name = "简称")]
         [StringLength(10)]
@@ -70,7 +73,6 @@ namespace Volkswagen.Models
         [Display(Name = "图片")]
         public string Image { get; set; }
 
-        [Key]
         [Display(Name = "编号")]
         [Column(TypeName = "bigint")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -93,11 +95,12 @@ namespace Volkswagen.Models
         public string Creator { get; set; }
 
         //操作类型记录对原表的修改类型: Insert / Delete / Update
+        [Required]
         [Display(Name = "操作类型")]
-        [StringLength(10)]
-        public string Operator { get; set; }
+        public ArEquipmentModels.OperatorType Operator { get; set; }
 
         [Display(Name = "操作时间")]
+        [Required]
         public DateTime OperateTime { get; set; }
 
         public ArUserModels() { }
@@ -124,7 +127,7 @@ namespace Volkswagen.Models
             CreateTime = md.CreateTime;
             Creator = md.Creator;
 
-            Operator = "Default";
+            Operator = ArEquipmentModels.OperatorType.缺省;
             OperateTime = DateTime.Now;
         }
 

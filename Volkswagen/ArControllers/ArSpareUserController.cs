@@ -19,16 +19,18 @@ using System.Linq.Dynamic;
 
 namespace Volkswagen.ArControllers
 {
+    [Authorize(Roles = "Admin")]
     public class ArSpareUserController : Controller
     {
         private SVWContext db = new SVWContext();
 
         // GET: /ArSpareUser/
-        public async Task<ActionResult> Index(int? page, GridSortOptions model)
+        public async Task<ActionResult> Index(int? page, GridSortOptions model, string selected_item)
         {
             ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
 
-            IQueryable<ArSpareUserModels> list = db.ArSpareUsers.Where("1 = 1");
+            IQueryable<ArSpareUserModels> list = getQuery(false);
             if (!string.IsNullOrEmpty(model.Column))
             {
                 if (model.Direction == SortDirection.Descending)
@@ -40,20 +42,17 @@ namespace Volkswagen.ArControllers
                     list = list.OrderBy(model.Column + " asc");
                 }
             }
-            else
-            {
-                return View(db.ArSpareUsers.ToList().AsPagination(page ?? 1, 200));
-            }
-            return View(list.ToList().AsPagination(page ?? 1, 200));
+            return View(list.ToList().AsPagination(page ?? 1, 100));
         }
 
         [HttpPost]
-        public async Task<ActionResult> Index(int? page)
+        public async Task<ActionResult> Index(int? page, string selected_item)
         {
             GridSortOptions model = new GridSortOptions();
             model.Column = Request.Form["Column"];
             model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
             ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
 
             IQueryable<ArSpareUserModels> list = getQuery();
 
@@ -69,21 +68,21 @@ namespace Volkswagen.ArControllers
                 }
             }
 
-            return View(list.ToList().AsPagination(page ?? 1, 200));
+            return View(list.ToList().AsPagination(page ?? 1, 100));
         }
 
-        private IQueryable<ArSpareUserModels> getQuery()
+        private IQueryable<ArSpareUserModels> getQuery(bool post = true)
         {
             //p
             ParameterExpression param = Expression.Parameter(typeof(ArSpareUserModels), "p");
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
             {
-                string field = Request.Form["field" + n];
+                string field = (post ? Request.Form["field" + n] : Request["field" + n]);
                 ViewData["field" + n] = field;
-                string op = Request.Form["op" + n];
+                string op = (post ? Request.Form["op" + n] : Request["op" + n]);
                 ViewData["op" + n] = op;
-                string operand = Request.Form["operand" + n];
+                string operand = (post ? Request.Form["operand" + n] : Request["operand" + n]);
                 ViewData["operand" + n] = operand;
 
                 if (string.IsNullOrEmpty(field)) break;
@@ -94,6 +93,30 @@ namespace Volkswagen.ArControllers
                 //[operandn]
                 Expression right = Expression.Constant(operand);
                 Expression result;
+
+                switch (field)
+                {
+                    case "ChangeTime":
+                    case "CreateTime":
+                    case "UseTime":
+                    case "OperateTime":
+                        right = Expression.Constant(Convert.ToDateTime(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "InValue":
+                    case "OutValue":
+                    case "UserID":
+                    case "RecordID":
+                        right = Expression.Constant(int.Parse(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "Operator":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(ArEquipmentModels.OperatorType), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    default:
+                        break;
+                }
 
                 switch (op)
                 {
@@ -153,52 +176,75 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArSpareUser/Details/5
-        public async Task<ActionResult> Details(int? id, string op, long opt)
+        public async Task<ActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ArSpareUserModels arspareusermodels = await db.ArSpareUsers.FindAsync(id, op, new DateTime(opt));
-            if (arspareusermodels == null)
+            ArSpareUserModels arSpareUsermodels = await db.ArSpareUsers.FindAsync(id);
+            if (arSpareUsermodels == null)
             {
                 return HttpNotFound();
             }
-            return View(arspareusermodels);
+
+            SpareUserModels e = await db.SpareUsers.FindAsync(arSpareUsermodels.UserID);
+            ViewData["origin"] = e;
+            return View(arSpareUsermodels);
         }
 
         // GET: /ArSpareUser/Rollback/5
-        public async Task<ActionResult> Rollback(int? id, string op, long opt)
+        public async Task<ActionResult> Rollback(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ArSpareUserModels a = await db.ArSpareUsers.FindAsync(id, op, new DateTime(opt));
+            ArSpareUserModels a = await db.ArSpareUsers.FindAsync(id);
             if (a == null)
             {
                 return HttpNotFound();
             }
-            SpareUserModels origin = await db.SpareUsers.FindAsync(id);
-            string change;
-            if (origin != null)
+            SpareUserModels origin = await db.SpareUsers.FindAsync(a.UserID);
+
+            ArEquipmentModels.OperatorType change;
+
+            switch (a.Operator)
             {
-                origin.upcast(a);
-                origin.Changer = User.Identity.Name;
-                origin.ChangeTime = DateTime.Now;
-                change = "Update";
+                case ArEquipmentModels.OperatorType.创建:
+                    if (origin == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "表中已不存在此记录");
+                    }
+                    db.SpareUsers.Remove(origin);
+                    change = ArEquipmentModels.OperatorType.删除;
+                    break;
+                case ArEquipmentModels.OperatorType.修改:
+                    if (origin == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "表中已不存在此记录");
+                    }
+                    origin.upcast(a);
+                    change = ArEquipmentModels.OperatorType.修改;
+                    break;
+                case ArEquipmentModels.OperatorType.删除:
+                    if (origin != null)
+                    {
+                        change = ArEquipmentModels.OperatorType.修改;
+                    }
+                    else
+                    {
+                        change = ArEquipmentModels.OperatorType.创建;
+                        db.SpareUsers.Add(origin);
+                    }
+                    origin = new SpareUserModels();
+                    origin.upcast(a);
+                    origin.Creator = User.Identity.Name;
+                    origin.CreateTime = DateTime.Now;
+                    break;
+                default:
+                    if (origin == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                    change = ArEquipmentModels.OperatorType.修改;
+                    break;
             }
-            else
-            {
-                origin = new SpareUserModels();
-                origin.upcast(a);
-                origin.Changer = User.Identity.Name;
-                origin.Creator = User.Identity.Name;
-                origin.CreateTime = DateTime.Now;
-                origin.ChangeTime = DateTime.Now;
-                change = "Create";
-                db.SpareUsers.Add(origin);
-            }
+
+            origin.Changer = User.Identity.Name;
+            origin.ChangeTime = DateTime.Now;
 
             int x = await db.SaveChangesAsync();
             if (x != 0)
@@ -213,13 +259,13 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArSpareUser/Delete/5
-        public async Task<ActionResult> Delete(int? id, string op, long opt)
+        public async Task<ActionResult> Delete(int id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArSpareUserModels arspareusermodels = await db.ArSpareUsers.FindAsync(id, op, new DateTime(opt));
+            ArSpareUserModels arspareusermodels = await db.ArSpareUsers.FindAsync(id);
             if (arspareusermodels == null)
             {
                 return HttpNotFound();
@@ -230,9 +276,9 @@ namespace Volkswagen.ArControllers
         // POST: /ArSpareUser/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id, string op, long opt)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            ArSpareUserModels arspareusermodels = await db.ArSpareUsers.FindAsync(id, op, new DateTime(opt));
+            ArSpareUserModels arspareusermodels = await db.ArSpareUsers.FindAsync(id);
             db.ArSpareUsers.Remove(arspareusermodels);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -271,6 +317,7 @@ namespace Volkswagen.ArControllers
             sbHtml.Append("<table border='1' cellspacing='0' cellpadding='0'>");
             sbHtml.Append("<tr>");
             var lstTitle = new List<string> { 
+                "记录编号",
                 "备件物流编号",
         "备件名称",
         "备件型号",
@@ -294,6 +341,7 @@ namespace Volkswagen.ArControllers
             foreach (var i in list)
             {
                 sbHtml.Append("<tr>");
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.RecordID);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.SpareID);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.SpareDes);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Type);

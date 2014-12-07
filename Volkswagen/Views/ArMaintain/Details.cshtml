@@ -8,220 +8,495 @@
 <h3>历史记录 - 设备维护及状态跟踪</h3>
 
 <div>
-    <h4>@Model.MaintainId</h4>
-	<hr />
-    @Html.ActionLink("回滚", "Rollback", new { @class = "btn btn-default", id = Model.MaintainId, op = Model.Operator, opt = Model.OperateTime.ToBinary() })
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.EquipmentID)
-        </dt>
+    <h4>@Model.RecordID</h4>
+    <hr />
+    @if (Model.Operator == Volkswagen.Models.ArEquipmentModels.OperatorType.创建)
+    {
+        @Html.ActionLink("彻底删除此条记录", "Rollback", new { @class = "btn btn-default", id = Model.RecordID })
+    }
+    else
+    {
+        @Html.ActionLink("恢复至此条记录", "Rollback", new { @class = "btn btn-default", id = Model.RecordID })
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.EquipmentID)
-        </dd>
+    <div class="row">
+        <dl class="dl-horizontal col-lg-4">
+            <dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EquipDes)
-        </dt>
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.EquipDes)
-        </dd>
+            <dd>
+                要恢复的记录
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Line)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.MaintainId)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Line)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.MaintainId)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.MType)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.EquipmentID)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.MType)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.EquipmentID)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.MPart)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.EquipDes)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.MPart)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.EquipDes)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Line)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Content)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Line)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Period)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.MType)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Period)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.MType)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.MStartTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.MPart)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.MStartTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.MPart)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.MEndTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Content)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.MEndTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Content)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ResponseClass)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Period)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ResponseClass)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Period)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CheckStatus)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.MStartTime)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CheckStatus)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.MStartTime)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CheckDetail)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.MEndTime)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CheckDetail)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.MEndTime)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EquipStatus)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.ResponseClass)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.EquipStatus)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.ResponseClass)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EquipDetail)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.CheckStatus)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.EquipDetail)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.CheckStatus)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CheckerType)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.CheckDetail)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CheckerType)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.CheckDetail)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Checker)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.EquipStatus)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Checker)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.EquipStatus)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CheckTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.EquipDetail)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CheckTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.EquipDetail)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Problem)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.CheckerType)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Problem)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.CheckerType)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Mark)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Checker)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Mark)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Checker)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Grade)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.CheckTime)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Grade)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.CheckTime)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ProblemStatus)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Problem)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ProblemStatus)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Problem)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CheckNum)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Mark)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CheckNum)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Mark)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ChangeTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Grade)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ChangeTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Grade)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Changer)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.ProblemStatus)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Changer)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.ProblemStatus)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CreateTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.CheckNum)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CreateTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.CheckNum)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Creator)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.ChangeTime)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Creator)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.ChangeTime)
+            </dd>
 
-    </dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.Changer)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Changer)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CreateTime)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CreateTime)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Creator)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Creator)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.OperateTime)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.OperateTime)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Operator)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Operator)
+            </dd>
+
+        </dl>
+        @{
+            var origin = ViewData["origin"] as Volkswagen.Models.MaintainModels;
+            if (origin != null)
+            {
+                <dl class="dl-horizontal col-lg-4">
+                    <dt>
+
+                    </dt>
+
+                    <dd>
+                        当前记录
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.MaintainId)
+                    </dt>
+
+                    <dd>
+                        @origin.MaintainId
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EquipmentID)
+                    </dt>
+
+                    <dd>
+                        @origin.EquipmentID
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EquipDes)
+                    </dt>
+
+                    <dd>
+                        @origin.EquipDes
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Line)
+                    </dt>
+
+                    <dd>
+                        @origin.Line
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.MType)
+                    </dt>
+
+                    <dd>
+                        @origin.MType
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.MPart)
+                    </dt>
+
+                    <dd>
+                        @origin.MPart
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Content)
+                    </dt>
+
+                    <dd>
+                        @origin.Content
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Period)
+                    </dt>
+
+                    <dd>
+                        @origin.Period
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.MStartTime)
+                    </dt>
+
+                    <dd>
+                        @origin.MStartTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.MEndTime)
+                    </dt>
+
+                    <dd>
+                        @origin.MEndTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ResponseClass)
+                    </dt>
+
+                    <dd>
+                        @origin.ResponseClass
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CheckStatus)
+                    </dt>
+
+                    <dd>
+                        @origin.CheckStatus
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CheckDetail)
+                    </dt>
+
+                    <dd>
+                        @origin.CheckDetail
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EquipStatus)
+                    </dt>
+
+                    <dd>
+                        @origin.EquipStatus
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EquipDetail)
+                    </dt>
+
+                    <dd>
+                        @origin.EquipDetail
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CheckerType)
+                    </dt>
+
+                    <dd>
+                        @origin.CheckerType
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Checker)
+                    </dt>
+
+                    <dd>
+                        @origin.Checker
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CheckTime)
+                    </dt>
+
+                    <dd>
+                        @origin.CheckTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Problem)
+                    </dt>
+
+                    <dd>
+                        @origin.Problem
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Mark)
+                    </dt>
+
+                    <dd>
+                        @origin.Mark
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Grade)
+                    </dt>
+
+                    <dd>
+                        @origin.Grade
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ProblemStatus)
+                    </dt>
+
+                    <dd>
+                        @origin.ProblemStatus
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CheckNum)
+                    </dt>
+
+                    <dd>
+                        @origin.CheckNum
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ChangeTime)
+                    </dt>
+
+                    <dd>
+                        @origin.ChangeTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Changer)
+                    </dt>
+
+                    <dd>
+                        @origin.Changer
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CreateTime)
+                    </dt>
+
+                    <dd>
+                        @origin.CreateTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Creator)
+                    </dt>
+
+                    <dd>
+                        @origin.Creator
+                    </dd>
+
+                </dl>
+
+            }
+        }
+    </div>
 </div>
-<p>
-    @Html.ActionLink("返回列表", "Index")
-</p>
+    <p>
+        @Html.ActionLink("返回列表", "Index")
+    </p>

@@ -21,6 +21,7 @@ namespace Volkswagen.Controllers
 {
 
 //    [Authorize(Roles="Admin")]
+    [UserAuthorized]
     public class EquipmentController : Controller
     {
         public SVWContext db = new SVWContext();
@@ -318,6 +319,7 @@ namespace Volkswagen.Controllers
         }
 
         // GET: /Equipment/Create
+        [Authorize(Roles="Admin")]
         public ActionResult Create()
         {
             //ViewBag.SectionNames = new SelectList(Enum.GetValues(typeof(EquipmentModels.SectionNames)));
@@ -332,6 +334,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Create([Bind(Include="EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,ItemInspectNum,RegularCare,RegularCareNum,Check,CheckNum,RoutingInspect,Rules,TechnicFile,TrainingFile,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
         {
             if (ModelState.IsValid)
@@ -347,7 +350,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArEquipmentModels ar = new ArEquipmentModels(equipmentmodels);
-                    ar.Operator = "Create";
+                    ar.Operator = ArEquipmentModels.OperatorType.创建;
                     db.ArEquipments.Add(ar);
                     await db.SaveChangesAsync();
                 }               
@@ -363,6 +366,7 @@ namespace Volkswagen.Controllers
         }
 
         // GET: /Equipment/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Edit(string id)
         {
             if (id == null)
@@ -382,6 +386,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Edit([Bind(Include = "EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,ItemInspectNum,RegularCare,RegularCareNum,Check,CheckNum,RoutingInspect,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
         {
             if (ModelState.IsValid)
@@ -402,7 +407,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArEquipmentModels ar = new ArEquipmentModels(toUpdate);
-                    ar.Operator = "Update";
+                    ar.Operator = ArEquipmentModels.OperatorType.修改;
                     db.ArEquipments.Add(ar);
                     await db.SaveChangesAsync();
                 }
@@ -415,6 +420,7 @@ namespace Volkswagen.Controllers
 
         // POST: /Equipment/EditMultiple/
         //[HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> EditMultiple()
         {
             IQueryable<EquipmentModels> l = getQuery();
@@ -428,6 +434,7 @@ namespace Volkswagen.Controllers
         // POST: /Equipment/ChangeMultiple/
         //[HttpPost]
         //[ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,ItemInspectNum,RegularCare,RegularCareNum,Check,CheckNum,RoutingInspect,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
         {
             bool changed = false;
@@ -461,7 +468,7 @@ namespace Volkswagen.Controllers
                         if (x != 0)
                         {      
                             changed = true;
-                            ar.Operator = "Update";
+                            ar.Operator = ArEquipmentModels.OperatorType.修改;
                             db.ArEquipments.Add(ar);
                             await db.SaveChangesAsync();
                         }                       
@@ -481,6 +488,7 @@ namespace Volkswagen.Controllers
         }
 
         // GET: /Equipment/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(string id)
         {
             if (id == null)
@@ -498,6 +506,7 @@ namespace Volkswagen.Controllers
         // POST: /Equipment/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
             EquipmentModels toDelete = await db.Equipments.FindAsync(id);
@@ -506,7 +515,7 @@ namespace Volkswagen.Controllers
             int x = await db.SaveChangesAsync();
             if (x != 0){
                 ArEquipmentModels ar = new ArEquipmentModels(toDelete);
-                ar.Operator = "Delete";
+                ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArEquipments.Add(ar);
                 await db.SaveChangesAsync();
             }
@@ -516,6 +525,7 @@ namespace Volkswagen.Controllers
         // POST: /Equipment/DeleteMultiple/
         //[HttpPost]
         //[ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteMultiple()
         {
             IQueryable<EquipmentModels> l = getQuery();
@@ -527,7 +537,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArEquipmentModels ar = new ArEquipmentModels(e);
-                    ar.Operator = "Delete";
+                    ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArEquipments.Add(ar);
                     await db.SaveChangesAsync();
                 }
@@ -581,6 +591,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         //[ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult FileUpload(HttpPostedFileBase[] photos)
         {
             string key = Request.Form["key"];

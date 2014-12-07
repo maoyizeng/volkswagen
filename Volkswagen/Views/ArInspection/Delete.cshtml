@@ -9,9 +9,17 @@
 
 <h4>确定要删除这条记录吗?</h4>
 <div>
-    <h4>@Model.InspectionId</h4>
+    <h4>@Model.RecordID</h4>
     <hr />
-    <dl class="dl-horizontal">
+    <dl class="dl-horizontal">">
+<dt>
+    @Html.DisplayNameFor(model => model.InspectionId)
+</dt>
+
+<dd>
+    @Html.DisplayFor(model => model.InspectionId)
+</dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.EquipmentID)
         </dt>
@@ -114,6 +122,22 @@
 
         <dd>
             @Html.DisplayFor(model => model.Creator)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Operator)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Operator)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OperateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OperateTime)
         </dd>
 
     </dl>

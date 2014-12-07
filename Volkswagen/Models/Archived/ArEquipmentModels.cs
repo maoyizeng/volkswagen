@@ -14,6 +14,10 @@ namespace Volkswagen.Models
     public class ArEquipmentModels 
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Display(Name = "记录编号")]
+        public int RecordID { get; set; }
+
         [Required]
         [Display(Name = "设备编号")]
         [StringLength(15)]
@@ -107,12 +111,21 @@ namespace Volkswagen.Models
         [Column(TypeName = "ntext")]
         public string Remark { get; set; }
 
+        public enum OperatorType
+        {
+            创建,
+            删除,
+            修改,
+            缺省
+        }
+
         //操作类型记录对原表的修改类型: Create / Delete / Update      默认为Default
+        [Required]
         [Display(Name = "操作类型")]
-        [StringLength(10)]
-        public string Operator { get; set; }
+        public OperatorType Operator { get; set; }
 
         //操作记录的时间
+        [Required]
         [Display(Name = "操作时间")]
         public DateTime OperateTime { get; set; }
 
@@ -149,7 +162,7 @@ namespace Volkswagen.Models
             Creator = md.Creator;
             Remark = md.Remark;
 
-            Operator = "Default";
+            Operator = OperatorType.缺省;
             OperateTime = DateTime.Now;
         }
 

@@ -213,7 +213,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArSpareModels ar = new ArSpareModels(sparemodels);
-                    ar.Operator = "Create";
+                    ar.Operator = ArEquipmentModels.OperatorType.创建;
                     db.ArSpares.Add(ar);
                     await db.SaveChangesAsync();
                 }
@@ -264,7 +264,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArSpareModels ar = new ArSpareModels(toUpdate);
-                    ar.Operator = "Update";
+                    ar.Operator = ArEquipmentModels.OperatorType.修改;
                     db.ArSpares.Add(ar);
                     await db.SaveChangesAsync();
                 }
@@ -324,7 +324,7 @@ namespace Volkswagen.Controllers
                     if (x != 0)
                     {
                         changed = true;
-                        ar.Operator = "Update";
+                        ar.Operator = ArEquipmentModels.OperatorType.修改;
                         db.ArSpares.Add(ar);
                         await db.SaveChangesAsync();
                     }
@@ -369,7 +369,7 @@ namespace Volkswagen.Controllers
             if (x != 0)
             {
                 ArSpareModels ar = new ArSpareModels(toDelete);
-                ar.Operator = "Delete";
+                ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArSpares.Add(ar);
                 await db.SaveChangesAsync();
             }
@@ -390,7 +390,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArSpareModels ar = new ArSpareModels(e);
-                    ar.Operator = "Delete";
+                    ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArSpares.Add(ar);
                     await db.SaveChangesAsync();
                 }

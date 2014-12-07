@@ -19,6 +19,7 @@ using System.Text;
 
 namespace Volkswagen.Controllers
 {
+    [UserAuthorized]
     public class EquipLogController : Controller
     {
         private SVWContext db = new SVWContext();
@@ -210,7 +211,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArEquipLogModels ar = new ArEquipLogModels(equiplogmodels);
-                    ar.Operator = "Create";
+                    ar.Operator = ArEquipmentModels.OperatorType.创建;
                     db.ArEquipLogs.Add(ar);
                     await db.SaveChangesAsync();
                 }
@@ -265,7 +266,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArEquipLogModels ar = new ArEquipLogModels(toUpdate);
-                    ar.Operator = "Update";
+                    ar.Operator = ArEquipmentModels.OperatorType.修改;
                     db.ArEquipLogs.Add(ar);
                     await db.SaveChangesAsync();
                 }
@@ -326,7 +327,7 @@ namespace Volkswagen.Controllers
                     if (x != 0)
                     {
                         changed = true;
-                        ar.Operator = "Update";
+                        ar.Operator =  ArEquipmentModels.OperatorType.修改;
                         db.ArEquipLogs.Add(ar);
                         await db.SaveChangesAsync();
                     }
@@ -372,7 +373,7 @@ namespace Volkswagen.Controllers
             if (x != 0)
             {
                 ArEquipLogModels ar = new ArEquipLogModels(toDelete);
-                ar.Operator = "Delete";
+                ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArEquipLogs.Add(ar);
                 await db.SaveChangesAsync();
             }
@@ -393,7 +394,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArEquipLogModels ar = new ArEquipLogModels(e);
-                    ar.Operator = "Delete";
+                    ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArEquipLogs.Add(ar);
                     await db.SaveChangesAsync();
                 }

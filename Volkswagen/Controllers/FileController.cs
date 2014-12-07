@@ -19,6 +19,7 @@ using System.Linq.Dynamic;
 
 namespace Volkswagen.Controllers
 {
+    [UserAuthorized]
     public class FileController : Controller
     {
         private SVWContext db = new SVWContext();
@@ -201,7 +202,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArFileModels ar = new ArFileModels(filemodels);
-                    ar.Operator = "Create";
+                    ar.Operator = ArEquipmentModels.OperatorType.创建;
                     db.ArFiles.Add(ar);
                     await db.SaveChangesAsync();
                 }
@@ -251,7 +252,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArFileModels ar = new ArFileModels(toUpdate);
-                    ar.Operator = "Update";
+                    ar.Operator = ArEquipmentModels.OperatorType.修改;
                     db.ArFiles.Add(ar);
                     await db.SaveChangesAsync();
                 }
@@ -299,7 +300,7 @@ namespace Volkswagen.Controllers
                     if (x != 0)
                     {
                         changed = true;
-                        ar.Operator = "Update";
+                        ar.Operator = ArEquipmentModels.OperatorType.修改;
                         db.ArFiles.Add(ar);
                         await db.SaveChangesAsync();
                     }
@@ -343,7 +344,7 @@ namespace Volkswagen.Controllers
             if (x != 0)
             {
                 ArFileModels ar = new ArFileModels(toDelete);
-                ar.Operator = "Delete";
+                ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArFiles.Add(ar);
                 await db.SaveChangesAsync();
             }
@@ -364,7 +365,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArFileModels ar = new ArFileModels(e);
-                    ar.Operator = "Delete";
+                    ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArFiles.Add(ar);
                     await db.SaveChangesAsync();
                 }

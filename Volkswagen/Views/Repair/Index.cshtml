@@ -286,10 +286,10 @@
     @Html.DropDownList("Section", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.RepairModels.SectionNames))), String.Empty)
     @Html.DropDownList("FaultType", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.RepairModels.FaultTypeEnum))), String.Empty)
     @Html.DropDownList("Result", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.YesNo))), String.Empty)
-    @Html.TextBoxFor(model => (model as Volkswagen.Models.SpareModels).Changer)
-    @Html.TextBoxFor(model => (model as Volkswagen.Models.SpareModels).ChangeTime, new { type = "datetime-local" })
-    @Html.TextBoxFor(model => (model as Volkswagen.Models.SpareModels).Creator)
-    @Html.TextBoxFor(model => (model as Volkswagen.Models.SpareModels).CreateTime, new { type = "datetime-local" })
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).Changer)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).ChangeTime, new { type = "datetime-local" })
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).Creator)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).CreateTime, new { type = "datetime-local" })
 </div>
 
 

@@ -218,11 +218,10 @@
     @Html.TextBoxFor(model => (model as Volkswagen.Models.FileModels).EquipmentID)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.FileModels).EquipDes)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.FileModels).Charger)
-    @Html.TextBoxFor(model => (model as Volkswagen.Models.SpareModels).Changer)
-    @Html.TextBoxFor(model => (model as Volkswagen.Models.SpareModels).ChangeTime, new { type = "datetime-local" })
-    @Html.TextBoxFor(model => (model as Volkswagen.Models.SpareModels).Creator)
-    @Html.TextBoxFor(model => (model as Volkswagen.Models.SpareModels).CreateTime, new { type = "datetime-local" })
-    @Html.TextBoxFor(model => (model as Volkswagen.Models.SpareModels).Remark)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.FileModels).Changer)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.FileModels).ChangeTime, new { type = "datetime-local" })
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.FileModels).Creator)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.FileModels).CreateTime, new { type = "datetime-local" })
 </div>
 
 <form action="/File/" id="query_form" method="post">

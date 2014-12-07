@@ -29,16 +29,24 @@
                 </div>
                 <div data-bind="if: loggedIn" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <!--<li><a href="#" data-bind="click: navigateToHome">主页</a></li>
-                        <li>@Html.ActionLink("API", "Index", "Help", new { area = "HelpPage" }, null)</li>-->
-                        <li>@Html.ActionLink("设备履历", "Index", "Equipment", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("设备保养计划", "Index", "Inspection", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("备件库存", "Index", "Spare", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("备件领用记录", "Index", "SpareUser", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("设备保修单", "Index", "Repair", new { area = "" }, null)</li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">设备 <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>@Html.ActionLink("设备履历", "Index", "Equipment", new { area = "" }, null)</li>
+                                <li>@Html.ActionLink("设备保养计划", "Index", "Inspection", new { area = "" }, null)</li>
+                                <li>@Html.ActionLink("设备台账", "Index", "EquipLog", new { area = "" }, null)</li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">备件 <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>@Html.ActionLink("备件库存", "Index", "Spare", new { area = "" }, null)</li>
+                                <li>@Html.ActionLink("备件领用记录", "Index", "SpareUser", new { area = "" }, null)</li>
+                                <li>@Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { area = "" }, null)</li>
+                            </ul>
+                        </li>
+                        <li>@Html.ActionLink("设备报修单", "Index", "Repair", new { area = "" }, null)</li>
                         <li>@Html.ActionLink("交班记录", "Index", "Shift", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("设备台账", "Index", "EquipLog", new { area = "" }, null)</li>
                         <li>@Html.ActionLink("设备维护", "Index", "Maintain", new { area = "" }, null)</li>
                         <li>@Html.ActionLink("人员信息", "Index", "User", new { area = "" }, null)</li>
                         <li>@Html.ActionLink("文件库", "Index", "File", new { area = "" }, null)</li>
@@ -50,7 +58,7 @@
                                 <li>@Html.ActionLink("备件库存", "Index", "ArSpare", new { area = "" }, null)</li>
                                 <li>@Html.ActionLink("备件领用记录", "Index", "ArSpareUser", new { area = "" }, null)</li>
                                 <li>@Html.ActionLink("备件订购信息", "Index", "ArSpareOrder", new { area = "" }, null)</li>
-                                <li>@Html.ActionLink("设备保修单", "Index", "ArRepair", new { area = "" }, null)</li>
+                                <li>@Html.ActionLink("设备报修单", "Index", "ArRepair", new { area = "" }, null)</li>
                                 <li>@Html.ActionLink("交班记录", "Index", "ArShift", new { area = "" }, null)</li>
                                 <li>@Html.ActionLink("设备台账", "Index", "ArEquipLog", new { area = "" }, null)</li>
                                 <li>@Html.ActionLink("设备维护", "Index", "ArMaintain", new { area = "" }, null)</li>
@@ -58,6 +66,7 @@
                                 <li>@Html.ActionLink("文件库", "Index", "ArFile", new { area = "" }, null)</li>
                             </ul>
                         </li>
+                        <li>@Html.ActionLink("权限管理", "Index", "Authorize", new { area = "" }, null)</li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right" data-bind="with: user">
                         <li>
@@ -75,7 +84,6 @@
         @Html.Partial("_Home")
         @Html.Partial("_Login")
         @Html.Partial("_Register")
-        @Html.Partial("_RegisterExternal")
         @Html.Partial("_Manage")
         <hr />
         <footer>

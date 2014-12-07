@@ -19,16 +19,21 @@ using System.Linq.Dynamic;
 
 namespace Volkswagen.ArControllers
 {
+    [Authorize(Roles="Admin")]
     public class ArEquipmentController : Controller
     {
         private SVWContext db = new SVWContext();
 
         // GET: /ArEquipment/
-        public async Task<ActionResult> Index(int? page, GridSortOptions model)
+        public async Task<ActionResult> Index(int? page, GridSortOptions model, string selected_item)
         {
-            ViewData["model"] = model;
+            //PrepareSelectItems();
+            //return View(await db.Equipments.ToListAsync());
 
-            IQueryable<ArEquipmentModels> list = db.ArEquipments.Where("1 = 1");
+            ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
+
+            IQueryable<ArEquipmentModels> list = getQuery(false);
             if (!string.IsNullOrEmpty(model.Column))
             {
                 if (model.Direction == SortDirection.Descending)
@@ -40,21 +45,22 @@ namespace Volkswagen.ArControllers
                     list = list.OrderBy(model.Column + " asc");
                 }
             }
-            else
-            {
-                return View(db.ArEquipments.ToList().AsPagination(page ?? 1, 200));
-            }
             //list = list.AsPagination(page ?? 1, 5);
-            return View(list.ToList().AsPagination(page ?? 1, 200));
+            //IPagination<Volkswagen.Models.EquipmentModels> l = list.ToList().AsPagination(page ?? 1, 200);
+            return View(list.ToList().AsPagination(page ?? 1, 100));
         }
 
         [HttpPost]
-        public async Task<ActionResult> Index(int? page)
+        public async Task<ActionResult> Index(int? page, string selected_item)
         {
+            //IQueryable<EquipmentModels> list = ViewData.Model as IQueryable<EquipmentModels>;
+            //IQueryable<EquipmentModels> list = db.Equipments.Where("1 = 1");
+
             GridSortOptions model = new GridSortOptions();
             model.Column = Request.Form["Column"];
             model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
             ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
 
             IQueryable<ArEquipmentModels> list = getQuery();
 
@@ -70,14 +76,17 @@ namespace Volkswagen.ArControllers
                 }
             }
 
-            return View(list.ToList().AsPagination(page ?? 1, 200));
+            //IPagination<Volkswagen.Models.EquipmentModels> l = list.ToList().AsPagination(page ?? 1, 5);
+            return View(list.ToList().AsPagination(page ?? 1, 100));
+            //return View(l);
         }
 
-        private IQueryable<ArEquipmentModels> getQuery()
+        private IQueryable<ArEquipmentModels> getQuery(bool post = true)
         {
-            //p
-            ParameterExpression param = Expression.Parameter(typeof(ArEquipmentModels), "p");
-            Expression filter = Expression.Constant(true);
+            /*string query = "1 = 1";
+
+            ParameterExpression param = Expression.Parameter(typeof(EquipmentModels), "p");
+
             for (int n = 0; ; n++)
             {
                 string field = Request.Form["field" + n];
@@ -90,10 +99,104 @@ namespace Volkswagen.ArControllers
                 if (string.IsNullOrEmpty(field)) break;
                 if (string.IsNullOrEmpty(operand)) continue;
 
+                if (Expression.Property(param, typeof(EquipmentModels).GetProperty(field)).Type == typeof(string) && (!op.Equals("6")))
+                {
+                    operand = "\"" + operand + "\"";
+                }
+                else if (Expression.Property(param, typeof(EquipmentModels).GetProperty(field)).Type.MemberType.GetType().IsEnum)
+                {
+                    Type t = Expression.Property(param, typeof(EquipmentModels).GetProperty(field)).Type.GenericTypeArguments[0];
+                    operand = Convert.ToInt32(Enum.Parse(t, operand)) + "";
+                }
+
+                switch (op)
+                {
+                    case "0":
+                        query += " AND " + field + " = " + operand;
+                        break;
+                    case "1":
+                        query += " AND " + field + " > " + operand;
+                        break;
+                    case "2":
+                        query += " AND " + field + " < " + operand;
+                        break;
+                    case "3":
+                        query += " AND " + field + " >= " + operand;
+                        break;
+                    case "4":
+                        query += " AND " + field + " <= " + operand;
+                        break;
+                    case "5":
+                        query += " AND " + field + " <> " + operand;
+                        break;
+                    case "6": //Contain
+                        query += " AND " + field + " like %" + operand + "%";
+                        break;
+                    default:
+                        query += " AND " + field + " = " + operand;
+                        break;
+                }
+            }
+
+            IQueryable<EquipmentModels> list = db.Equipments.Where(query);
+            return list;
+             * */
+
+            //p
+            ParameterExpression param = Expression.Parameter(typeof(ArEquipmentModels), "p");
+            Expression filter = Expression.Constant(true);
+            for (int n = 0; ; n++)
+            {
+                string field = (post ? Request.Form["field" + n] : Request["field" + n]);
+                ViewData["field" + n] = field;
+                string op = (post ? Request.Form["op" + n] : Request["op" + n]);
+                ViewData["op" + n] = op;
+                string operand = (post ? Request.Form["operand" + n] : Request["operand" + n]);
+                ViewData["operand" + n] = operand;
+
+                if (string.IsNullOrEmpty(field)) break;
+                if (string.IsNullOrEmpty(operand)) continue;
+
+
                 //p.[filedn]
                 Expression left = Expression.Property(param, typeof(ArEquipmentModels).GetProperty(field));
                 //[operandn]
                 Expression right = Expression.Constant(operand);
+
+                switch (field)
+                {
+                    case "RecordID":
+                        right = Expression.Constant(int.Parse(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "WSArea":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.WSNames), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "ItemInspect":
+                    case "RegularCare":
+                    case "Check":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.ThereBe), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "RoutingInspect":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.YesNo), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "Operator":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(ArEquipmentModels.OperatorType), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "ChangeTime":
+                    case "CreateTime":
+                    case "OperateTime":
+                        right = Expression.Constant(Convert.ToDateTime(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    default:
+                        break;
+                }
+
                 Expression result;
 
                 switch (op)
@@ -154,54 +257,79 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArEquipment/Details/5
-        public async Task<ActionResult> Details(string id, string op, long opt)
+        public async Task<ActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             //ArEquipmentModels arequipmentmodels = await db.ArEquipments.Where(p => p.EquipmentID == id && p.OperateTime.Equals(new DateTime(opt))).FirstAsync();
-            ArEquipmentModels arequipmentmodels = await db.ArEquipments.FindAsync(id, op, new DateTime(opt));
+            ArEquipmentModels arequipmentmodels = await db.ArEquipments.FindAsync(id);
             
             if (arequipmentmodels == null)
             {
                 return HttpNotFound();
             }
+
+            
+            EquipmentModels e = await db.Equipments.FindAsync(arequipmentmodels.EquipmentID);
+            ViewData["origin"] = e;
+
             return View(arequipmentmodels);
         }
 
         // GET: /ArEquipment/Rollback/5
-        public async Task<ActionResult> Rollback(string id, string op, long opt)
+        public async Task<ActionResult> Rollback(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ArEquipmentModels a = await db.ArEquipments.FindAsync(id, op, new DateTime(opt));
+            ArEquipmentModels a = await db.ArEquipments.FindAsync(id);
             if (a == null)
             {
                 return HttpNotFound();
             }
-            EquipmentModels origin = await db.Equipments.FindAsync(id);
-            string change;
-            if (origin != null)
+            EquipmentModels origin = await db.Equipments.FindAsync(a.EquipmentID);
+
+            ArEquipmentModels.OperatorType change;
+
+            switch (a.Operator)
             {
-                origin.upcast(a);
-                origin.Changer = User.Identity.Name;
-                origin.ChangeTime = DateTime.Now;
-                change = "Update";
+                case ArEquipmentModels.OperatorType.创建:
+                    if (origin == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "表中已不存在此记录");
+                    }
+                    db.Equipments.Remove(origin);
+                    change = ArEquipmentModels.OperatorType.删除;
+                    break;
+                case ArEquipmentModels.OperatorType.修改:
+                    if (origin == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "表中已不存在此记录");
+                    }
+                    origin.upcast(a);
+                    change = ArEquipmentModels.OperatorType.修改;
+                    break;
+                case ArEquipmentModels.OperatorType.删除:
+                    if (origin != null)
+                    {
+                        change = ArEquipmentModels.OperatorType.修改;
+                    }
+                    else
+                    {
+                        change = ArEquipmentModels.OperatorType.创建;
+                        db.Equipments.Add(origin);
+                    }
+                    origin = new EquipmentModels();
+                    origin.upcast(a);
+                    origin.Creator = User.Identity.Name;
+                    origin.CreateTime = DateTime.Now;                    
+                    break;
+                default:
+                    if (origin == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                    change = ArEquipmentModels.OperatorType.修改;
+                    break;
             }
-            else
-            {
-                origin = new EquipmentModels();
-                origin.upcast(a);
-                origin.Changer = User.Identity.Name;
-                origin.Creator = User.Identity.Name;
-                origin.CreateTime = DateTime.Now;
-                origin.ChangeTime = DateTime.Now;
-                change = "Create";
-                db.Equipments.Add(origin);
-            }
+
+            origin.Changer = User.Identity.Name;
+            origin.ChangeTime = DateTime.Now;
 
             int x = await db.SaveChangesAsync();
             if (x != 0)
@@ -216,13 +344,13 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArEquipment/Delete/5
-        public async Task<ActionResult> Delete(string id, string op, long opt)
+        public async Task<ActionResult> Delete(int id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArEquipmentModels arequipmentmodels = await db.ArEquipments.FindAsync(id, op, new DateTime(opt));
+            ArEquipmentModels arequipmentmodels = await db.ArEquipments.FindAsync(id);
             if (arequipmentmodels == null)
             {
                 return HttpNotFound();
@@ -233,9 +361,9 @@ namespace Volkswagen.ArControllers
         // POST: /ArEquipment/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(string id, string op, long opt)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            ArEquipmentModels arequipmentmodels = await db.ArEquipments.FindAsync(id, op, new DateTime(opt));
+            ArEquipmentModels arequipmentmodels = await db.ArEquipments.FindAsync(id);
             db.ArEquipments.Remove(arequipmentmodels);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -274,6 +402,7 @@ namespace Volkswagen.ArControllers
             sbHtml.Append("<table border='1' cellspacing='0' cellpadding='0'>");
             sbHtml.Append("<tr>");
             var lstTitle = new List<string> { 
+                "记录编号",
                 "设备编号",
                 "设备名称",
                 "负责人",
@@ -300,6 +429,7 @@ namespace Volkswagen.ArControllers
             foreach (var i in list)
             {
                 sbHtml.Append("<tr>");
+                sbHtml.AppendFormat(format, i.RecordID);
                 sbHtml.AppendFormat(format, i.EquipmentID);
                 sbHtml.AppendFormat(format, i.EquipDes);
                 sbHtml.AppendFormat(format, i.Person);

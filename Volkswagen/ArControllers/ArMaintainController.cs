@@ -19,16 +19,18 @@ using System.Linq.Dynamic;
 
 namespace Volkswagen.ArControllers
 {
+    [Authorize(Roles = "Admin")]
     public class ArMaintainController : Controller
     {
         private SVWContext db = new SVWContext();
 
         // GET: /ArMaintain/
-        public async Task<ActionResult> Index(int? page, GridSortOptions model)
+        public async Task<ActionResult> Index(int? page, GridSortOptions model, string selected_item)
         {
             ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
 
-            IQueryable<ArMaintainModels> list = db.ArMaintains.Where("1 = 1");
+            IQueryable<ArMaintainModels> list = getQuery(false);
             if (!string.IsNullOrEmpty(model.Column))
             {
                 if (model.Direction == SortDirection.Descending)
@@ -40,20 +42,17 @@ namespace Volkswagen.ArControllers
                     list = list.OrderBy(model.Column + " asc");
                 }
             }
-            else
-            {
-                return View(db.ArMaintains.ToList().AsPagination(page ?? 1, 200));
-            }
-            return View(list.ToList().AsPagination(page ?? 1, 200));
+            return View(list.ToList().AsPagination(page ?? 1, 100));
         }
 
         [HttpPost]
-        public async Task<ActionResult> Index(int? page)
+        public async Task<ActionResult> Index(int? page, string selected_item)
         {
             GridSortOptions model = new GridSortOptions();
             model.Column = Request.Form["Column"];
             model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
             ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
 
             IQueryable<ArMaintainModels> list = getQuery();
 
@@ -69,21 +68,21 @@ namespace Volkswagen.ArControllers
                 }
             }
 
-            return View(list.ToList().AsPagination(page ?? 1, 200));
+            return View(list.ToList().AsPagination(page ?? 1, 100));
         }
 
-        private IQueryable<ArMaintainModels> getQuery()
+        private IQueryable<ArMaintainModels> getQuery(bool post = true)
         {
             //p
             ParameterExpression param = Expression.Parameter(typeof(ArMaintainModels), "p");
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
             {
-                string field = Request.Form["field" + n];
+                string field = (post ? Request.Form["field" + n] : Request["field" + n]);
                 ViewData["field" + n] = field;
-                string op = Request.Form["op" + n];
+                string op = (post ? Request.Form["op" + n] : Request["op" + n]);
                 ViewData["op" + n] = op;
-                string operand = Request.Form["operand" + n];
+                string operand = (post ? Request.Form["operand" + n] : Request["operand" + n]);
                 ViewData["operand" + n] = operand;
 
                 if (string.IsNullOrEmpty(field)) break;
@@ -94,6 +93,39 @@ namespace Volkswagen.ArControllers
                 //[operandn]
                 Expression right = Expression.Constant(operand);
                 Expression result;
+
+                switch (field)
+                {
+                    case "ResponseClass":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(RepairModels.ClassType), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "Line":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.WSNames), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "ChangeTime":
+                    case "CreateTime":
+                    case "MStartTime":
+                    case "MEndTime":
+                    case "CheckTime":
+                    case "OperateTime":
+                        right = Expression.Constant(Convert.ToDateTime(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "CheckNum":
+                    case "MaintainId":
+                    case "RecordID":
+                        right = Expression.Constant(int.Parse(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "Operator":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(ArEquipmentModels.OperatorType), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    default:
+                        break;
+                }
 
                 switch (op)
                 {
@@ -153,52 +185,75 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArMaintain/Details/5
-        public async Task<ActionResult> Details(int? id, string op, long opt)
+        public async Task<ActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ArMaintainModels armaintainmodels = await db.ArMaintains.FindAsync(id, op, new DateTime(opt));
-            if (armaintainmodels == null)
+            ArMaintainModels arMaintainmodels = await db.ArMaintains.FindAsync(id);
+            if (arMaintainmodels == null)
             {
                 return HttpNotFound();
             }
-            return View(armaintainmodels);
+
+            MaintainModels e = await db.Maintains.FindAsync(arMaintainmodels.MaintainId);
+            ViewData["origin"] = e;
+            return View(arMaintainmodels);
         }
 
         // GET: /ArMaintain/Rollback/5
-        public async Task<ActionResult> Rollback(int? id, string op, long opt)
+        public async Task<ActionResult> Rollback(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ArMaintainModels a = await db.ArMaintains.FindAsync(id, op, new DateTime(opt));
+            ArMaintainModels a = await db.ArMaintains.FindAsync(id);
             if (a == null)
             {
                 return HttpNotFound();
             }
-            MaintainModels origin = await db.Maintains.FindAsync(id);
-            string change;
-            if (origin != null)
+            MaintainModels origin = await db.Maintains.FindAsync(a.MaintainId);
+
+            ArEquipmentModels.OperatorType change;
+
+            switch (a.Operator)
             {
-                origin.upcast(a);
-                origin.Changer = User.Identity.Name;
-                origin.ChangeTime = DateTime.Now;
-                change = "Update";
+                case ArEquipmentModels.OperatorType.创建:
+                    if (origin == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "表中已不存在此记录");
+                    }
+                    db.Maintains.Remove(origin);
+                    change = ArEquipmentModels.OperatorType.删除;
+                    break;
+                case ArEquipmentModels.OperatorType.修改:
+                    if (origin == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "表中已不存在此记录");
+                    }
+                    origin.upcast(a);
+                    change = ArEquipmentModels.OperatorType.修改;
+                    break;
+                case ArEquipmentModels.OperatorType.删除:
+                    if (origin != null)
+                    {
+                        change = ArEquipmentModels.OperatorType.修改;
+                    }
+                    else
+                    {
+                        change = ArEquipmentModels.OperatorType.创建;
+                        db.Maintains.Add(origin);
+                    }
+                    origin = new MaintainModels();
+                    origin.upcast(a);
+                    origin.Creator = User.Identity.Name;
+                    origin.CreateTime = DateTime.Now;
+                    break;
+                default:
+                    if (origin == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                    change = ArEquipmentModels.OperatorType.修改;
+                    break;
             }
-            else
-            {
-                origin = new MaintainModels();
-                origin.upcast(a);
-                origin.Changer = User.Identity.Name;
-                origin.Creator = User.Identity.Name;
-                origin.CreateTime = DateTime.Now;
-                origin.ChangeTime = DateTime.Now;
-                change = "Create";
-                db.Maintains.Add(origin);
-            }
+
+            origin.Changer = User.Identity.Name;
+            origin.ChangeTime = DateTime.Now;
 
             int x = await db.SaveChangesAsync();
             if (x != 0)
@@ -213,13 +268,13 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArMaintain/Delete/5
-        public async Task<ActionResult> Delete(int? id, string op, long opt)
+        public async Task<ActionResult> Delete(int id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArMaintainModels armaintainmodels = await db.ArMaintains.FindAsync(id, op, new DateTime(opt));
+            ArMaintainModels armaintainmodels = await db.ArMaintains.FindAsync(id);
             if (armaintainmodels == null)
             {
                 return HttpNotFound();
@@ -230,9 +285,9 @@ namespace Volkswagen.ArControllers
         // POST: /ArMaintain/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id, string op, long opt)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            ArMaintainModels armaintainmodels = await db.ArMaintains.FindAsync(id, op, new DateTime(opt));
+            ArMaintainModels armaintainmodels = await db.ArMaintains.FindAsync(id);
             db.ArMaintains.Remove(armaintainmodels);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -271,6 +326,7 @@ namespace Volkswagen.ArControllers
             sbHtml.Append("<table border='1' cellspacing='0' cellpadding='0'>");
             sbHtml.Append("<tr>");
             var lstTitle = new List<string> { 
+                "记录编号",
                 "设备编号",
                 "设备名称",
                 "维护类别",
@@ -296,6 +352,7 @@ namespace Volkswagen.ArControllers
             foreach (var i in list)
             {
                 sbHtml.Append("<tr>");
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.RecordID);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.EquipmentID);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.EquipDes);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Line);

@@ -13,6 +13,10 @@ namespace Volkswagen.Models
     // 表2 设备保养计划
     public class ArInspectionModels
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Display(Name = "记录编号")]
+        public int RecordID { get; set; }
 
         [Required]
         [Display(Name = "设备编号")]
@@ -52,8 +56,6 @@ namespace Volkswagen.Models
         [Column(TypeName = "ntext")]
         public string Remark { get; set; }
 
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name = "编号")]
  //       [StringLength(15)]
         public int InspectionId { get; set; }
@@ -81,11 +83,12 @@ namespace Volkswagen.Models
         public string Creator { get; set; }
 
         //操作类型记录对原表的修改类型: Insert / Delete / Update
+        [Required]
         [Display(Name = "操作类型")]
-        [StringLength(10)]
-        public string Operator { get; set; }
+        public ArEquipmentModels.OperatorType Operator { get; set; }
 
         [Display(Name = "操作时间")]
+        [Required]
         public DateTime OperateTime { get; set; }
         //      表连接关系
      //   public virtual ArEquipmentModels ArEquipments { get; set; }
@@ -110,7 +113,7 @@ namespace Volkswagen.Models
             CreateTime = md.CreateTime;
             Creator = md.Creator;
 
-            Operator = "Default";
+            Operator = ArEquipmentModels.OperatorType.缺省;
             OperateTime = DateTime.Now;
         }
 

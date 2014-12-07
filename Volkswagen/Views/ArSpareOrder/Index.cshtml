@@ -21,6 +21,36 @@
 <script type="text/javascript">
     var row = 0;
     var fieldMap = new Array(
+        "记录编号",
+        "备件物流编号",
+        "备件名称",
+        "备件型号",
+        "订购数量",
+        "备件制造商",
+        "订货号",
+        "所属设备",
+        "设备编号",
+        "设备商",
+        "产品编号",
+        "订购人",
+        "订购日期",
+        "单价金额",
+        "总金额",
+        "状态",
+        "采购形式",
+        "编号",
+        "最后修改时间",
+        "修改人",
+        "创建时间",
+        "创建人",
+        "备注",
+        "操作类型",
+        "操作时间"
+    );
+
+    var fieldSortMap = new Array(
+        "",
+        "记录编号",
         "备件物流编号",
         "备件名称",
         "备件型号",
@@ -58,6 +88,7 @@
         );
 
     var valueMap = new Array(
+        "RecordID",
         "SpareID",
         "SpareDes",
         "Type",
@@ -82,6 +113,33 @@
         "Operator",
         "OperateTime");
 
+    var valueSortMap = new Array(
+        "",
+        "RecordID",
+       "SpareID",
+       "SpareDes",
+       "Type",
+       "OrderValue",
+       "Producer",
+       "OrderNum",
+       "Property",
+       "EquipmentID",
+       "Maker",
+       "MakerNum",
+       "Orderman",
+       "UseTime",
+       "UnitPrice",
+       "TotalPrice",
+       "Status",
+       "Mode",
+       "OrderID",
+       "ChangeTime",
+       "Changer",
+       "CreateTime",
+       "Creator",
+       "Operator",
+       "OperateTime");
+
     function append_input() {
 
         var fm = document.getElementById("query_panel");
@@ -98,6 +156,10 @@
         op.name = "op" + row;
         operand.name = "operand" + row;
 
+        field.id = "field" + row;
+        op.id = "op" + row;
+        operand.id = "operand" + row;
+
         //operand.className = "form-control"
 
         for (var i = 0; i < fieldMap.length; i++) {
@@ -110,25 +172,39 @@
         for (var i = 0; i < opMap.length; i++) {
             var ooption = document.createElement("option");
             ooption.text = opMap[i];
-            ooption.value = i;
+            ooption.value = i.toString();
             op.add(ooption);
         }
 
+        field.onchange = function () {
+            var operand = this.parentElement.children.item(this.parentElement.children.length - 1);
+            var id_placement = operand.id;
+            var name_placement = operand.name;
+            this.parentElement.removeChild(operand);
+            var new_operand = document.getElementById(this.value).cloneNode(true);
+            new_operand.id = id_placement;
+            new_operand.name = name_placement;
+            this.parentElement.appendChild(new_operand);
+            new_operand.name = name_placement;
+        }
+
         var cancel = document.createElement("button");
+        cancel.id = "cancel" + row;
         cancel.type = "button";
         cancel.className = "btn btn-default btn-xs";
         var cancelx = document.createElement("span");
         cancelx.className = "glyphicon glyphicon-remove"
         cancel.onclick = function () {
             this.parentElement.hidden = true;
-            this.parentElement.getElementsByTagName("input").value = null;
+            this.parentElement.lastChild.value = "";
         };
         cancel.appendChild(cancelx);
 
+        f.appendChild(cancel);
         f.appendChild(field);
         f.appendChild(op);
         f.appendChild(operand);
-        f.appendChild(cancel);
+
 
         fm.appendChild(f);
 
@@ -139,23 +215,46 @@
         var field = document.getElementsByName("field" + r)[0];
         var op = document.getElementsByName("op" + r)[0];
         var operand = document.getElementById("operand" + r);
-        for (var i = 0; i < field.options.length; i++) {
-            if (field.options[i].value == a) {
-                field.options[i].selected = true;
-                break;
-            }
+        var cancel = document.getElementById("cancel" + r)
+
+        field.value = a;
+
+        field.onchange = function () {
+            var operand = this.parentElement.children.item(this.parentElement.children.length - 1);
+            var id_placement = operand.id;
+            var name_placement = operand.name;
+            this.parentElement.removeChild(operand);
+            var new_operand = document.getElementById(this.value).cloneNode(true);
+            new_operand.id = id_placement;
+            new_operand.name = name_placement;
+            this.parentElement.appendChild(new_operand);
+            new_operand.name = name_placement;
         }
-        for (var i = 0; i < op.options.length; i++) {
-            if (op.options[i].value == b) {
-                op.options[i].selected = true;
-                break;
-            }
-        }
-        operand.value = c;
-        if (operand.value == "") {
-            operand.parentElement.hidden = true;
+
+        op.value = b;
+
+        cancel.onclick = function () {
+            this.parentElement.hidden = true;
+            this.parentElement.lastChild.value = "";
+        };
+
+        var id_placement = operand.id;
+        var name_placement = operand.name;
+        field.parentElement.removeChild(operand);
+        var new_operand = document.getElementById(field.value).cloneNode(true);
+        new_operand.id = id_placement;
+        new_operand.name = name_placement;
+        field.parentElement.appendChild(new_operand);
+        new_operand.name = name_placement;
+
+        new_operand.value = c;
+
+        if (new_operand.value == "") {
+            new_operand.parentElement.hidden = true;
         }
     }
+
+    var initial_value = new Array();
 
     function select_all() {
         var inputs = document.getElementById("query_form").getElementsByTagName("input");
@@ -175,6 +274,27 @@
     }
 </script>
 
+<div hidden="hidden">
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).RecordID)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).SpareID)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).SpareDes)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).Type)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).OrderValue)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).Producer)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).OrderNum)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).Property)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).EquipmentID)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).Maker)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).MakerNum)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).Orderman)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).UseTime, new { type = "datetime-local" })
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).Changer)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).ChangeTime, new { type = "datetime-local" })
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).Creator)
+        @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).CreateTime, new { type = "datetime-local" })
+    @Html.DropDownList("Operator", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.ArEquipmentModels.OperatorType))), "缺省")
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareOrderModels).OperateTime, new { type = "datetime-local" })
+</div>
 
 <form action="/ArSpareOrder/" id="query_form" method="post">
     <div class="row">
@@ -184,10 +304,8 @@
                     <h3 class="panel-title">查询</h3>
                 </div>
                 <div id="query_panel" class="panel-body">
-                    <input type="hidden" name="Colu" value=@col />
-                    <input type="hidden" name="Direction" value=@dir />
                     <input type="button" value="+" onclick="append_input()" class="btn btn-sm" />
-                    <input type="submit" id="query" value="确定" class="btn btn-sm" />
+                    <input type="submit" id="query" value="确定" onclick="var sel=document.getElementById('Column'); sel.value='';" class="btn btn-sm" />
                     @{
                         int r = 0;
                         while (true)
@@ -201,18 +319,258 @@
                             }
 
                             <script>
+                                initial_value.push({ field_name: '@field', op_name: '@op', operand_name: '@operand', r_name: '@r' });
                                 append_input();
-                                add_input('@field' , '@op' , '@operand' , '@r' );
                             </script>
                             r++;
                         }
                     }
+                    <script>
+                        window.onload = function () {
+                            for (var i = 0; i < initial_value.length; i++) {
+                                add_input(initial_value[i].field_name, initial_value[i].op_name, initial_value[i].operand_name, initial_value[i].r_name);
+                            }
+
+                            order_by.value = '@col';
+                            order_by.value = '@dir';
+                        }
+                    </script>
                 </div>
             </div>
         </div>
     </div>
 
     <br />
+
+    @if ((ViewData["selected"] != null) && (ViewData["selected"] != ""))
+    {
+        int rec_id = Convert.ToInt32(ViewData["selected"] as string);
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">@ViewData["selected"]</h3>
+            </div>
+
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().Operator)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().Operator)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().OperateTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().OperateTime)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().OrderID)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().OrderID)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().EquipmentID)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().EquipmentID)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().SpareID)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().SpareID)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().SpareDes)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().SpareDes)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().Type)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().Type)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().OrderValue)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().OrderValue)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().Producer)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().Producer)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().OrderNum)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().OrderNum)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().Property)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().Property)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().Maker)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().Maker)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().MakerNum)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().MakerNum)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().Orderman)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().Orderman)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().UseTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().UseTime)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().UnitPrice)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().UnitPrice)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().TotalPrice)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().TotalPrice)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().Status)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().Status)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().Mode)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().Mode)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().ChangeTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().ChangeTime)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().Changer)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().Changer)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().CreateTime)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().CreateTime)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().Creator)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().Creator)
+                </dd>
+
+            </dl>
+            @{ var em = Model.GetEnumerator();
+             var current_em = Model.Where(p => p.RecordID == rec_id).First();
+             var prev_em = em.Current;
+             string first_one = "", last_one = "";
+             try
+             {
+                 em.MoveNext();
+                 while ((em.Current != null) && (em.Current != current_em))
+                 {
+                     prev_em = em.Current;
+                     em.MoveNext();
+                 }
+                 if (prev_em == null)
+                 {
+                     first_one = "disabled=\"disabled\"";
+                     prev_em = em.Current;
+                 }
+                 if (!em.MoveNext())
+                 {
+                     last_one = "disabled=\"disabled\"";
+                 }
+             }
+             catch (Exception) { }
+
+            }
+
+            <div class="btn-group">
+                <button class='btn btn-default' @first_one onclick="var sel=document.getElementById('selected_item'); sel.value='@prev_em.RecordID'; var pg=document.getElementById('page'); pg.value='@Model.PageNumber';"><span class='glyphicon glyphicon-chevron-left'></span>上一项</button>
+                @Html.ActionLink("详细/对比", "Details", "ArSpareOrder", new { id = rec_id }, new { @class = "btn btn-default" })
+                @Html.ActionLink("恢复", "Details", "ArSpareOrder", new { id = rec_id }, new { @class = "btn btn-default" })
+                @Html.ActionLink("删除", "Delete", "ArSpareOrder", new { id = rec_id }, new { @class = "btn btn-default" })
+                <button class='btn btn-default' @last_one onclick="var sel=document.getElementById('selected_item'); sel.value='@em.Current.RecordID'; var pg=document.getElementById('page'); pg.value='@Model.PageNumber';"><span class='glyphicon glyphicon-chevron-right'></span>下一项</button>
+            </div>
+        </div>
+    }
 
     <p>
         @Html.ActionLink("导出", "ExportExcel", "ArSpareOrder", null, new { @class = "btn btn-default" })
@@ -222,7 +580,32 @@
         <input type="button" id="select_button" value="全选" onclick="select_all()" class="btn btn-default" />
         <input type="button" id="select_button" value="反选" onclick="toggle_all()" class="btn btn-default" />
     </div>
-    @Html.ActionLink("批量删除", "DeleteMultiple", "ArSpareOrder", null, new { @class = "btn btn-default" })
+    <input type="submit" class="btn btn-default" formaction="/ArSpareOrder/DeleteMultiple" value="批量删除">
+
+
+    <input type="hidden" name="selected_item" id="selected_item" />
+    <input type="hidden" name="page" id="page" />
+
+    <script>
+        var order_by = document.createElement("select");
+        order_by.name = "Column";
+        order_by.id = "order_by";
+
+        for (var i = 0; i < fieldSortMap.length; i++) {
+            var option = document.createElement("option");
+            option.text = fieldSortMap[i];
+            option.value = valueSortMap[i];
+            order_by.add(option);
+        }
+        var f = document.getElementById("query_form");
+        f.appendChild(order_by);
+    </script>
+    <select id="order_as" name="Direction">
+        <option value=""></option>
+        <option value="Ascending">升序</option>
+        <option value="Descending">降序</option>
+    </select>
+    <input type="submit" class="btn btn-default" value="排序">
 
     @using MvcContrib.UI.Grid
     @using MvcContrib.UI.Pager
@@ -230,7 +613,11 @@
     @using MvcContrib
     @Html.Grid(Model).Sort(ViewData["model"] as GridSortOptions).Columns(column =>
 {
-    column.For(p => Html.CheckBox("Checked" + p.OrderID + p.OperateTime.ToBinary())).Sortable(false);
+    column.For(p => Html.CheckBox("Checked" + p.RecordID)).Sortable(false);
+    column.For(p => new MvcHtmlString("<button class='btn btn-sm' onclick=\"var sel = document.getElementById('selected_item'); sel.value='" + @p.RecordID + "'; var pg = document.getElementById('page'); pg.value='" + @Model.PageNumber + "';\" ><span class='glyphicon glyphicon-eye-open'></span></button>"));
+    column.For(p => new MvcHtmlString("<a href='/ArSpareOrder/Delete/" + p.RecordID + "' class='btn btn-sm'><span class='glyphicon glyphicon-trash'></span></a>"));
+    column.For(p => new MvcHtmlString("<a href='/ArSpareOrder/Details/" + p.RecordID + "' class='btn btn-sm'><span class='glyphicon glyphicon-repeat'></span></a>"));
+    column.For(p => p.RecordID).Sortable(true);
     column.For(p => p.SpareID).Sortable(true);
     column.For(p => p.SpareDes).Sortable(true);
     column.For(p => p.Type).Sortable(true);
@@ -256,7 +643,25 @@
     column.For(p => p.OperateTime).Sortable(true);
     column.For(p => Html.ActionLink("查看", "Details", new { id = p.OrderID, op = p.Operator, opt = p.OperateTime.ToBinary() }));
     column.For(p => Html.ActionLink("删除", "Delete", new { id = p.OrderID, op = p.Operator, opt = p.OperateTime.ToBinary() }));
-}).Empty("无数据").Attributes(@width => "100%", @style => "text-align:center;border-collapse:collapse;white-space:nowrap;overflow:hidden;text-overflow:ellipsis", @class => "table table-striped table-hover")
+}).Empty("无数据").Attributes(@width => "100%", @style => "align:left;border-collapse:collapse;white-space:nowrap;overflow:hidden;text-overflow:ellipsis", @class => "table table-striped table-hover")
 
-@Html.Pager(Model).First(" 首页 ").Next(" 下一页 ").Previous(" 上一页 ").Last(" 末页 ").Format("共{2}项, 当前{0}-{1} |")
+<nav>
+    <ul class="pager">
+        @if (Model.HasPreviousPage)
+        {
+            <li><button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='1';">首页</button></li>
+            <li>
+                <button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='@(Model.PageNumber - 1)';"><span class='glyphicon glyphicon-chevron-left'></span>上一页</button>
+            </li>
+        }
+        <li>共 @Model.TotalItems 项 | 当前 @Model.PageNumber 页 | 全 @Model.TotalPages 页</li>
+        @if (Model.HasNextPage)
+        {
+            <li>
+                <button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='@(Model.PageNumber + 1)';"><span class='glyphicon glyphicon-chevron-right'></span>下一页</button>
+            </li>
+            <li><button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='@Model.TotalPages';">末页</button></li>
+        }
+    </ul>
+</nav>
 </form>

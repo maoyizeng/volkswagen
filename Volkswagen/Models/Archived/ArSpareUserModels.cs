@@ -13,7 +13,11 @@ namespace Volkswagen.Models
     // 表4 备件领用记录
     public class ArSpareUserModels
     {
-        
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Display(Name = "记录编号")]
+        public int RecordID { get; set; }
+
         [Required]
         [Display(Name = "备件物流编号")]
         [StringLength(30)]
@@ -46,7 +50,6 @@ namespace Volkswagen.Models
         [StringLength(50)]
         public string ActualUse { get; set; }
 
-        [Key]
         [Display(Name = "编号")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Column(TypeName = "bigint")]
@@ -69,11 +72,12 @@ namespace Volkswagen.Models
         public string Creator { get; set; }
 
         //操作类型记录对原表的修改类型: Insert / Delete / Update
+        [Required]
         [Display(Name = "操作类型")]
-        [StringLength(10)]
-        public string Operator { get; set; }
+        public ArEquipmentModels.OperatorType Operator { get; set; }
 
         [Display(Name = "操作时间")]
+        [Required]
         public DateTime OperateTime { get; set; }
 //        public virtual ArSpareModels ArSpares { get; set; }
 
@@ -95,7 +99,7 @@ namespace Volkswagen.Models
             CreateTime = md.CreateTime;
             Creator = md.Creator;
 
-            Operator = "Default";
+            Operator = ArEquipmentModels.OperatorType.缺省;
             OperateTime = DateTime.Now;
         }
     }

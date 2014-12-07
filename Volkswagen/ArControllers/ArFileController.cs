@@ -19,16 +19,18 @@ using System.Linq.Dynamic;
 
 namespace Volkswagen.ArControllers
 {
+    [Authorize(Roles = "Admin")]
     public class ArFileController : Controller
     {
         private SVWContext db = new SVWContext();
 
         // GET: /ArFile/
-        public async Task<ActionResult> Index(int? page, GridSortOptions model)
+        public async Task<ActionResult> Index(int? page, GridSortOptions model, string selected_item)
         {
             ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
 
-            IQueryable<ArFileModels> list = db.ArFiles.Where("1 = 1");
+            IQueryable<ArFileModels> list = getQuery(false);
             if (!string.IsNullOrEmpty(model.Column))
             {
                 if (model.Direction == SortDirection.Descending)
@@ -40,20 +42,17 @@ namespace Volkswagen.ArControllers
                     list = list.OrderBy(model.Column + " asc");
                 }
             }
-            else
-            {
-                return View(db.ArFiles.ToList().AsPagination(page ?? 1, 200));
-            }
-            return View(list.ToList().AsPagination(page ?? 1, 200));
+            return View(list.ToList().AsPagination(page ?? 1, 100));
         }
 
         [HttpPost]
-        public async Task<ActionResult> Index(int? page)
+        public async Task<ActionResult> Index(int? page, string selected_item)
         {
             GridSortOptions model = new GridSortOptions();
             model.Column = Request.Form["Column"];
             model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
             ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
 
             IQueryable<ArFileModels> list = getQuery();
 
@@ -69,21 +68,21 @@ namespace Volkswagen.ArControllers
                 }
             }
 
-            return View(list.ToList().AsPagination(page ?? 1, 200));
+            return View(list.ToList().AsPagination(page ?? 1, 100));
         }
 
-        private IQueryable<ArFileModels> getQuery()
+        private IQueryable<ArFileModels> getQuery(bool post = true)
         {
             //p
             ParameterExpression param = Expression.Parameter(typeof(ArFileModels), "p");
             Expression filter = Expression.Constant(true);
             for (int n = 0; ; n++)
             {
-                string field = Request.Form["field" + n];
+                string field = (post ? Request.Form["field" + n] : Request["field" + n]);
                 ViewData["field" + n] = field;
-                string op = Request.Form["op" + n];
+                string op = (post ? Request.Form["op" + n] : Request["op" + n]);
                 ViewData["op" + n] = op;
-                string operand = Request.Form["operand" + n];
+                string operand = (post ? Request.Form["operand" + n] : Request["operand" + n]);
                 ViewData["operand" + n] = operand;
 
                 if (string.IsNullOrEmpty(field)) break;
@@ -94,6 +93,26 @@ namespace Volkswagen.ArControllers
                 //[operandn]
                 Expression right = Expression.Constant(operand);
                 Expression result;
+
+                switch (field)
+                {
+                    case "ChangeTime":
+                    case "CreateTime":
+                    case "OperateTime":
+                        right = Expression.Constant(Convert.ToDateTime(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "RecordID":
+                        right = Expression.Constant(int.Parse(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "Operator":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(ArEquipmentModels.OperatorType), operand)));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    default:
+                        break;
+                }
 
                 switch (op)
                 {
@@ -153,52 +172,75 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArFile/Details/5
-        public async Task<ActionResult> Details(string id, string op, long opt)
+        public async Task<ActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ArFileModels arfilemodels = await db.ArFiles.FindAsync(id, op, new DateTime(opt));
-            if (arfilemodels == null)
+            ArFileModels arFilemodels = await db.ArFiles.FindAsync(id);
+            if (arFilemodels == null)
             {
                 return HttpNotFound();
             }
-            return View(arfilemodels);
+
+            FileModels e = await db.Files.FindAsync(arFilemodels.FileName);
+            ViewData["origin"] = e;
+            return View(arFilemodels);
         }
 
         // GET: /ArFile/Rollback/5
-        public async Task<ActionResult> Rollback(string id, string op, long opt)
+        public async Task<ActionResult> Rollback(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ArFileModels a = await db.ArFiles.FindAsync(id, op, new DateTime(opt));
+            ArFileModels a = await db.ArFiles.FindAsync(id);
             if (a == null)
             {
                 return HttpNotFound();
             }
-            FileModels origin = await db.Files.FindAsync(id);
-            string change;
-            if (origin != null)
+            FileModels origin = await db.Files.FindAsync(a.FileName);
+
+            ArEquipmentModels.OperatorType change;
+
+            switch (a.Operator)
             {
-                origin.upcast(a);
-                origin.Changer = User.Identity.Name;
-                origin.ChangeTime = DateTime.Now;
-                change = "Update";
+                case ArEquipmentModels.OperatorType.创建:
+                    if (origin == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "表中已不存在此记录");
+                    }
+                    db.Files.Remove(origin);
+                    change = ArEquipmentModels.OperatorType.删除;
+                    break;
+                case ArEquipmentModels.OperatorType.修改:
+                    if (origin == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "表中已不存在此记录");
+                    }
+                    origin.upcast(a);
+                    change = ArEquipmentModels.OperatorType.修改;
+                    break;
+                case ArEquipmentModels.OperatorType.删除:
+                    if (origin != null)
+                    {
+                        change = ArEquipmentModels.OperatorType.修改;
+                    }
+                    else
+                    {
+                        change = ArEquipmentModels.OperatorType.创建;
+                        db.Files.Add(origin);
+                    }
+                    origin = new FileModels();
+                    origin.upcast(a);
+                    origin.Creator = User.Identity.Name;
+                    origin.CreateTime = DateTime.Now;
+                    break;
+                default:
+                    if (origin == null)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                    change = ArEquipmentModels.OperatorType.修改;
+                    break;
             }
-            else
-            {
-                origin = new FileModels();
-                origin.upcast(a);
-                origin.Changer = User.Identity.Name;
-                origin.Creator = User.Identity.Name;
-                origin.CreateTime = DateTime.Now;
-                origin.ChangeTime = DateTime.Now;
-                change = "Create";
-                db.Files.Add(origin);
-            }
+
+            origin.Changer = User.Identity.Name;
+            origin.ChangeTime = DateTime.Now;
 
             int x = await db.SaveChangesAsync();
             if (x != 0)
@@ -213,13 +255,13 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArFile/Delete/5
-        public async Task<ActionResult> Delete(string id, string op, long opt)
+        public async Task<ActionResult> Delete(int id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ArFileModels arfilemodels = await db.ArFiles.FindAsync(id, op, new DateTime(opt));
+            ArFileModels arfilemodels = await db.ArFiles.FindAsync(id);
             if (arfilemodels == null)
             {
                 return HttpNotFound();
@@ -230,9 +272,9 @@ namespace Volkswagen.ArControllers
         // POST: /ArFile/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(string id, string op, long opt)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            ArFileModels arfilemodels = await db.ArFiles.FindAsync(id, op, new DateTime(opt));
+            ArFileModels arfilemodels = await db.ArFiles.FindAsync(id);
             db.ArFiles.Remove(arfilemodels);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -271,6 +313,7 @@ namespace Volkswagen.ArControllers
             sbHtml.Append("<table border='1' cellspacing='0' cellpadding='0'>");
             sbHtml.Append("<tr>");
             var lstTitle = new List<string> { 
+                "记录编号",
                 "文件名",
                 "类别",
                 "设备编号",
@@ -292,6 +335,7 @@ namespace Volkswagen.ArControllers
             foreach (var i in list)
             {
                 sbHtml.Append("<tr>");
+                sbHtml.AppendFormat(format, i.RecordID);
                 sbHtml.AppendFormat(format, i.FileName);
                 sbHtml.AppendFormat(format, i.Class);
                 sbHtml.AppendFormat(format, i.EquipmentID);

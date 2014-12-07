@@ -19,6 +19,7 @@ using System.Text;
 
 namespace Volkswagen.Controllers
 {
+    [UserAuthorized]
     public class RepairController : Controller
     {
         private SVWContext db = new SVWContext();
@@ -231,7 +232,7 @@ namespace Volkswagen.Controllers
                 {
 
                     ArRepairModels ar = new ArRepairModels(repairmodels);
-                    ar.Operator = "Create";
+                    ar.Operator = ArEquipmentModels.OperatorType.创建;
                     db.ArRepairs.Add(ar);
                     await db.SaveChangesAsync();
                 }
@@ -284,7 +285,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArRepairModels ar = new ArRepairModels(toUpdate);
-                    ar.Operator = "Update";
+                    ar.Operator = ArEquipmentModels.OperatorType.修改;
                     db.ArRepairs.Add(ar);
                     await db.SaveChangesAsync();
                 }
@@ -349,7 +350,7 @@ namespace Volkswagen.Controllers
                     if (x != 0)
                     {
                         changed = true;
-                        ar.Operator = "Update";
+                        ar.Operator = ArEquipmentModels.OperatorType.修改;
                         db.ArRepairs.Add(ar);
                         await db.SaveChangesAsync();
                     }
@@ -395,7 +396,7 @@ namespace Volkswagen.Controllers
             if (x != 0)
             {
                 ArRepairModels ar = new ArRepairModels(toDelete);
-                ar.Operator = "Delete";
+                ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArRepairs.Add(ar);
                 await db.SaveChangesAsync();
             }
@@ -416,7 +417,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArRepairModels ar = new ArRepairModels(e);
-                    ar.Operator = "Delete";
+                    ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArRepairs.Add(ar);
                     await db.SaveChangesAsync();
                 }

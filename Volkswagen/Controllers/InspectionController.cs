@@ -241,7 +241,7 @@ namespace Volkswagen.Controllers
                 {
                     var new_ins = db.Inspections.OrderByDescending(p => p.InspectionId).First();
                     ArInspectionModels ar = new ArInspectionModels(new_ins);
-                    ar.Operator = "Create";
+                    ar.Operator = ArEquipmentModels.OperatorType.创建;
                     db.ArInspections.Add(ar);
                     await db.SaveChangesAsync();
                 }
@@ -294,7 +294,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArInspectionModels ar = new ArInspectionModels(toUpdate);
-                    ar.Operator = "Update";
+                    ar.Operator = ArEquipmentModels.OperatorType.修改;
                     db.ArInspections.Add(ar);
                     await db.SaveChangesAsync();
                 }
@@ -352,7 +352,7 @@ namespace Volkswagen.Controllers
                     if (x != 0)
                     {
                         changed = true;
-                        ar.Operator = "Update";
+                        ar.Operator = ArEquipmentModels.OperatorType.修改;
                         db.ArInspections.Add(ar);
                         await db.SaveChangesAsync();
                     }
@@ -397,7 +397,7 @@ namespace Volkswagen.Controllers
             if (x != 0)
             {
                 ArInspectionModels ar = new ArInspectionModels(toDelete);
-                ar.Operator = "Delete";
+                ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArInspections.Add(ar);
                 await db.SaveChangesAsync();
             }
@@ -418,7 +418,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArInspectionModels ar = new ArInspectionModels(e);
-                    ar.Operator = "Delete";
+                    ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArInspections.Add(ar);
                     await db.SaveChangesAsync();
                 }
@@ -843,7 +843,7 @@ namespace Volkswagen.Controllers
                             if (x != 0)
                             {
                                 ArInspectionModels ar = new ArInspectionModels(db.Inspections.OrderByDescending(p => p.InspectionId).First());
-                                ar.Operator = "Create";
+                                ar.Operator = ArEquipmentModels.OperatorType.创建;
                                 db.ArInspections.Add(ar);
                                 await db.SaveChangesAsync();
                             }

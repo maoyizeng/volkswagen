@@ -8,156 +8,367 @@
 <h3>历史记录 - 人员信息</h3>
 
 <div>
-    <h4>@Model.UserID</h4>
-	<hr />
-    @Html.ActionLink("回滚", "Rollback", new { @class = "btn btn-default", id = Model.UserID, op = Model.Operator, opt = Model.OperateTime.ToBinary() })
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Breviary)
-        </dt>
+    <h4>@Model.RecordID</h4>
+    <hr />
+    @if (Model.Operator == Volkswagen.Models.ArEquipmentModels.OperatorType.创建)
+    {
+        @Html.ActionLink("彻底删除此条记录", "Rollback", new { @class = "btn btn-default", id = Model.RecordID })
+    }
+    else
+    {
+        @Html.ActionLink("恢复至此条记录", "Rollback", new { @class = "btn btn-default", id = Model.RecordID })
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.Breviary)
-        </dd>
+    <div class="row">
+        <dl class="dl-horizontal col-lg-4">
+            <dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+            <dd>
+                要恢复的记录
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Number)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.UserID)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Number)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.UserID)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Telephone)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Breviary)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Telephone)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Breviary)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Mobile)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Mobile)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Birthday)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Number)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Birthday)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Number)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EntryDate)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Telephone)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.EntryDate)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Telephone)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Position)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Mobile)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Position)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Mobile)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.PoliticalStatus)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Birthday)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.PoliticalStatus)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Birthday)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.EntryDate)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Address)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.EntryDate)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Skill)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Position)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Skill)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Position)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Experience)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.PoliticalStatus)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Experience)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.PoliticalStatus)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Remark)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Address)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Remark)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Address)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Image)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Skill)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Image)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Skill)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ChangeTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Experience)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ChangeTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Experience)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Changer)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Remark)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Changer)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Remark)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CreateTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Image)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CreateTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Image)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Creator)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.ChangeTime)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Creator)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.ChangeTime)
+            </dd>
 
-    </dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.Changer)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Changer)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CreateTime)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CreateTime)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Creator)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Creator)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.OperateTime)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.OperateTime)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Operator)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Operator)
+            </dd>
+
+        </dl>
+        @{
+            var origin = ViewData["origin"] as Volkswagen.Models.UserModels;
+            if (origin != null)
+            {
+                <dl class="dl-horizontal col-lg-4">
+                    <dt>
+
+                    </dt>
+
+                    <dd>
+                        当前记录
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.UserID)
+                    </dt>
+
+                    <dd>
+                        @origin.UserID
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Breviary)
+                    </dt>
+
+                    <dd>
+                        @origin.Breviary
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+
+                    <dd>
+                        @origin.Name
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Number)
+                    </dt>
+
+                    <dd>
+                        @origin.Number
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Telephone)
+                    </dt>
+
+                    <dd>
+                        @origin.Telephone
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Mobile)
+                    </dt>
+
+                    <dd>
+                        @origin.Mobile
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Birthday)
+                    </dt>
+
+                    <dd>
+                        @origin.Birthday
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EntryDate)
+                    </dt>
+
+                    <dd>
+                        @origin.EntryDate
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Position)
+                    </dt>
+
+                    <dd>
+                        @origin.Position
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PoliticalStatus)
+                    </dt>
+
+                    <dd>
+                        @origin.PoliticalStatus
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Address)
+                    </dt>
+
+                    <dd>
+                        @origin.Address
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Skill)
+                    </dt>
+
+                    <dd>
+                        @origin.Skill
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Experience)
+                    </dt>
+
+                    <dd>
+                        @origin.Experience
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Remark)
+                    </dt>
+
+                    <dd>
+                        @origin.Remark
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Image)
+                    </dt>
+
+                    <dd>
+                        @origin.Image
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ChangeTime)
+                    </dt>
+
+                    <dd>
+                        @origin.ChangeTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Changer)
+                    </dt>
+
+                    <dd>
+                        @origin.Changer
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CreateTime)
+                    </dt>
+
+                    <dd>
+                        @origin.CreateTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Creator)
+                    </dt>
+
+                    <dd>
+                        @origin.Creator
+                    </dd>
+
+                </dl>
+
+            }
+        }
+    </div>
 </div>
-<p>
-    @Html.ActionLink("返回列表", "Index")
-</p>
+    <p>
+        @Html.ActionLink("返回列表", "Index")
+    </p>

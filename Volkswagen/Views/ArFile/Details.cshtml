@@ -8,84 +8,223 @@
 <h3>历史记录 - 文件</h3>
 
 <div>
-    <h4>@Model.FileName</h4>
-	<hr />
-    @Html.ActionLink("回滚", "Rollback", new { @class = "btn btn-default", id = Model.FileName, op = Model.Operator, opt = Model.OperateTime.ToBinary() })
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Class)
-        </dt>
+    <h4>@Model.RecordID</h4>
+    <hr />
+    @if (Model.Operator == Volkswagen.Models.ArEquipmentModels.OperatorType.创建)
+    {
+        @Html.ActionLink("彻底删除此条记录", "Rollback", new { @class = "btn btn-default", id = Model.RecordID })
+    }
+    else
+    {
+        @Html.ActionLink("恢复至此条记录", "Rollback", new { @class = "btn btn-default", id = Model.RecordID })
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.Class)
-        </dd>
+    <div class="row">
+        <dl class="dl-horizontal col-lg-4">
+            <dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EquipmentID)
-        </dt>
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.EquipmentID)
-        </dd>
+            <dd>
+                要恢复的记录
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EquipDes)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.FileName)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.EquipDes)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.FileName)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Charger)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Class)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Charger)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Class)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.File)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.EquipmentID)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.File)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.EquipmentID)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ChangeTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.EquipDes)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ChangeTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.EquipDes)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Changer)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Charger)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Changer)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Charger)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CreateTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.File)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CreateTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.File)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Creator)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.ChangeTime)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Creator)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.ChangeTime)
+            </dd>
 
-    </dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.Changer)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Changer)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CreateTime)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CreateTime)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Creator)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Creator)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.OperateTime)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.OperateTime)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Operator)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Operator)
+            </dd>
+
+        </dl>
+        @{
+            var origin = ViewData["origin"] as Volkswagen.Models.FileModels;
+            if (origin != null)
+            {
+                <dl class="dl-horizontal col-lg-4">
+                    <dt>
+
+                    </dt>
+
+                    <dd>
+                        当前记录
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.FileName)
+                    </dt>
+
+                    <dd>
+                        @origin.FileName
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Class)
+                    </dt>
+
+                    <dd>
+                        @origin.Class
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EquipmentID)
+                    </dt>
+
+                    <dd>
+                        @origin.EquipmentID
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EquipDes)
+                    </dt>
+
+                    <dd>
+                        @origin.EquipDes
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Charger)
+                    </dt>
+
+                    <dd>
+                        @origin.Charger
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.File)
+                    </dt>
+
+                    <dd>
+                        @origin.File
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ChangeTime)
+                    </dt>
+
+                    <dd>
+                        @origin.ChangeTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Changer)
+                    </dt>
+
+                    <dd>
+                        @origin.Changer
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CreateTime)
+                    </dt>
+
+                    <dd>
+                        @origin.CreateTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Creator)
+                    </dt>
+
+                    <dd>
+                        @origin.Creator
+                    </dd>
+
+                </dl>
+
+            }
+        }
+    </div>
 </div>
-<p>
-    @Html.ActionLink("返回列表", "Index")
-</p>
+    <p>
+        @Html.ActionLink("返回列表", "Index")
+    </p>

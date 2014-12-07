@@ -19,6 +19,7 @@ using System.Text;
 
 namespace Volkswagen.Controllers
 {
+    [UserAuthorized]
     public class MaintainController : Controller
     {
         private SVWContext db = new SVWContext();
@@ -218,7 +219,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArMaintainModels ar = new ArMaintainModels(maintainmodels);
-                    ar.Operator = "Create";
+                    ar.Operator = ArEquipmentModels.OperatorType.创建;
                     db.ArMaintains.Add(ar);
                     await db.SaveChangesAsync();
                 }
@@ -271,7 +272,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArMaintainModels ar = new ArMaintainModels(toUpdate);
-                    ar.Operator = "Update";
+                    ar.Operator = ArEquipmentModels.OperatorType.修改;
                     db.ArMaintains.Add(ar);
                     await db.SaveChangesAsync();
                 }
@@ -340,7 +341,7 @@ namespace Volkswagen.Controllers
                     if (x != 0)
                     {
                         changed = true;
-                        ar.Operator = "Update";
+                        ar.Operator = ArEquipmentModels.OperatorType.修改;
                         db.ArMaintains.Add(ar);
                         await db.SaveChangesAsync();
                     }
@@ -386,7 +387,7 @@ namespace Volkswagen.Controllers
             if (x != 0)
             {
                 ArMaintainModels ar = new ArMaintainModels(toDelete);
-                ar.Operator = "Delete";
+                ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArMaintains.Add(ar);
                 await db.SaveChangesAsync();
             }
@@ -407,7 +408,7 @@ namespace Volkswagen.Controllers
                 if (x != 0)
                 {
                     ArMaintainModels ar = new ArMaintainModels(e);
-                    ar.Operator = "Delete";
+                    ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArMaintains.Add(ar);
                     await db.SaveChangesAsync();
                 }

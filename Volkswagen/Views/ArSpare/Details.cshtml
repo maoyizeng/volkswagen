@@ -8,164 +8,367 @@
 <h3>历史记录 - 备件库存</h3>
 
 <div>
-    <h4>@Model.SpareID</h4>
-	<hr />
-    @Html.ActionLink("回滚", "Rollback", new { @class = "btn btn-default", id = Model.SpareID, op = Model.Operator, opt = Model.OperateTime.ToBinary() })
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.SpareDes)
-        </dt>
+    <h4>@Model.RecordID</h4>
+    <hr />
+    @if (Model.Operator == Volkswagen.Models.ArEquipmentModels.OperatorType.创建)
+    {
+        @Html.ActionLink("彻底删除此条记录", "Rollback", new { @class = "btn btn-default", id = Model.RecordID })
+    }
+    else
+    {
+        @Html.ActionLink("恢复至此条记录", "Rollback", new { @class = "btn btn-default", id = Model.RecordID })
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.SpareDes)
-        </dd>
+    <div class="row">
+        <dl class="dl-horizontal col-lg-4">
+            <dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Type)
-        </dd>
+            <dd>
+                要恢复的记录
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Picture1)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.SpareID)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Picture1)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.SpareID)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Picture2)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.SpareDes)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Picture2)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.SpareDes)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Mark)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Type)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Mark)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Type)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.PresentValue)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Picture1)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.PresentValue)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Picture1)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.SafeValue)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Mark)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.SafeValue)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Mark)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.DCMinValue)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.PresentValue)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.DCMinValue)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.PresentValue)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.DCMaxValue)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.SafeValue)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.DCMaxValue)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.SafeValue)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Property)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.DCMinValue)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Property)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.DCMinValue)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EquipmentID)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.DCMaxValue)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.EquipmentID)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.DCMaxValue)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Producer)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Property)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Producer)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Property)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.OrderNumber)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.EquipmentID)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.OrderNumber)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.EquipmentID)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Remark)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Producer)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Remark)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Producer)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.KeyPart)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.OrderNumber)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.KeyPart)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.OrderNumber)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ChangeTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Remark)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ChangeTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Remark)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Changer)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.KeyPart)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Changer)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.KeyPart)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CreateTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.ChangeTime)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CreateTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.ChangeTime)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Creator)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Changer)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Creator)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Changer)
+            </dd>
 
-    </dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.CreateTime)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CreateTime)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Creator)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Creator)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.OperateTime)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.OperateTime)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Operator)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Operator)
+            </dd>
+
+        </dl>
+        @{
+            var origin = ViewData["origin"] as Volkswagen.Models.SpareModels;
+            if (origin != null)
+            {
+                <dl class="dl-horizontal col-lg-4">
+                    <dt>
+
+                    </dt>
+
+                    <dd>
+                        当前记录
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.SpareID)
+                    </dt>
+
+                    <dd>
+                        @origin.SpareID
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.SpareDes)
+                    </dt>
+
+                    <dd>
+                        @origin.SpareDes
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Type)
+                    </dt>
+
+                    <dd>
+                        @origin.Type
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Picture1)
+                    </dt>
+
+                    <dd>
+                        @origin.Picture1
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Mark)
+                    </dt>
+
+                    <dd>
+                        @origin.Mark
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PresentValue)
+                    </dt>
+
+                    <dd>
+                        @origin.PresentValue
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.SafeValue)
+                    </dt>
+
+                    <dd>
+                        @origin.SafeValue
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.DCMinValue)
+                    </dt>
+
+                    <dd>
+                        @origin.DCMinValue
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.DCMaxValue)
+                    </dt>
+
+                    <dd>
+                        @origin.DCMaxValue
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Property)
+                    </dt>
+
+                    <dd>
+                        @origin.Property
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EquipmentID)
+                    </dt>
+
+                    <dd>
+                        @origin.EquipmentID
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Producer)
+                    </dt>
+
+                    <dd>
+                        @origin.Producer
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.OrderNumber)
+                    </dt>
+
+                    <dd>
+                        @origin.OrderNumber
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Remark)
+                    </dt>
+
+                    <dd>
+                        @origin.Remark
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.KeyPart)
+                    </dt>
+
+                    <dd>
+                        @origin.KeyPart
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ChangeTime)
+                    </dt>
+
+                    <dd>
+                        @origin.ChangeTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Changer)
+                    </dt>
+
+                    <dd>
+                        @origin.Changer
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CreateTime)
+                    </dt>
+
+                    <dd>
+                        @origin.CreateTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Creator)
+                    </dt>
+
+                    <dd>
+                        @origin.Creator
+                    </dd>
+
+                </dl>
+
+            }
+        }
+    </div>
 </div>
-<p>
-    @Html.ActionLink("返回列表", "Index")
-</p>
+    <p>
+        @Html.ActionLink("返回列表", "Index")
+    </p>

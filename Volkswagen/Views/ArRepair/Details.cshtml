@@ -8,189 +8,433 @@
 <h3>历史记录 - 设备报修单</h3>
 
 <div>
-    <h4>@Model.SheetID</h4>
-	<hr />
-    @Html.ActionLink("回滚", "Rollback", new { @class = "btn btn-default", id = Model.SheetID, op = Model.SheetID, opt = Model.OperateTime.ToBinary() })
-    <dl class="dl-horizontal">
+    <h4>@Model.RecordID</h4>
+    <hr />
+    @if (Model.Operator == Volkswagen.Models.ArEquipmentModels.OperatorType.创建)
+    {
+        @Html.ActionLink("彻底删除此条记录", "Rollback", new { @class = "btn btn-default", id = Model.RecordID })
+    }
+    else
+    {
+        @Html.ActionLink("恢复至此条记录", "Rollback", new { @class = "btn btn-default", id = Model.RecordID })
+    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EquipmentID)
-        </dt>
+    <div class="row">
+        <dl class="dl-horizontal col-lg-4">
+            <dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.EquipmentID)
-        </dd>
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EquipDes)
-        </dt>
+            <dd>
+                要恢复的记录
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.EquipDes)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.StartTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.SheetID)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.StartTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.SheetID)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FinishTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.EquipmentID)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.FinishTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.EquipmentID)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RepairTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.EquipDes)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.RepairTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.EquipDes)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Class)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.StartTime)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Class)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.StartTime)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Line)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.FinishTime)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Line)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.FinishTime)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Section)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.RepairTime)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Section)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.RepairTime)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FaultView)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Class)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.FaultView)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Class)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Repairman)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Line)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Repairman)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Line)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Section)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Section)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FaultType)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.FaultView)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.FaultType)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.FaultView)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Result)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Repairman)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Result)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Repairman)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Problem)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Problem)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Checker)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.FaultType)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Checker)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.FaultType)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Remark)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Result)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Remark)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Result)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.StopTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Problem)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.StopTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Problem)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RepairNum)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Checker)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.RepairNum)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Checker)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ChangeTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Remark)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ChangeTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Remark)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Changer)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.StopTime)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Changer)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.StopTime)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CreateTime)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.RepairNum)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CreateTime)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.RepairNum)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Creator)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.ChangeTime)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Creator)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.ChangeTime)
+            </dd>
 
-    </dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.Changer)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Changer)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CreateTime)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CreateTime)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Creator)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Creator)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.OperateTime)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.OperateTime)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Operator)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Operator)
+            </dd>
+
+        </dl>
+        @{
+            var origin = ViewData["origin"] as Volkswagen.Models.RepairModels;
+            if (origin != null)
+            {
+                <dl class="dl-horizontal col-lg-4">
+                    <dt>
+
+                    </dt>
+
+                    <dd>
+                        当前记录
+                    </dd>
+
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.SheetID)
+                    </dt>
+
+                    <dd>
+                        @origin.SheetID
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EquipmentID)
+                    </dt>
+
+                    <dd>
+                        @origin.EquipmentID
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EquipDes)
+                    </dt>
+
+                    <dd>
+                        @origin.EquipDes
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.StartTime)
+                    </dt>
+
+                    <dd>
+                        @origin.StartTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.FinishTime)
+                    </dt>
+
+                    <dd>
+                        @origin.FinishTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.RepairTime)
+                    </dt>
+
+                    <dd>
+                        @origin.RepairTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Class)
+                    </dt>
+
+                    <dd>
+                        @origin.Class
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Line)
+                    </dt>
+
+                    <dd>
+                        @origin.Line
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Section)
+                    </dt>
+
+                    <dd>
+                        @origin.Section
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.FaultView)
+                    </dt>
+
+                    <dd>
+                        @origin.FaultView
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Repairman)
+                    </dt>
+
+                    <dd>
+                        @origin.Repairman
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </dt>
+
+                    <dd>
+                        @origin.Description
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.FaultType)
+                    </dt>
+
+                    <dd>
+                        @origin.FaultType
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Result)
+                    </dt>
+
+                    <dd>
+                        @origin.Result
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Problem)
+                    </dt>
+
+                    <dd>
+                        @origin.Problem
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Checker)
+                    </dt>
+
+                    <dd>
+                        @origin.Checker
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Remark)
+                    </dt>
+
+                    <dd>
+                        @origin.Remark
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.StopTime)
+                    </dt>
+
+                    <dd>
+                        @origin.StopTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.RepairNum)
+                    </dt>
+
+                    <dd>
+                        @origin.RepairNum
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ChangeTime)
+                    </dt>
+
+                    <dd>
+                        @origin.ChangeTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Changer)
+                    </dt>
+
+                    <dd>
+                        @origin.Changer
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CreateTime)
+                    </dt>
+
+                    <dd>
+                        @origin.CreateTime
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Creator)
+                    </dt>
+
+                    <dd>
+                        @origin.Creator
+                    </dd>
+
+                </dl>
+
+            }
+        }
+    </div>
 </div>
-<p>
-    @Html.ActionLink("返回列表", "Index")
-</p>
+    <p>
+        @Html.ActionLink("返回列表", "Index")
+    </p>
