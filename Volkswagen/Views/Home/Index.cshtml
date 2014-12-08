@@ -81,6 +81,8 @@
         <div data-bind="foreach: errors" class="padding-error">
             <p class="text-danger" data-bind="text: $data"></p>
         </div>
+
+        <!-- 委托这几个部分进行显示 在/Home下可找到各自的页面 -->
         @Html.Partial("_Home")
         @Html.Partial("_Login")
         @Html.Partial("_Register")

@@ -20,36 +20,11 @@ using System.Text;
 namespace Volkswagen.Controllers
 {
 
-//    [Authorize(Roles="Admin")]
-    [UserAuthorized]
+    [UserAuthorized] // 自行编写的权限特性, 当没有登录时跳转到主页
     public class EquipmentController : Controller
     {
         public SVWContext db = new SVWContext();
-        /*private enum operation
-        {
-            EQ,     // == equal to
-            GT,     // >  greater than
-            LT,     // <  less than
-            GE,     // >= greater than or equal to
-            LE,     // <= less than or equal to
-            CONTAIN // contain
-        };
-        private string[] fieldMap = new string[] {
-             "设备编号",
-             "设备名称",
-             "负责人",
-             "所在工段",
-             "车间生产线",
-             "点检",
-             "日常保养",
-             "巡检",
-             "需更新否",
-             "最后修改时间",
-             "修改人",
-             "创建时间",
-             "创建人",
-             "备注"
-        };*/
+
         private string[] operation = new string[] {
             "=",
             ">",
@@ -60,15 +35,22 @@ namespace Volkswagen.Controllers
         
 
         // GET: /Equipment/
+        // 以get方式调用的主页
+        // page: 页码号
+        // model: 排序选项(Column, Direction)
+        // selected_item: 详细显示的记录主键
+        // get方式调用的函数, 得到调用时参数的方法有两种, 一是如下在函数的参数列表里, 二是在Request[]数组里, 都可以使用
         public async Task<ActionResult> Index(int? page, GridSortOptions model, string selected_item)
         {
-            //PrepareSelectItems();
-            //return View(await db.Equipments.ToListAsync());
-            
+            // 将之后页面的预设排序/查看值设上
+            // ViewData是除了主要model外给页面传值的途径
             ViewData["model"] = model;
             ViewData["selected"] = selected_item;
 
+            // 查询
             IQueryable<EquipmentModels> list = getQuery(false);
+
+            // 如果Column不为空, 说明需要进行排序, 根据Direction进行升序或降序
             if (!string.IsNullOrEmpty(model.Column))
             {
                 if (model.Direction == SortDirection.Descending)
@@ -80,25 +62,30 @@ namespace Volkswagen.Controllers
                     list = list.OrderBy(model.Column + " asc");
                 }
             }
-            //list = list.AsPagination(page ?? 1, 5);
-            //IPagination<Volkswagen.Models.EquipmentModels> l = list.ToList().AsPagination(page ?? 1, 200);
+            
+            // 返回页面, 主model为IPagination, 如果page有值就以page值-100返回, 否则就是1-100
             return View(list.ToList().AsPagination(page ?? 1, 100));
         }
 
+        // 以post方式调用主页
+        // page: 页码
+        // select_item: 要详细显示的记录主键
+        // 排序的项在Request.Form[]里可以得到
+        // post方式调用的函数, 得到调用时参数的方法有两种, 一是如下在函数的参数列表里, 二是在Request.Form[]数组里, 都可以使用
         [HttpPost]
         public async Task<ActionResult> Index(int? page, string selected_item)
         {
-            //IQueryable<EquipmentModels> list = ViewData.Model as IQueryable<EquipmentModels>;
-            //IQueryable<EquipmentModels> list = db.Equipments.Where("1 = 1");
-
+            // 得到排序选项, 并给页面的ViewData赋值
             GridSortOptions model = new GridSortOptions();
             model.Column = Request.Form["Column"];
             model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
             ViewData["model"] = model;
             ViewData["selected"] = selected_item;
             
+            // 查询
             IQueryable<EquipmentModels> list = getQuery();
 
+            // 排序
             if (!string.IsNullOrEmpty(model.Column))
             {
                 if (model.Direction == SortDirection.Descending)
@@ -111,77 +98,26 @@ namespace Volkswagen.Controllers
                 }
             }
 
-            //IPagination<Volkswagen.Models.EquipmentModels> l = list.ToList().AsPagination(page ?? 1, 5);
+            // 返回 如果页码 不为空则返回页码-100 否则1-100
             return View(list.ToList().AsPagination(page ?? 1, 100));
-            //return View(l);
         }
 
+        // 查询方法
+        // post: 是否是post方式 false表示get
         private IQueryable<EquipmentModels> getQuery(bool post = true)
         {
-            /*string query = "1 = 1";
+            // 以下使用Expression类构造出一句数据库的查询语句, 比较难看懂
+            // xx.where(p => p.[filedn] [opn] [operandn] && ...)
 
+            // 构造一个参数 p | p是EquipmentModel类型的
             ParameterExpression param = Expression.Parameter(typeof(EquipmentModels), "p");
 
-            for (int n = 0; ; n++)
-            {
-                string field = Request.Form["field" + n];
-                ViewData["field" + n] = field;
-                string op = Request.Form["op" + n];
-                ViewData["op" + n] = op;
-                string operand = Request.Form["operand" + n];
-                ViewData["operand" + n] = operand;
-
-                if (string.IsNullOrEmpty(field)) break;
-                if (string.IsNullOrEmpty(operand)) continue;
-
-                if (Expression.Property(param, typeof(EquipmentModels).GetProperty(field)).Type == typeof(string) && (!op.Equals("6")))
-                {
-                    operand = "\"" + operand + "\"";
-                }
-                else if (Expression.Property(param, typeof(EquipmentModels).GetProperty(field)).Type.MemberType.GetType().IsEnum)
-                {
-                    Type t = Expression.Property(param, typeof(EquipmentModels).GetProperty(field)).Type.GenericTypeArguments[0];
-                    operand = Convert.ToInt32(Enum.Parse(t, operand)) + "";
-                }
-
-                switch (op)
-                {
-                    case "0":
-                        query += " AND " + field + " = " + operand;
-                        break;
-                    case "1":
-                        query += " AND " + field + " > " + operand;
-                        break;
-                    case "2":
-                        query += " AND " + field + " < " + operand;
-                        break;
-                    case "3":
-                        query += " AND " + field + " >= " + operand;
-                        break;
-                    case "4":
-                        query += " AND " + field + " <= " + operand;
-                        break;
-                    case "5":
-                        query += " AND " + field + " <> " + operand;
-                        break;
-                    case "6": //Contain
-                        query += " AND " + field + " like %" + operand + "%";
-                        break;
-                    default:
-                        query += " AND " + field + " = " + operand;
-                        break;
-                }
-            }
-
-            IQueryable<EquipmentModels> list = db.Equipments.Where(query);
-            return list;
-             * */
-
-            //p
-            ParameterExpression param = Expression.Parameter(typeof(EquipmentModels), "p");
+            // 构造查询的bool条件
             Expression filter = Expression.Constant(true);
+            // 逐条得到页面传来的查询行进行分析
             for (int n = 0; ; n++)
             {
+                // 根据post还是get 得到各自的列名/操作符/操作数 并且赋值给ViewData以再传回页面
                 string field = (post ? Request.Form["field" + n] : Request["field" + n]);
                 ViewData["field" + n] = field;
                 string op = (post ? Request.Form["op" + n] : Request["op" + n]);
@@ -189,39 +125,22 @@ namespace Volkswagen.Controllers
                 string operand = (post ? Request.Form["operand" + n] : Request["operand" + n]);
                 ViewData["operand" + n] = operand;
 
+                // 如果列名为空 说明查询结束 直接跳出
                 if (string.IsNullOrEmpty(field)) break;
+                // 如果操作数为空 说明此行查询无效 看下一行
                 if (string.IsNullOrEmpty(operand)) continue;
 
 
-                //p.[filedn]
+                //p.[filedn] | 在EquipmentModels中得到列名作为param
                 Expression left = Expression.Property(param, typeof(EquipmentModels).GetProperty(field));
-                //[operandn]
+                //[operandn] | 将操作数构造成常数
                 Expression right = Expression.Constant(operand);
 
-                /*if (field == "WSArea")
-                {
-                    right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.WSNames), operand)));
-                    right = Expression.Convert(right, left.Type);
-                }
-                else if ((field == "ItemInspect") || (field == "RegularCare") || (field == "Check"))
-                {
-                    right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.ThereBe), operand)));
-                    right = Expression.Convert(right, left.Type);
-                }
-                else if (field == "RoutingInspect")
-                {
-                    right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.YesNo), operand)));
-                    right = Expression.Convert(right, left.Type);
-                }
-                else if ((field == "ChangeTime") || (field == "CreateTime"))
-                {
-                    right = Expression.Constant(Convert.ToDateTime(operand));
-                    right = Expression.Convert(right, left.Type);
-                }*/
-
+                // 当列名的类型不是string时, 需要对操作数进行处理, 以类型匹配
                 switch (field)
                 {
                     case "WSArea":
+                        // enum 进行转换
                         right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.WSNames), operand)));
                         right = Expression.Convert(right, left.Type);
                         break;
@@ -237,6 +156,7 @@ namespace Volkswagen.Controllers
                         break;
                     case "ChangeTime":
                     case "CreateTime":
+                        // datetime 转换
                         right = Expression.Constant(Convert.ToDateTime(operand));
                         right = Expression.Convert(right, left.Type);
                         break;
@@ -246,6 +166,7 @@ namespace Volkswagen.Controllers
 
                 Expression result;
 
+                // 根据操作符不同, 将列名和操作数用操作符连接起来构成一句 p.[filedn] [opn] [operandn]
                 switch (op)
                 {
                     case "0":
@@ -266,7 +187,7 @@ namespace Volkswagen.Controllers
                     case "5":
                         result = Expression.NotEqual(left, right);
                         break;
-                    case "6": //Contain
+                    case "6": //Contain 包含要通过特别处理 p.[filedn].Contains([operandn])
                         result = Expression.Call(left, typeof(string).GetMethod("Contains", new Type[]{typeof(string)}), right);
                         break;
                     default:
@@ -281,19 +202,23 @@ namespace Volkswagen.Controllers
 
             // where(p => p.[filedn] [opn] [operandn] && ...)
             var e = db.Equipments;
+            // 构造函数调用
             Expression expr = Expression.Call(typeof(Queryable), "Where", new Type[] { typeof(EquipmentModels) }, Expression.Constant(e), pred);
 
+            // 得到结果
             IQueryable<EquipmentModels> list = db.Equipments.AsQueryable().Provider.CreateQuery<EquipmentModels>(expr);
             
             return list;
         }
 
+        // 多选时 分析checkbox状态
         private List<EquipmentModels> getSelected(IQueryable<EquipmentModels> l)
         {
             List<EquipmentModels> list = new List<EquipmentModels>();
             List<EquipmentModels> list_origin = l.ToList();
             foreach (EquipmentModels e in list_origin)
             {
+                // 由于checkbox的名字设置为Checked+主键, 所以这边逐一分析
                 if (Request.Form["Checked" + e.EquipmentID] != "false")
                 {
                     list.Add(e);
@@ -304,13 +229,17 @@ namespace Volkswagen.Controllers
         }
 
         // GET: /Equipment/Details/5
+        // 详细信息页面请求
         public async Task<ActionResult> Details(string id)
         {
+            // id为空, 请求无效
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            // 得到记录项
             EquipmentModels equipmentmodels = await db.Equipments.FindAsync(id);
+            // 记录项为空, 请求无效
             if (equipmentmodels == null)
             {
                 return HttpNotFound();
@@ -319,10 +248,10 @@ namespace Volkswagen.Controllers
         }
 
         // GET: /Equipment/Create
-        [Authorize(Roles="Admin")]
+        // 创建页面 这是请求空的创建页面 所以只返回页面 不做任何事
+        [Authorize(Roles="Admin")] // 只有Admin允许操作 否则报错 401没有权限
         public ActionResult Create()
         {
-            //ViewBag.SectionNames = new SelectList(Enum.GetValues(typeof(EquipmentModels.SectionNames)));
             ViewBag.WSNames = new SelectList(Enum.GetValues(typeof(EquipmentModels.WSNames)));
             ViewBag.ThereBe = new SelectList(Enum.GetValues(typeof(EquipmentModels.ThereBe)));
             ViewBag.YesNo = new SelectList(Enum.GetValues(typeof(EquipmentModels.YesNo)));
@@ -330,35 +259,38 @@ namespace Volkswagen.Controllers
         }
 
         // POST: /Equipment/Create
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // 创建记录, 这条是要进行创建工作
+        // 返回的值是页面上传回的一条完整EquipmentModel记录
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Create([Bind(Include="EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,ItemInspectNum,RegularCare,RegularCareNum,Check,CheckNum,RoutingInspect,Rules,TechnicFile,TrainingFile,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) // 确认传回的值是有效的, 要是有输入错误, 则返回原页面并显示错误
             {
-
+                // 给记录做上必要记录
                 equipmentmodels.Changer = User.Identity.Name;
                 equipmentmodels.Creator = User.Identity.Name;
                 equipmentmodels.CreateTime = DateTime.Now;
                 equipmentmodels.ChangeTime = DateTime.Now;
+                // 给数据库添加记录, 这是还没有保存, 所以还没真加到数据库里
                 db.Equipments.Add(equipmentmodels);
 
+                // 保存数据库改动, 这时x是操作的结果 非零表示成功
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
+                    // 成功时添加历史记录
                     ArEquipmentModels ar = new ArEquipmentModels(equipmentmodels);
                     ar.Operator = ArEquipmentModels.OperatorType.创建;
                     db.ArEquipments.Add(ar);
                     await db.SaveChangesAsync();
                 }               
                 
+                // 返回主页
                 return RedirectToAction("Index");
             }
 
-            //ViewBag.SectionNames = new SelectList(Enum.GetValues(typeof(EquipmentModels.SectionNames)));
             ViewBag.WSNames = new SelectList(Enum.GetValues(typeof(EquipmentModels.WSNames)));
             ViewBag.ThereBe = new SelectList(Enum.GetValues(typeof(EquipmentModels.ThereBe)));
             ViewBag.YesNo = new SelectList(Enum.GetValues(typeof(EquipmentModels.YesNo)));
@@ -366,6 +298,7 @@ namespace Volkswagen.Controllers
         }
 
         // GET: /Equipment/Edit/5
+        // 编辑页面请求 同Create
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Edit(string id)
         {
@@ -382,8 +315,7 @@ namespace Volkswagen.Controllers
         }
 
         // POST: /Equipment/Edit/5
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // 编辑操作请求 同Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -391,17 +323,21 @@ namespace Volkswagen.Controllers
         {
             if (ModelState.IsValid)
             {
+                // 得到同主键的原记录
                 var toUpdate = db.Equipments.Find(equipmentmodels.EquipmentID);
 
+                // 修改新的记录
                 equipmentmodels.Changer = User.Identity.Name;
                 equipmentmodels.ChangeTime = DateTime.Now;
                 equipmentmodels.Creator = toUpdate.Creator;
                 equipmentmodels.CreateTime = toUpdate.CreateTime;
 
-                
+                // 将原纪录剔除
                 db.Entry(toUpdate).State = EntityState.Detached;
+                // 将新记录加上
                 db.Entry(equipmentmodels).State = EntityState.Modified;
 
+                // 同步数据库
                 int x = await db.SaveChangesAsync();
 
                 if (x != 0)
@@ -419,7 +355,7 @@ namespace Volkswagen.Controllers
         }
 
         // POST: /Equipment/EditMultiple/
-        //[HttpPost]
+        // 复数编辑
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> EditMultiple()
         {
@@ -432,8 +368,6 @@ namespace Volkswagen.Controllers
         }
 
         // POST: /Equipment/ChangeMultiple/
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,ItemInspectNum,RegularCare,RegularCareNum,Check,CheckNum,RoutingInspect,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
         {
@@ -446,6 +380,7 @@ namespace Volkswagen.Controllers
                     EquipmentModels e = db.Equipments.Find(id);
                     l.Add(e);
                     ArEquipmentModels ar = new ArEquipmentModels(e);
+                    // 如果得到的值不为空, 说明需要进行修改
                     if (equipmentmodels.EquipDes != null && ModelState.IsValidField("EquipDes")) e.EquipDes = equipmentmodels.EquipDes;
                     if (equipmentmodels.Person != null  && ModelState.IsValidField("Person")) e.Person = equipmentmodels.Person;
                     if (equipmentmodels.Section != null  && ModelState.IsValidField("Section")) e.Section = equipmentmodels.Section;
@@ -488,6 +423,7 @@ namespace Volkswagen.Controllers
         }
 
         // GET: /Equipment/Delete/5
+        // 删除 这条是显示要删除的项 并不做删除操作
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(string id)
         {
@@ -504,16 +440,19 @@ namespace Volkswagen.Controllers
         }
 
         // POST: /Equipment/Delete/5
+        // 确认删除 做删除操作
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
             EquipmentModels toDelete = await db.Equipments.FindAsync(id);
+            // 删除, 还未同步数据库, 并未真正删除
             db.Equipments.Remove(toDelete);
             
             int x = await db.SaveChangesAsync();
             if (x != 0){
+                // 如果删除 添加历史记录
                 ArEquipmentModels ar = new ArEquipmentModels(toDelete);
                 ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArEquipments.Add(ar);
@@ -523,8 +462,7 @@ namespace Volkswagen.Controllers
         }
 
         // POST: /Equipment/DeleteMultiple/
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
+        // 复数删除
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteMultiple()
         {
@@ -554,55 +492,23 @@ namespace Volkswagen.Controllers
             base.Dispose(disposing);
         }
 
-        /*private void PrepareSelectItems()
-        {
-            List<SelectListItem> fieldlist = new List<SelectListItem> {
-                new SelectListItem { Text = "设备编号", Value = "EquipmentID", Selected = true},
-                new SelectListItem { Text = "设备名称", Value = "EquipDes"},
-                new SelectListItem { Text = "负责人", Value = "Person"},
-                new SelectListItem { Text = "所在工段", Value = "Section"},
-                new SelectListItem { Text = "车间生产线", Value = "WSArea"},
-                new SelectListItem { Text = "点检", Value = "ItemInspect"},
-                new SelectListItem { Text = "日常保养", Value = "RegularCare"},
-                new SelectListItem { Text = "巡检", Value = "Check"},
-                new SelectListItem { Text = "需更新否", Value = "RoutingInspect"},
-                new SelectListItem { Text = "最后修改时间", Value = "ChangeTime"},
-                new SelectListItem { Text = "修改人", Value = "Changer"},
-                new SelectListItem { Text = "创建时间", Value = "CreateTime"},
-                new SelectListItem { Text = "创建人", Value = "Creator"},
-                new SelectListItem { Text = "备注", Value = "Remark"}
-            };
-            List<SelectListItem> operationList = new List<SelectListItem> {
-                new SelectListItem { Text = "=", Value = "0", Selected = true},
-                new SelectListItem { Text = ">", Value = "1"},
-                new SelectListItem { Text = "<", Value = "2"},
-                new SelectListItem { Text = ">=", Value = "3"},
-                new SelectListItem { Text = "<=", Value = "4"},
-                new SelectListItem { Text = "包含", Value = "5"}
-            };
-            ViewData["fields"] = fieldlist;
-            ViewData["operations"] = operationList;
-
-            //fieldRow = 0;
-        }*/
-
         // POST: /Equipment/FileUpload
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        // 文件上传
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public ActionResult FileUpload(HttpPostedFileBase[] photos)
         {
+            // 得到主键号
             string key = Request.Form["key"];
             string fullname = "";
                 
+            // 得到多个图片的文件
             foreach (HttpPostedFileBase file in photos)
             {
                 if (file != null)
                 {
+                    // 构造需要保存的路径并保存, 然后将$...加到字符串中
                     string filePath = Path.Combine((AppDomain.CurrentDomain.BaseDirectory + @"img\equipments\"), Path.GetFileName(file.FileName));
-                    //file.SaveAs(Server.MapPath(@"UploadFile\" + file.FileName));
                     file.SaveAs(filePath);
                     fullname += "$" + file.FileName;
                 }
@@ -617,12 +523,15 @@ namespace Volkswagen.Controllers
         }
 
         // GET: /Equipment/ExportExcel
+        // 导出excel 使用StringBuilder的方法, 用html语言输出 与生成报表的方法不一样
         public FileResult ExportExcel()
         {
             var sbHtml = new StringBuilder();
             List<EquipmentModels> list = db.Equipments.ToList();
 
+            // 表格
             sbHtml.Append("<table border='1' cellspacing='0' cellpadding='0'>");
+            // 头行
             sbHtml.Append("<tr>");
             var lstTitle = new List<string> { 
                 "设备编号",
@@ -645,7 +554,8 @@ namespace Volkswagen.Controllers
             }
             sbHtml.Append("</tr>");
 
-            string format = "<td style='font-size: 12px;height:20px;'>{0}</td>";
+            // 为每一行输出
+            string format = "<td style='font-size: 12px;height:20px;'>{0}</td>"; // 表格内容格式
             foreach (var i in list)
             {
                 sbHtml.Append("<tr>");
@@ -671,9 +581,12 @@ namespace Volkswagen.Controllers
             }
             sbHtml.Append("</table>");
             
+            // 转换成二进制
             byte[] fileContents = Encoding.UTF8.GetBytes(sbHtml.ToString());
             
+            // 写入输出流
             var fileStream = new MemoryStream(fileContents);
+            // 将输出流输出
             return File(fileStream, "application/ms-excel", "设备履历.xls");
         }
     }

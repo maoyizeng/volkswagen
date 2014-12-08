@@ -14,6 +14,7 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("Scripts", required: false)
 
+    <!-- 以下内容是左侧边栏的模版格式 共三级 -->
     <style type="text/css" media="screen">
         #menu {
             float: left;
@@ -73,9 +74,13 @@
 </head>
 <body>
 
+    <!-- body部分开始 首先是加载栏, 在加载时会显示 然后隐去 -->
+    <!-- 这里有很多data-bind语法 可以不用弄懂 比较复杂但不重要 -->
     <div data-bind="visible: loading">正在加载...</div>
-    <div class="navbar navbar-inverse navbar-fixed-top">
 
+    <!-- 导航栏 -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <!-- 导航栏头 即上海大众的标志 -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="icon-bar"></span>
@@ -85,9 +90,12 @@
             <a href="/Home" class="navbar-brand" >上海大众</a>
         </div>
 
+        <!-- 导航栏内容 由于按钮较多 放不下的话可以自己合并成下拉菜单-->
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
+                <!-- 下拉菜单项 -->
                 <li class="dropdown">
+                    <!-- href表示这个<a>可以点击 然后data-toggle表示是一个下拉菜单 span是一个向下箭头的显示图标 -->
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">设备 <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li>@Html.ActionLink("设备履历", "Index", "Equipment", new { area = "" }, null)</li>
@@ -103,6 +111,7 @@
                         <li>@Html.ActionLink("备件订购信息", "Index", "SpareOrder", new { area = "" }, null)</li>
                     </ul>
                 </li>
+                <!-- 这几项不是下拉菜单 在正常的导航栏位置上 -->
                 <li>@Html.ActionLink("设备报修单", "Index", "Repair", new { area = "" }, null)</li>
                 <li>@Html.ActionLink("交班记录", "Index", "Shift", new { area = "" }, null)</li>
                 <li>@Html.ActionLink("设备维护", "Index", "Maintain", new { area = "" }, null)</li>
@@ -126,6 +135,7 @@
                 </li>
                 <li>@Html.ActionLink("权限管理", "Index", "Authorize", new { area = "" }, null)</li>
             </ul>
+            <!-- 如果登录了 会显示名字 并由注销键 -->
             <ul class="nav navbar-nav navbar-right" data-bind="with: user">
                 <li>
                     <span class="navbar-text nofloat">你好, <a href="#" class="navbar-link" data-bind="text: name, click: manage"></a>!</span>
@@ -135,7 +145,7 @@
         </div>
     </div>
 
-    <!-- <div class="body-content"> -->
+    <!-- 左侧栏 -->
     <div class="row">
         <div class="col-md-1" id="menu">
             <br />
@@ -147,19 +157,26 @@
                 @using Volkswagen.Models;
                 @{
                     var db = new Volkswagen.DAL.SVWContext();
+                    // 查询设备履历表 得到所有的WSNames 每个可以衍生出一个二级菜单
                     foreach (EquipmentModels.WSNames ws in typeof(EquipmentModels.WSNames).GetEnumValues())
                     {
                         <li>
+                            <!-- 显示WSNames -->
                             <a>@ws.ToString()</a>
+
+                            <!-- 二级菜单 -->
                             <ul class="nav nav-stacked nav-pills">
+                                <!-- 查询工段 并衍生三级菜单 -->
                                 @foreach (string s in db.Equipments.OrderByDescending(p => p.Section).Select(p => p.Section).Distinct())
                                 {
                                     if (db.Equipments.Any(p => (p.Section == s) && (p.WSArea == ws)))
                                     {
                                         <li>
                                             <a>@(s.IsEmpty() ? "无工段" : s)</a>
-                                            <ul class="nav nav-stacked nav-pills">
 
+                                            <!-- 三级菜单 -->
+                                            <ul class="nav nav-stacked nav-pills">
+                                               
                                                 @foreach (EquipmentModels e in db.Equipments.Where(p => (p.Section == s) && (p.WSArea == ws)).ToList())
                                                 {
                                                     string path = "/Equipment/Details/" + e.EquipmentID;
@@ -182,6 +199,7 @@
         </div>
 
         <div class="col-md-11">
+            <!-- 正文部分 委托各个View完成 -->
             @RenderBody()
         </div>
 

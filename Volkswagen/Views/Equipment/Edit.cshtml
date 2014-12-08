@@ -1,4 +1,5 @@
 ﻿@model Volkswagen.Models.EquipmentModels
+<!-- 本页面的主model为一条记录, 而不是一个记录的数组 -->
 
 @{
     ViewBag.Title = "编辑设备履历 - " + Model.EquipmentID;
@@ -100,12 +101,14 @@
             </div>
         </div>
 
+        <!-- 以下是保存和确认的弹窗 -->
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
+                <!-- data-target表示点击时显示名为myModal的modal -->
                 <button class="btn btn-default" data-toggle="modal" data-target="#myModal">
                     保存
                 </button>
-                <!-- Modal -->
+                <!-- 确认的弹窗 modal -->
                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -128,36 +131,44 @@
     </div>
 }
 
+<!-- 照片的显示模块 使用了fileinput.css插件 -->
 <div class="form-horizontal">
     <div class="row">
         @Html.LabelFor(model => model.Photo, new { @class = "control-label  col-md-2" })
         @using (Html.BeginForm("FileUpload", "Equipment", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             <div class="form-group col-md-6">
+                <!-- 照片的框组 -->
                 <input id="photo-input" type="file" class="file" name="photos" data-preview-file-type="any" multiple="multiple">
             </div>
+            <!-- 隐藏输入 告诉服务器主键号 -->
             <input type="hidden" value=@Model.EquipmentID name="key" />
         }
     </div>
 </div>
 
 <script>
+    // 得到Photo字符串
     var init = "@Model.Photo";
     var arr = new Array();
 
+    // 以$分割
     arr = init.split('$');
     var init_arr = new Array();
+
+    // 为每一项构建一个地址并作为img输出
     for (var i = 1; i < arr.length; i++) {
         init_arr[i - 1] = "<img src='/img/equipments/" + arr[i] + "' class='file-preview-image'>";
     }
 
+    // 给fileinput的参数 然后它会显示出图片上传框组
     $("#photo-input").fileinput({
-        initialPreview: init_arr,
-        overwriteInitial: true,
-        browseLabel: "浏览",
+        initialPreview: init_arr, // 初始图片数组
+        overwriteInitial: true, // 可覆盖初始图片
+        browseLabel: "浏览",  // 按钮显示
         uploadLabel: "上传",
         removeLabel: "移除",
-        showPreview: true
+        showPreview: true //显示图片
     });
 
 
