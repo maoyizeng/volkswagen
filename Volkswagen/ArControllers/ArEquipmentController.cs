@@ -275,6 +275,8 @@ namespace Volkswagen.ArControllers
         }
 
         // GET: /ArEquipment/Rollback/5
+        // 回滚机制
+        // 回滚的机制为, 回滚到这一条的状态, 也就是说, 将这一条记录到目前状态之间所有的修改全部无视而直接覆盖
         public async Task<ActionResult> Rollback(int id)
         {
             ArEquipmentModels a = await db.ArEquipments.FindAsync(id);
@@ -289,28 +291,34 @@ namespace Volkswagen.ArControllers
             switch (a.Operator)
             {
                 case ArEquipmentModels.OperatorType.创建:
+                    // 如果是创建操作 但是目前没有这条记录 说明之后已经被删 报错
                     if (origin == null)
                     {
                         return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "表中已不存在此记录");
                     }
+                    // 存在 那么删除掉这条被创建的记录
                     db.Equipments.Remove(origin);
                     change = ArEquipmentModels.OperatorType.删除;
                     break;
                 case ArEquipmentModels.OperatorType.修改:
+                    // 如果是修改操作 但是目前没有这条记录 说明之后已经被删 报错
                     if (origin == null)
                     {
                         return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "表中已不存在此记录");
                     }
+                    // 直接覆盖当前的记录
                     origin.upcast(a);
                     change = ArEquipmentModels.OperatorType.修改;
                     break;
                 case ArEquipmentModels.OperatorType.删除:
+                    // 如果是删除 但是目前还是有这条记录的 说明之后又被创建了 因此这次操作是一次修改操作 并强制覆盖
                     if (origin != null)
                     {
                         change = ArEquipmentModels.OperatorType.修改;
                     }
                     else
                     {
+                    // 不存在这条记录了 那么再重新创建这条被删的记录
                         change = ArEquipmentModels.OperatorType.创建;
                         db.Equipments.Add(origin);
                     }
@@ -320,6 +328,7 @@ namespace Volkswagen.ArControllers
                     origin.CreateTime = DateTime.Now;                    
                     break;
                 default:
+                    // 缺省 不应该跑进来的 随便操作一下
                     if (origin == null)
                     {
                         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -328,6 +337,7 @@ namespace Volkswagen.ArControllers
                     break;
             }
 
+            // 必要记录修改
             origin.Changer = User.Identity.Name;
             origin.ChangeTime = DateTime.Now;
 

@@ -500,32 +500,43 @@ namespace Volkswagen.Controllers
             var data = l.ToList();
             int year = int.Parse(Request.Form["year_file"]);
 
+            // 用随机数构造一个新的文件夹
             Random random = new Random();
             int ranfolder = random.Next();
             string folder = AppDomain.CurrentDomain.BaseDirectory + @"files\tmp\" + ranfolder;
             Directory.CreateDirectory(folder);            
 
+            // 对每个设备进行逐个输出
             foreach (string equip_number in l.Select(p => p.EquipmentID).Distinct())
             {
+                // 当前设备的所有保养计划
                 var data_now = data.Where(p => p.EquipmentID == equip_number).ToList();
 
+                // 设备的基本信息
                 string equip_name = data_now.First().EquipDes;
                 string equip_person = data_now.First().Equipments.Person;
                 string equip_line = data_now.First().Equipments.WSArea.ToString();
 
+                // 打开excel和工作簿
                 Application app = new Application();
                 Workbooks wbks = app.Workbooks;
+
+                // 打开模版文件 之后会另存
                 _Workbook wbk = wbks.Add(AppDomain.CurrentDomain.BaseDirectory + @"files\file_template\设备年度保养计划表.xls");
                 Sheets shs = wbk.Sheets;
                 //_Worksheet sh = shs.Add();
 
                 // http://www.cnblogs.com/wang_yb/articles/1750419.html
-                // TODO - generate excel data
+                // 对每个sheet进行操作 最多15个
                 int sheet = 1;
                 for (sheet = 1; sheet <= 15; sheet++)
                 {
-                    bool finished = false;
+                    bool finished = false; // flag 表示是不是输出完了所有的内容
+                    
+                    // 得到当前sheet对象
                     _Worksheet _wsh = (_Worksheet)shs.get_Item(sheet);
+
+                    // 基本信息的输出
                     _wsh.Cells[2, 3] = year + "年度设备保养计划";
                     _wsh.Cells[4, 3] = "设备名称: " + equip_name;
                     _wsh.Cells[4, 15] = "设备技术员: " + equip_person;
@@ -533,59 +544,71 @@ namespace Volkswagen.Controllers
                     _wsh.Cells[5, 15] = "编制日期: " + DateTime.Now.Year + "." + DateTime.Now.Month;
                     _wsh.Cells[5, 25] = "车间: " + equip_line;
 
+                    // 正文 最多15行
                     for (int i = 1; i <= 15; i++)
                     {
                         int line = i + 8;
-                        InspectionModels current;
+                        InspectionModels current; 
                         if (data_now.Count == ((sheet - 1) * 15 + i - 1))
                         {
+                            // 如果现在的总序号和要输出的个数相等 那么本设备的输出已经结束
                             finished = true;
                             break;
                         }
                         else
                         {
+                            // 得到当前项
                             current = data_now.ElementAt((sheet - 1) * 15 + i - 1);
                         }
 
+                        // 输出保养信息
                         _wsh.Cells[line, 1] = i;
                         _wsh.Cells[line, 2] = current.Part;
                         _wsh.Cells[line, 3] = current.Position;
                         _wsh.Cells[line, 4] = current.Content;
+
+                        // 保养周期
                         string[] s_months = { };
                         if (current.Period != null)
                         {
+                            // 将保养周期按","分割
                             s_months = Regex.Split(current.Period, ",", RegexOptions.IgnorePatternWhitespace);
                         }
 
-
+                        // 填入x
                         foreach (string str in s_months)
                         {
                             if (str == "1-12")
                             {
+                                // 如果只有一项1-12 那么12个月都要填 然后跳出
                                 for (int m = 21; m <= 32; m++)
                                 {
                                     _wsh.Cells[line, m] = "x";
                                 }
                                 break;
                             }
+                            // 根据这是第几个月, 在那一栏内填上x
                             int mm = int.Parse(str);
                             _wsh.Cells[line, mm + 20] = "x";
                         }
                     }
 
+                    // 日期
                     _wsh.Cells[33, 28] = DateTime.Now.Year + "年" + DateTime.Now.Month + "月至" + DateTime.Now.Year + "年12月";
                     if (finished)
                     {
-                        break;
+                        break; //如果已经结束本设备 跳出
                     }
 
                 }
 
+                // 页码 当前/总页数
                 for (int i = 1; i <= sheet; i++)
                 {
                     ((_Worksheet)shs.get_Item(i)).Cells[35, 31] = i + "/" + sheet;
                 }
 
+                // 删除多余的sheet 要把删除时的alert先关掉
                 app.DisplayAlerts = false;
                 for (int i = 15; i > sheet; i--)
                 {
@@ -612,10 +635,12 @@ namespace Volkswagen.Controllers
                 app = null;
             }
 
+            // 压缩
             FastZip fz = new FastZip();
             fz.CreateZip(folder + @"\..\" + ranfolder + ".zip", folder, false, "");
             fz = null;
 
+            // 返回
             return File(folder + @"\..\" + ranfolder + ".zip", "application/zip", year + "年度设备保养计划.zip");
         }
 
@@ -631,7 +656,8 @@ namespace Volkswagen.Controllers
             int ranfolder = random.Next();
             string folder = AppDomain.CurrentDomain.BaseDirectory + @"files\tmp\" + ranfolder;
             Directory.CreateDirectory(folder);
-
+            
+            // 对每个设备逐个生成excel
             foreach (string equip_number in l.Select(p => p.EquipmentID).Distinct())
             {
                 var data_now = data.Where(p => p.EquipmentID == equip_number).ToList();
@@ -640,20 +666,24 @@ namespace Volkswagen.Controllers
                 string equip_person = data_now.First().Equipments.Person;
                 string equip_line = data_now.First().Equipments.WSArea.ToString();
 
+                // 打开excel
                 Application app = new Application();
                 Workbooks wbks = app.Workbooks;
+                // 打开模板 之后另存为新的工作本
                 _Workbook wbk = wbks.Add(AppDomain.CurrentDomain.BaseDirectory + @"files\file_template\设备月度保养计划表.xls");
                 Sheets shs = wbk.Sheets;
                 //_Worksheet sh = shs.Add();
 
                 // http://www.cnblogs.com/wang_yb/articles/1750419.html
-                // TODO - generate excel data
+                // 对15个sheet逐个操作
                 int sheet = 1;
                 for (sheet = 1; sheet <= 15; sheet++)
                 {
-                    bool finished = false;
+                    bool finished = false; // flag 表示是不是输出完了所有的内容
                     int index = 0;
                     _Worksheet _wsh = (_Worksheet)shs.get_Item(sheet);
+
+                    // 基本信息
                     _wsh.Cells[2, 3] = year + "年" + month + "月设备维修保养记录卡";
                     _wsh.Cells[4, 3] = "设备名称: " + equip_name;
                     _wsh.Cells[4, 16] = "设备技术员: " + equip_person;
@@ -661,6 +691,7 @@ namespace Volkswagen.Controllers
                     _wsh.Cells[5, 16] = "编制日期: " + DateTime.Now.Year + "." + DateTime.Now.Month;
                     _wsh.Cells[5, 27] = "车间: " + equip_line;
 
+                    // 输出正文, 一共15行 逐行输出
                     for (int i = 1; i <= 15; i++)
                     {
                         int line = i + 8;
@@ -670,7 +701,7 @@ namespace Volkswagen.Controllers
                         while (index < data_now.Count)
                         {
                             current = data_now.ElementAt(index);
-                            bool to_print = false;
+                            bool to_print = false; // flag 表示要不要输出
                             if ((current.Period == null) || (current.Period.Contains("1-12")))
                             {
                                 // 保养周期为空或为1-12 输出
@@ -682,9 +713,11 @@ namespace Volkswagen.Controllers
                                 string[] s_months = { };
                                 if (current.Period != null)
                                 {
+                                    // 用","将保养周期的字符串分割
                                     s_months = Regex.Split(current.Period, ",", RegexOptions.IgnorePatternWhitespace);
                                 }
 
+                                // 如果分割出的某一项跟这个月匹配, 就要输出
                                 foreach (string str in s_months)
                                 {
                                     int mm = int.Parse(str);
@@ -700,43 +733,47 @@ namespace Volkswagen.Controllers
                             {
                                 break;
                             }
-                            // 跳过此项 下一个循环
+                            // 跳过此项 下一个循环, 查看下一个部件
                             index++;
                         }
                         
                         if (data_now.Count == index)
                         {
-                            // 所有项已遍历 结束本设备输出任务
+                            // 在找下一项的过程中发现所有项已遍历 结束本设备输出任务
                             finished = true;
                             break;
                         }
                         else
                         {
+                            // 找到了要输出的部件 继续执行
                             current = data_now.ElementAt(index);
                         }
 
+                        // 填写部件
                         _wsh.Cells[line, 1] = i;
                         _wsh.Cells[line, 2] = current.Part;
                         _wsh.Cells[line, 3] = current.Position;
                         _wsh.Cells[line, 4] = current.Content;
                         _wsh.Cells[line, 29] = month + "月底";
 
-                        //下一项
+                        //下一个部件
                         index++;
                     }
 
-                    // 所有项已遍历 结束本设备输出任务
+                    // 所有项已遍历 结束本设备的输出任务
                     if (finished)
                     {
                         break;
                     }
                 }
 
+                // 给每个sheet加页标 当前/总页数
                 for (int i = 1; i <= sheet; i++)
                 {
                     ((_Worksheet)shs.get_Item(i)).Cells[28, 35] = i + "/" + sheet;
                 }
 
+                // 将多的sheet删除 将删除时的alert关掉
                 app.DisplayAlerts = false;
                 for (int i = 15; i > sheet; i--)
                 {
@@ -761,12 +798,16 @@ namespace Volkswagen.Controllers
                 //释放掉多余的excel进程
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(app);
                 app = null;
+
+                // 结束 输出下一个设备的报表
             }
 
+            // 压缩
             FastZip fz = new FastZip();
             fz.CreateZip(folder + @"\..\" + ranfolder + ".zip", folder, false, "");
             fz = null;
 
+            // 返回
             return File(folder + @"\..\" + ranfolder + ".zip", "application/zip", year + "年" + month + "月设备保养计划.zip");
         }
 
@@ -780,36 +821,47 @@ namespace Volkswagen.Controllers
             {
                 if (file != null)
                 {
+                    // 先保存好
                     int ran = random.Next();
                     string filePath = Path.Combine((AppDomain.CurrentDomain.BaseDirectory + @"files\tmp\"), ran + Path.GetFileName(file.FileName));
                     
                     file.SaveAs(filePath);
 
+                    // 打开工作簿
                     Application app = new Application();
                     Workbooks wbks = app.Workbooks;
                     _Workbook wbk = wbks.Add(filePath);
                     Sheets shs = wbk.Sheets;
                     Range range = null;
 
+                    // 遍历sheet
                     foreach (_Worksheet _wsh in shs)
                     {
                         range = _wsh.get_Range("C4", Missing.Value);
+                        // 如果设备履历项没有值(仅有"设备履历:") 则sheet为空 结束此工作簿
                         if ((range.Value2 as string).Length < 6) {
                             break;
                         }
+                        // 截取设备名称
                         string equip_name = (range.Value2 as string).Substring(5).Trim();
+
+                        // 截取设备编号
                         range = _wsh.get_Range("C5", Missing.Value);
                         string equip_number = (range.Value2 as string).Substring(5).Trim();
 
+                        // 找正文, 一共15行
                         for (int i = 0; i < 15; i++)
                         {
                             int line = i + 9;
+
+                            // 如果序号为空 说明正文结束
                             range = _wsh.Range[_wsh.Cells[line, 1], _wsh.Cells[line, 1]];
                             if (!(range.Value2 is double))
                             {
                                 break;
                             }
 
+                            // 构造一个新的记录
                             InspectionModels im = new InspectionModels();
                             im.EquipmentID = equip_number;
                             im.EquipDes = equip_name;
@@ -820,8 +872,9 @@ namespace Volkswagen.Controllers
                             range = _wsh.Range[_wsh.Cells[line, 4], _wsh.Cells[line, 4]];
                             im.Content = range.Value2 as string;
 
+                            // 保养周期, 搜索12列, 将有x的月份拼成一个字符串
                             string period = "";
-                            bool period_all = true;
+                            bool period_all = true; // flag 表示是否是1-12都有
                             for (int month = 1; month <= 12; month++)
                             {
                                 range = _wsh.Range[_wsh.Cells[line, month + 20], _wsh.Cells[line, month + 20]];
@@ -841,12 +894,14 @@ namespace Volkswagen.Controllers
                             }
                             if (period_all)
                             {
+                                // 如果12个月都有, 放弃之前的字符串 改用"1-12"
                                 period = "1-12";
                             }
 
                             im.Period = period;
                             //im.InspectionId = db.Inspections.Max(p => p.InspectionId) + 1;
 
+                            // 必要的设置 并添加
                             im.Changer = User.Identity.Name;
                             im.Creator = User.Identity.Name;
                             im.CreateTime = DateTime.Now;
