@@ -35,11 +35,29 @@
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="查询" class="btn btn-default" />
                 <input type="submit" formaction="/Authorize/ModifyRole" value="更改" class="btn btn-default" />
+                <input type="submit" formaction="/Authorize/Delete" value="删除用户" class="btn btn-default" data-toggle="modal" data-target="#myModal" />
             </div>
         </div>
     </div>
 }
 
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">删除确认</h4>
+            </div>
+            <div class="modal-body">
+                是否删除该用户?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <input type="submit" value="确定" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     window.onload = function () {
         var UserName = document.getElementById("roles");

@@ -454,6 +454,8 @@
     <Content Include="Views\Shift\ChangeMultiple.cshtml" />
     <Content Include="Views\Account\UserRoles.cshtml" />
     <Content Include="Views\Authorize\Index.cshtml" />
+    <Content Include="Views\Authorize\UserRegister.cshtml" />
+    <Content Include="Views\Authorize\ResetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -76,5 +76,74 @@ namespace Volkswagen.Controllers
             }
             return RedirectToAction("index");
         }
+
+        public ActionResult UserRegister()
+        {
+            return View();
+        }
+
+        public async Task<ActionResult> Register(RegisterBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                //return BadRequest(ModelState);
+            }
+            //          替换
+            IdentityUser user = new IdentityUser
+            {
+                UserName = model.UserName
+            };
+
+            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+            var new_user = UserManager.FindByName(model.UserName);
+
+            if (new_user == null)
+            {
+                return HttpNotFound();
+            }
+
+            UserManager.AddToRole(new_user.Id, "User");
+            //IHttpActionResult errorResult = GetErrorResult(result);
+
+            //if (errorResult != null)
+            //{
+            //    return errorResult;
+            //}
+
+            //result = await UserManager.AddToRoleAsync(user.Id, "User");
+
+            //errorResult = GetErrorResult(result);
+
+            //if (errorResult != null)
+            //{
+            //    return errorResult;
+            //}
+
+            return RedirectToAction("Index", new { UserName = model.UserName});
+        }
+
+        public ActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        public async Task<ActionResult> Reset(RegisterBindingModel model)
+        {
+            if ((model.UserName == "") || (model.UserName == null))
+            {
+                return HttpNotFound();
+            }
+            var user = UserManager.FindByName(model.UserName);
+
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            UserManager.RemovePassword(user.Id);
+            await UserManager.AddPasswordAsync(user.Id, model.Password);
+
+            return RedirectToAction("Index", new { UserName = model.UserName });
+        }
+
 	}
 }

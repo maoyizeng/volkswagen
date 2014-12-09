@@ -2,37 +2,37 @@
 <div data-bind="visible: loading">Loading...</div>
 <div data-bind="visible: !loading()">
     <p class="text-success" data-bind="text: message"></p>
-    <h2>Manage Account</h2>
+    <h2>管理账号</h2>
     <section>
         <div data-bind="with: changePassword">
-            <p class="text-info">You're logged in as <strong data-bind="text: name"></strong>.</p>
+            <p class="text-info">你好, <strong data-bind="text: name"></strong>.</p>
             <form class="form-horizontal" role="form">
-                <h4>Change your password</h4>
+                <h4>修改密码</h4>
                 <hr />
                 <ul class="text-danger" data-bind="foreach: errors">
                     <li data-bind="text: $data"></li>
                 </ul>
                 <div class="form-group">
-                    <label for="ChangePasswordOldPassword" class="col-md-2 control-label">Old password</label>
+                    <label for="ChangePasswordOldPassword" class="col-md-2 control-label">原密码</label>
                     <div class="col-md-10">
                         <input type="password" id="ChangePasswordOldPassword" class="form-control" data-bind="value: oldPassword" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="ChangePasswordNewPassword" class="col-md-2 control-label">New password</label>
+                    <label for="ChangePasswordNewPassword" class="col-md-2 control-label">新密码</label>
                     <div class="col-md-10">
                         <input type="password" id="ChangePasswordNewPassword" class="form-control" data-bind="value: newPassword" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="ChangePasswordConfirmPassword" class="col-md-2 control-label">Confirm new password</label>
+                    <label for="ChangePasswordConfirmPassword" class="col-md-2 control-label">确认新密码</label>
                     <div class="col-md-10">
                         <input type="password" id="ChangePasswordConfirmPassword" class="form-control" data-bind="value: confirmPassword" />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-default" data-bind="click: change, disable: changing">Change password</button>
+                        <button type="submit" class="btn btn-default" data-bind="click: change, disable: changing">修改密码</button>
                     </div>
                 </div>
             </form>
@@ -69,7 +69,7 @@
         <ul class="text-danger" data-bind="foreach: errors">
             <li data-bind="text: $data"></li>
         </ul>
-        <div data-bind="if: logins().length > 0">
+        <!--<div data-bind="if: logins().length > 0">
             <h4>Registered logins</h4>
             <table class="table">
                 <tbody data-bind="foreach: logins">
@@ -102,7 +102,7 @@
             <p data-bind="foreach: externalLoginProviders">
                 <button type="submit" class="btn btn-default" data-bind="text: name, attr: { title: 'Log in using your ' + name() + ' account' }, click: login"></button>
             </p>
-        </form>
+        </form>-->
     </section>
 </div>
 <!-- /ko -->
