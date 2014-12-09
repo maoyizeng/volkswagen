@@ -696,10 +696,10 @@ namespace Volkswagen.Controllers
                 // http://www.cnblogs.com/wang_yb/articles/1750419.html
                 // 对15个sheet逐个操作
                 int sheet = 1;
+                int index = 0;
                 for (sheet = 1; sheet <= 15; sheet++)
                 {
                     bool finished = false; // flag 表示是不是输出完了所有的内容
-                    int index = 0;
                     _Worksheet _wsh = (_Worksheet)shs.get_Item(sheet);
 
                     // 基本信息
