@@ -74,7 +74,8 @@
             </div>
             @Html.LabelFor(model => model.Section, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.DropDownList("Section", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.RepairModels.SectionNames))), String.Empty)
+                <!--@Html.DropDownList("Section", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.RepairModels.SectionNames))), String.Empty)-->
+                @Html.TextBoxFor(model => model.Section, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Section)
             </div>
         </div>
@@ -101,7 +102,7 @@
             </div>
             @Html.LabelFor(model => model.FaultType, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.DropDownList("ResponseClass", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.RepairModels.FaultTypeEnum))), String.Empty)
+                @Html.DropDownList("FaultType", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.RepairModels.FaultTypeEnum))), String.Empty)
                 @Html.ValidationMessageFor(model => model.FaultType)
             </div>
         </div>
@@ -109,7 +110,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Result, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.DropDownList("ResponseClass", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.YesNo))), String.Empty)
+                @Html.DropDownList("Result", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.YesNo))), String.Empty)
                 @Html.ValidationMessageFor(model => model.Result)
             </div>
             @Html.LabelFor(model => model.Problem, new { @class = "control-label col-md-2" })

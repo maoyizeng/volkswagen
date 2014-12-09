@@ -589,8 +589,7 @@
 
     <p>
         @Html.ActionLink("新建", "Create", "Equipment", null, new { @class = "btn btn-default" })
-        @Html.ActionLink("导出", "ExportExcel", "Equipment", null, new { @class = "btn btn-default" })
-    </p>
+        <input type="submit" class="btn btn-default" formaction="/Equipment/ExportExcel" value="导出">    </p>
 
     <!-- 全选和反选 onclick的函数在之前有 -->
     <div class="btn-group">

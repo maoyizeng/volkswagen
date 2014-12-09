@@ -407,7 +407,26 @@ namespace Volkswagen.ArControllers
         public FileResult ExportExcel()
         {
             var sbHtml = new StringBuilder();
-            List<ArEquipmentModels> list = db.ArEquipments.ToList();
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+
+            var l = getQuery();
+
+            // 排序
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    l = l.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    l = l.OrderBy(model.Column + " asc");
+                }
+            }
+
+            var list = l.ToList();
 
             sbHtml.Append("<table border='1' cellspacing='0' cellpadding='0'>");
             sbHtml.Append("<tr>");

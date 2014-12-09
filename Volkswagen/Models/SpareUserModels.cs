@@ -47,7 +47,7 @@ namespace Volkswagen.Models
         public string ActualUse { get; set; }
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name = "编号")]
         [Column(TypeName = "bigint")]
         public int UserID { get; set; }

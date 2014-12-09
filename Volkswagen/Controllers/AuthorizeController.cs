@@ -21,6 +21,7 @@ using Volkswagen.Results;
 
 namespace Volkswagen.Controllers
 {
+    [System.Web.Mvc.Authorize(Roles = "Admin")]
     public class AuthorizeController : Controller
     {
 

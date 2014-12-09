@@ -196,7 +196,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="UserID,SpareID,SpareDes,Type,InValue,OutValue,User,UseTime,ActualUse,ChangeTime,Changer,CreateTime,Creator")] SpareUserModels spareusermodels)
+        public async Task<ActionResult> Create([Bind(Include="SpareID,SpareDes,Type,InValue,OutValue,User,UseTime,ActualUse,ChangeTime,Changer,CreateTime,Creator")] SpareUserModels spareusermodels)
         {
             if (ModelState.IsValid)
             {
@@ -443,7 +443,26 @@ namespace Volkswagen.Controllers
         public FileResult ExportExcel()
         {
             var sbHtml = new StringBuilder();
-            List<SpareUserModels> list = db.SpareUsers.ToList();
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+
+            var l = getQuery();
+
+            // 排序
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    l = l.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    l = l.OrderBy(model.Column + " asc");
+                }
+            }
+
+            var list = l.ToList();
 
             sbHtml.Append("<table border='1' cellspacing='0' cellpadding='0'>");
             sbHtml.Append("<tr>");

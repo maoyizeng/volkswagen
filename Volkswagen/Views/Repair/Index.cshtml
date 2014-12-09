@@ -283,7 +283,8 @@
     @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).FinishTime, new { type = "datetime-local" })
     @Html.DropDownList("Class", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.RepairModels.ClassType))), String.Empty)
     @Html.DropDownList("Line", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.WSNames))), String.Empty)
-    @Html.DropDownList("Section", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.RepairModels.SectionNames))), String.Empty)
+    <!--@Html.DropDownList("Section", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.RepairModels.SectionNames))), String.Empty)-->
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).Section)
     @Html.DropDownList("FaultType", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.RepairModels.FaultTypeEnum))), String.Empty)
     @Html.DropDownList("Result", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.YesNo))), String.Empty)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.RepairModels).Changer)
@@ -563,7 +564,7 @@
 
     <p>
         @Html.ActionLink("新建", "Create", "Repair", null, new { @class = "btn btn-default" })
-        @Html.ActionLink("导出", "ExportExcel", "Repair", null, new { @class = "btn btn-default" })
+        <input type="submit" class="btn btn-default" formaction="/Repair/ExportExcel" value="导出">
     </p>
 
     <div class="btn-group">

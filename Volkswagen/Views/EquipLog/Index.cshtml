@@ -494,8 +494,7 @@
 
     <p>
         @Html.ActionLink("新建", "Create", "EquipLog", null, new { @class = "btn btn-default" })
-        @Html.ActionLink("导出", "ExportExcel", "EquipLog", null, new { @class = "btn btn-default" })
-    </p>
+        <input type="submit" class="btn btn-default" formaction="/EquipLog/ExportExcel" value="导出">    </p>
 
 
     <div class="btn-group">

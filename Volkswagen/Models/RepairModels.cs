@@ -66,8 +66,9 @@ namespace Volkswagen.Models
         }
 
         [Display(Name = "工段")]
-        //[StringLength(10)]
-        public Nullable<SectionNames> Section { get; set; }
+        [StringLength(30)]
+        //public Nullable<SectionNames> Section { get; set; }
+        public string Section { get; set; }
 
         [Display(Name = "故障现象")]
         [StringLength(200)]

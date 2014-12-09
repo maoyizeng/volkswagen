@@ -104,10 +104,10 @@ namespace Volkswagen.ArControllers
                         right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.WSNames), operand)));
                         right = Expression.Convert(right, left.Type);
                         break;
-                    case "Section":
-                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(RepairModels.SectionNames), operand)));
-                        right = Expression.Convert(right, left.Type);
-                        break;
+                    //case "Section":
+                    //    right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(RepairModels.SectionNames), operand)));
+                    //    right = Expression.Convert(right, left.Type);
+                    //    break;
                     case "FaultType":
                         right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(RepairModels.FaultTypeEnum), operand)));
                         right = Expression.Convert(right, left.Type);
@@ -333,7 +333,26 @@ namespace Volkswagen.ArControllers
         public FileResult ExportExcel()
         {
             var sbHtml = new StringBuilder();
-            List<ArRepairModels> list = db.ArRepairs.ToList();
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+
+            var l = getQuery();
+
+            // 排序
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    l = l.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    l = l.OrderBy(model.Column + " asc");
+                }
+            }
+
+            var list = l.ToList();
 
             sbHtml.Append("<table border='1' cellspacing='0' cellpadding='0'>");
             sbHtml.Append("<tr>");
