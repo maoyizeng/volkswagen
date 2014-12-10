@@ -12,7 +12,7 @@
     else
     {
         col = (ViewData["model"] as GridSortOptions).Column;
-        dir = ((ViewData["model"] as GridSortOptions).Direction == MvcContrib.Sorting.SortDirection.Ascending) ? "Asceding" : "Descending";
+        dir = ((ViewData["model"] as GridSortOptions).Direction == MvcContrib.Sorting.SortDirection.Ascending) ? "Ascending" : "Descending";
     }
 }
 
@@ -294,7 +294,7 @@
                             }
 
                             order_by.value = '@col';
-                            order_by.value = '@dir';
+                            order_as.value = '@dir';
                         }
                     </script>
                 </div>

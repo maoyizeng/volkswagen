@@ -42,6 +42,16 @@ namespace Volkswagen.Controllers
                     list = list.OrderBy(model.Column + " asc");
                 }
             }
+            else
+            {
+                // 如果Column为空, 说明没有设置排序选项, 默认按报修时间排序
+                list = list.OrderBy("StartTime desc");
+                GridSortOptions default_model = new GridSortOptions();
+                default_model.Column = "StartTime";
+                default_model.Direction = SortDirection.Descending;
+                ViewData["model"] = default_model;
+            }
+
             return View(list.ToList().AsPagination(page ?? 1, 100));
         }
 
@@ -465,7 +475,7 @@ namespace Volkswagen.Controllers
         "报修单号",
         "设备名称",
         "设备编号",
-        "保修时刻",
+        "报修时刻",
         "修复时刻",
         "维修耗时",
         "班次",

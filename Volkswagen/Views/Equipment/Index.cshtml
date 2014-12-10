@@ -20,7 +20,7 @@
     else
     {
         col = (ViewData["model"] as GridSortOptions).Column;
-        dir = ((ViewData["model"] as GridSortOptions).Direction == MvcContrib.Sorting.SortDirection.Ascending) ? "Asceding" : "Descending";
+        dir = ((ViewData["model"] as GridSortOptions).Direction == MvcContrib.Sorting.SortDirection.Ascending) ? "Ascending" : "Descending";
     }
 }
 
@@ -363,7 +363,7 @@
 
                             // 设置排序选项的预设值
                             order_by.value = '@col';
-                            order_by.value = '@dir';
+                            order_as.value = '@dir';
                         }
                     </script>
                     <!-- </form> -->
