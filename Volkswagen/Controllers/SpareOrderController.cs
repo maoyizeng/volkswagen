@@ -198,7 +198,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="OrderID,SpareID,SpareDes,Type,OrderValue,Producer,OrderNum,Property,EquipmentID,Maker,MakerNum,Orderman,UseTime,UnitPrice,TotalPrice,Status,Mode,OrderFile,ChangeTime,Changer,CreateTime,Creator")] SpareOrderModels spareordermodels)
+        public async Task<ActionResult> Create([Bind(Include="SpareID,SpareDes,Type,OrderValue,Producer,OrderNum,Property,EquipmentID,Maker,MakerNum,Orderman,UseTime,UnitPrice,TotalPrice,Status,Mode,OrderFile,ChangeTime,Changer,CreateTime,Creator")] SpareOrderModels spareordermodels)
         {
             if (ModelState.IsValid)
             {
@@ -210,7 +210,8 @@ namespace Volkswagen.Controllers
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArSpareOrderModels ar = new ArSpareOrderModels(spareordermodels);
+                    var new_ins = db.SpareOrders.OrderByDescending(p => p.OrderID).First();
+                    ArSpareOrderModels ar = new ArSpareOrderModels(new_ins);
                     ar.Operator = ArEquipmentModels.OperatorType.创建;
                     db.ArSpareOrders.Add(ar);
                     await db.SaveChangesAsync();
@@ -374,11 +375,11 @@ namespace Volkswagen.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             SpareOrderModels toDelete = await db.SpareOrders.FindAsync(id);
+            ArSpareOrderModels ar = new ArSpareOrderModels(toDelete);
             db.SpareOrders.Remove(toDelete);
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArSpareOrderModels ar = new ArSpareOrderModels(toDelete);
                 ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArSpareOrders.Add(ar);
                 await db.SaveChangesAsync();
@@ -395,11 +396,11 @@ namespace Volkswagen.Controllers
             List<SpareOrderModels> list = getSelected(l);
             foreach (SpareOrderModels e in list)
             {
+                ArSpareOrderModels ar = new ArSpareOrderModels(e);
                 db.SpareOrders.Remove(e);
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArSpareOrderModels ar = new ArSpareOrderModels(e);
                     ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArSpareOrders.Add(ar);
                     await db.SaveChangesAsync();

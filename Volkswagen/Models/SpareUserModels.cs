@@ -49,7 +49,7 @@ namespace Volkswagen.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name = "编号")]
-        [Column(TypeName = "bigint")]
+        //[Column(TypeName = "bigint")]
         public int UserID { get; set; }
 
         [Display(Name = "最后修改时间")]

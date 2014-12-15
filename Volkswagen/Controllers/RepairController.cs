@@ -401,11 +401,11 @@ namespace Volkswagen.Controllers
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
             RepairModels toDelete = await db.Repairs.FindAsync(id);
+            ArRepairModels ar = new ArRepairModels(toDelete);
             db.Repairs.Remove(toDelete);
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArRepairModels ar = new ArRepairModels(toDelete);
                 ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArRepairs.Add(ar);
                 await db.SaveChangesAsync();
@@ -422,11 +422,11 @@ namespace Volkswagen.Controllers
             List<RepairModels> list = getSelected(l);
             foreach (RepairModels e in list)
             {
+                ArRepairModels ar = new ArRepairModels(e);
                 db.Repairs.Remove(e);
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArRepairModels ar = new ArRepairModels(e);
                     ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArRepairs.Add(ar);
                     await db.SaveChangesAsync();

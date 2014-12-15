@@ -222,7 +222,8 @@ namespace Volkswagen.Controllers
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArSpareUserModels ar = new ArSpareUserModels(spareusermodels);
+                    var new_ins = db.SpareUsers.OrderByDescending(p => p.UserID).First();
+                    ArSpareUserModels ar = new ArSpareUserModels(new_ins);
                     ar.Operator = ArEquipmentModels.OperatorType.创建;
                     db.ArSpareUsers.Add(ar);
                     
@@ -396,11 +397,11 @@ namespace Volkswagen.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             SpareUserModels toDelete = await db.SpareUsers.FindAsync(id);
+            ArSpareUserModels ar = new ArSpareUserModels(toDelete);
             db.SpareUsers.Remove(toDelete);
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArSpareUserModels ar = new ArSpareUserModels(toDelete);
                 ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArSpareUsers.Add(ar);
                 await db.SaveChangesAsync();
@@ -417,11 +418,11 @@ namespace Volkswagen.Controllers
             List<SpareUserModels> list = getSelected(l);
             foreach (SpareUserModels e in list)
             {
+                ArSpareUserModels ar = new ArSpareUserModels(e);
                 db.SpareUsers.Remove(e);
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArSpareUserModels ar = new ArSpareUserModels(e);
                     ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArSpareUsers.Add(ar);
                     await db.SaveChangesAsync();

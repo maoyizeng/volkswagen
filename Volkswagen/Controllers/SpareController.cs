@@ -364,11 +364,11 @@ namespace Volkswagen.Controllers
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
             SpareModels toDelete = await db.Spares.FindAsync(id);
+            ArSpareModels ar = new ArSpareModels(toDelete);
             db.Spares.Remove(toDelete);
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArSpareModels ar = new ArSpareModels(toDelete);
                 ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArSpares.Add(ar);
                 await db.SaveChangesAsync();
@@ -385,11 +385,11 @@ namespace Volkswagen.Controllers
             List<SpareModels> list = getSelected(l);
             foreach (SpareModels e in list)
             {
+                ArSpareModels ar = new ArSpareModels(e);
                 db.Spares.Remove(e);
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArSpareModels ar = new ArSpareModels(e);
                     ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArSpares.Add(ar);
                     await db.SaveChangesAsync();

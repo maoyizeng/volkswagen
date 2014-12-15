@@ -447,13 +447,14 @@ namespace Volkswagen.Controllers
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
             EquipmentModels toDelete = await db.Equipments.FindAsync(id);
+            // 先创建历史记录, 因为remove后toDelete会被修改
+            ArEquipmentModels ar = new ArEquipmentModels(toDelete);
             // 删除, 还未同步数据库, 并未真正删除
             db.Equipments.Remove(toDelete);
             
             int x = await db.SaveChangesAsync();
             if (x != 0){
                 // 如果删除 添加历史记录
-                ArEquipmentModels ar = new ArEquipmentModels(toDelete);
                 ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArEquipments.Add(ar);
                 await db.SaveChangesAsync();
@@ -470,11 +471,11 @@ namespace Volkswagen.Controllers
             List<EquipmentModels> list = getSelected(l);
             foreach (EquipmentModels e in list)
             {
+                ArEquipmentModels ar = new ArEquipmentModels(e);
                 db.Equipments.Remove(e);
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArEquipmentModels ar = new ArEquipmentModels(e);
                     ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArEquipments.Add(ar);
                     await db.SaveChangesAsync();

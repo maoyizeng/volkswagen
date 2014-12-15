@@ -206,7 +206,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="MaintainId,EquipmentID,EquipDes,Line,MType,MPart,Content,Period,MStartTime,MEndTime,ResponseClass,CheckStatus,CheckDetail,EquipStatus,EquipDetail,CheckerType,Checker,CheckTime,Problem,Mark,Grade,ProblemStatus,CheckNum,ChangeTime,Changer,CreateTime,Creator")] MaintainModels maintainmodels)
+        public async Task<ActionResult> Create([Bind(Include="EquipmentID,EquipDes,Line,MType,MPart,Content,Period,MStartTime,MEndTime,ResponseClass,CheckStatus,CheckDetail,EquipStatus,EquipDetail,CheckerType,Checker,CheckTime,Problem,Mark,Grade,ProblemStatus,CheckNum,ChangeTime,Changer,CreateTime,Creator")] MaintainModels maintainmodels)
         {
             if (ModelState.IsValid)
             {
@@ -218,7 +218,8 @@ namespace Volkswagen.Controllers
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArMaintainModels ar = new ArMaintainModels(maintainmodels);
+                    var new_ins = db.Maintains.OrderByDescending(p => p.MaintainId).First();
+                    ArMaintainModels ar = new ArMaintainModels(new_ins);
                     ar.Operator = ArEquipmentModels.OperatorType.创建;
                     db.ArMaintains.Add(ar);
                     await db.SaveChangesAsync();
@@ -382,11 +383,11 @@ namespace Volkswagen.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             MaintainModels toDelete = await db.Maintains.FindAsync(id);
+            ArMaintainModels ar = new ArMaintainModels(toDelete);
             db.Maintains.Remove(toDelete);
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArMaintainModels ar = new ArMaintainModels(toDelete);
                 ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArMaintains.Add(ar);
                 await db.SaveChangesAsync();
@@ -403,11 +404,11 @@ namespace Volkswagen.Controllers
             List<MaintainModels> list = getSelected(l);
             foreach (MaintainModels e in list)
             {
+                ArMaintainModels ar = new ArMaintainModels(e);
                 db.Maintains.Remove(e);
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArMaintainModels ar = new ArMaintainModels(e);
                     ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArMaintains.Add(ar);
                     await db.SaveChangesAsync();

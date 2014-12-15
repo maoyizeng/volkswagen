@@ -12,6 +12,7 @@ namespace Volkswagen.Migrations
         {
             AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = true;
+            
         }
 
         protected override void Seed(Volkswagen.DAL.SVWContext context)

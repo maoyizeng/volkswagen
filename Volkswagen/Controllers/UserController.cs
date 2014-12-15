@@ -193,7 +193,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="UserID,Breviary,Name,Number,Telephone,Mobile,Birthday,EntryDate,Position,PoliticalStatus,Address,Skill,Experience,Remark,Image,ChangeTime,Changer,CreateTime,Creator")] UserModels usermodels)
+        public async Task<ActionResult> Create([Bind(Include="Breviary,Name,Number,Telephone,Mobile,Birthday,EntryDate,Position,PoliticalStatus,Address,Skill,Experience,Remark,Image,ChangeTime,Changer,CreateTime,Creator")] UserModels usermodels)
         {
             if (ModelState.IsValid)
             {
@@ -205,7 +205,8 @@ namespace Volkswagen.Controllers
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArUserModels ar = new ArUserModels(usermodels);
+                    var new_ins = db.Users.OrderByDescending(p => p.UserID).First();
+                    ArUserModels ar = new ArUserModels(new_ins);
                     ar.Operator = ArEquipmentModels.OperatorType.创建;
                     db.ArUsers.Add(ar);
                     await db.SaveChangesAsync();
@@ -351,11 +352,12 @@ namespace Volkswagen.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             UserModels toDelete = await db.Users.FindAsync(id);
+
+            ArUserModels ar = new ArUserModels(toDelete);
             db.Users.Remove(toDelete);
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArUserModels ar = new ArUserModels(toDelete);
                 ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArUsers.Add(ar);
                 await db.SaveChangesAsync();
@@ -372,11 +374,11 @@ namespace Volkswagen.Controllers
             List<UserModels> list = getSelected(l);
             foreach (UserModels e in list)
             {
+                ArUserModels ar = new ArUserModels(e);
                 db.Users.Remove(e);
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArUserModels ar = new ArUserModels(e);
                     ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArUsers.Add(ar);
                     await db.SaveChangesAsync();

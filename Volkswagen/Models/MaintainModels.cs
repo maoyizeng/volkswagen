@@ -101,7 +101,7 @@ namespace Volkswagen.Models
         public Nullable<int> CheckNum { get; set; }
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name = "编号")]
  //       [StringLength(15)]
         public int MaintainId { get; set; }

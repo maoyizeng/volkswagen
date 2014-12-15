@@ -183,7 +183,7 @@ namespace Volkswagen.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="ShiftID,ShiftDate,ShiftTime,Class,Line,Charger,Record,Urgency,Remark,ChangeTime,Changer,CreateTime,Creator")] ShiftModels shiftmodels)
+        public async Task<ActionResult> Create([Bind(Include="ShiftDate,ShiftTime,Class,Line,Charger,Record,Urgency,Remark,ChangeTime,Changer,CreateTime,Creator")] ShiftModels shiftmodels)
         {
             if (ModelState.IsValid)
             {
@@ -195,7 +195,8 @@ namespace Volkswagen.Controllers
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArShiftModels ar = new ArShiftModels(shiftmodels);
+                    var new_ins = db.Shifts.OrderByDescending(p => p.ShiftID).First();
+                    ArShiftModels ar = new ArShiftModels(new_ins);
                     ar.Operator = ArEquipmentModels.OperatorType.创建;
                     db.ArShifts.Add(ar);
                     await db.SaveChangesAsync();
@@ -336,11 +337,11 @@ namespace Volkswagen.Controllers
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
             ShiftModels toDelete = await db.Shifts.FindAsync(id);
+            ArShiftModels ar = new ArShiftModels(toDelete);
             db.Shifts.Remove(toDelete);
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArShiftModels ar = new ArShiftModels(toDelete);
                 ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArShifts.Add(ar);
                 await db.SaveChangesAsync();
@@ -357,11 +358,11 @@ namespace Volkswagen.Controllers
             List<ShiftModels> list = getSelected(l);
             foreach (ShiftModels e in list)
             {
+                ArShiftModels ar = new ArShiftModels(e);
                 db.Shifts.Remove(e);
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArShiftModels ar = new ArShiftModels(e);
                     ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArShifts.Add(ar);
                     await db.SaveChangesAsync();

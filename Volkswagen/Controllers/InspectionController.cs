@@ -392,14 +392,21 @@ namespace Volkswagen.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             InspectionModels toDelete = await db.Inspections.FindAsync(id);
+            ArInspectionModels ar = new ArInspectionModels(toDelete);
             db.Inspections.Remove(toDelete);
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArInspectionModels ar = new ArInspectionModels(toDelete);
-                ar.Operator = ArEquipmentModels.OperatorType.删除;
-                db.ArInspections.Add(ar);
-                await db.SaveChangesAsync();
+                try
+                {
+                    ar.Operator = ArEquipmentModels.OperatorType.删除;
+                    db.ArInspections.Add(ar);
+                    await db.SaveChangesAsync();
+                }
+                catch (System.Data.Entity.Validation.DbEntityValidationException dbex)
+                {
+
+                }
             }
             return RedirectToAction("Index");
         }

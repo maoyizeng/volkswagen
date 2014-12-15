@@ -339,11 +339,11 @@ namespace Volkswagen.Controllers
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
             FileModels toDelete = await db.Files.FindAsync(id);
+            ArFileModels ar = new ArFileModels(toDelete);
             db.Files.Remove(toDelete);
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArFileModels ar = new ArFileModels(toDelete);
                 ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArFiles.Add(ar);
                 await db.SaveChangesAsync();
@@ -360,11 +360,11 @@ namespace Volkswagen.Controllers
             List<FileModels> list = getSelected(l);
             foreach (FileModels e in list)
             {
+                ArFileModels ar = new ArFileModels(e);
                 db.Files.Remove(e);
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArFileModels ar = new ArFileModels(e);
                     ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArFiles.Add(ar);
                     await db.SaveChangesAsync();

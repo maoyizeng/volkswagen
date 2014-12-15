@@ -368,11 +368,11 @@ namespace Volkswagen.Controllers
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
             EquipLogModels toDelete = await db.EquipLogs.FindAsync(id);
+            ArEquipLogModels ar = new ArEquipLogModels(toDelete);
             db.EquipLogs.Remove(toDelete);
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArEquipLogModels ar = new ArEquipLogModels(toDelete);
                 ar.Operator = ArEquipmentModels.OperatorType.删除;
                 db.ArEquipLogs.Add(ar);
                 await db.SaveChangesAsync();
@@ -389,11 +389,11 @@ namespace Volkswagen.Controllers
             List<EquipLogModels> list = getSelected(l);
             foreach (EquipLogModels e in list)
             {
+                ArEquipLogModels ar = new ArEquipLogModels(e);
                 db.EquipLogs.Remove(e);
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArEquipLogModels ar = new ArEquipLogModels(e);
                     ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArEquipLogs.Add(ar);
                     await db.SaveChangesAsync();
