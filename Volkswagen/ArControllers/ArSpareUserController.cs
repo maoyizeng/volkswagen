@@ -198,6 +198,11 @@ namespace Volkswagen.ArControllers
                 return HttpNotFound();
             }
             SpareUserModels origin = await db.SpareUsers.FindAsync(a.UserID);
+            ArSpareUserModels ar = new ArSpareUserModels();
+            if (origin != null)
+            {
+                ar = new ArSpareUserModels(origin);
+            }
 
             ArEquipmentModels.OperatorType change;
 
@@ -226,6 +231,7 @@ namespace Volkswagen.ArControllers
                     origin.Creator = User.Identity.Name;
                     origin.CreateTime = DateTime.Now;
                     db.SpareUsers.Add(origin);
+                    ar = new ArSpareUserModels(origin);
                     break;
                 default:
                     if (origin == null)
@@ -242,7 +248,6 @@ namespace Volkswagen.ArControllers
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArSpareUserModels ar = new ArSpareUserModels(origin);
                 ar.Operator = change;
                 db.ArSpareUsers.Add(ar);
                 await db.SaveChangesAsync();

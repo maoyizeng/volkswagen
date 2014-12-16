@@ -505,7 +505,7 @@
         string init = Model.Where(e => e.EquipmentID == ViewData["selected"] as string).First().Photo;
         if (init == null)
         {
-            // 为空则不现实
+            // 为空则不显示
             <p>无</p>
         }
         else
@@ -516,7 +516,7 @@
                 for (var i = 1; i < sArray.Length; i++)
                 {
                     //为每一项构造图片地址并输出图片
-                    <img src='/img/equipments/@sArray[i]'>
+                    <img src='/img/equipments/@ViewData["selected"]/@sArray[i]'>
                 }
                 }
             </a>
@@ -651,7 +651,7 @@
     column.For(p => p.Person).Sortable(true);
     column.For(p => p.Section).Sortable(true);
     column.For(p => p.WSArea).Sortable(true);
-    column.For(p => p.Photo.IsEmpty() ? "无" : "有").Named("设备图片").Sortable(false);
+    column.For(p => p.Photo);
     column.For(p => p.ItemInspect).Sortable(true);
     column.For(p => p.ItemInspectNum).Sortable(true);
     column.For(p => p.RegularCare).Sortable(true);

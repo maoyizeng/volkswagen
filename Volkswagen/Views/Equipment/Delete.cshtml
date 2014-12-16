@@ -161,7 +161,7 @@
                                 @{string[] sArray = Regex.Split(init, "[$]");//, RegexOptions.IgnoreCase);
                                 for (var i = 1; i < sArray.Length; i++)
                                 {
-                                    <img src='/img/equipments/@sArray[i]'>
+                                    <img src='/img/equipments/@Model.EquipmentID/@sArray[i]'>
                                 }
                                 }
                             </a>

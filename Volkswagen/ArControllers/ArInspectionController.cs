@@ -209,6 +209,11 @@ namespace Volkswagen.ArControllers
                 return HttpNotFound();
             }
             InspectionModels origin = await db.Inspections.FindAsync(a.InspectionId);
+            ArInspectionModels ar = new ArInspectionModels();
+            if (origin != null)
+            {
+                ar = new ArInspectionModels(origin);
+            }
 
             ArEquipmentModels.OperatorType change;
 
@@ -237,6 +242,7 @@ namespace Volkswagen.ArControllers
                     origin.Creator = User.Identity.Name;
                     origin.CreateTime = DateTime.Now;
                     db.Inspections.Add(origin);
+                    ar = new ArInspectionModels(origin);
                     break;
                 default:
                     if (origin == null)
@@ -253,7 +259,6 @@ namespace Volkswagen.ArControllers
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArInspectionModels ar = new ArInspectionModels(origin);
                 ar.Operator = change;
                 db.ArInspections.Add(ar);
                 await db.SaveChangesAsync();

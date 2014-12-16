@@ -469,13 +469,12 @@
         else
         {
             <a class="thumbnail">
-                @{string[] sArray = Regex.Split(init, "[$]");//, RegexOptions.IgnoreCase);
-                  for (var i = 1; i < sArray.Length; i++)
-                  {
-                    <img src='/img/equipments/@sArray[i]'>
-                  }
-                }
-            </a>
+                                @{string[] sArray = Regex.Split(init, "[$]");//, RegexOptions.IgnoreCase);
+for (var i = 1; i < sArray.Length; i++)
+{
+            <img src='/img/equipments/@Model.Where(e => e.RecordID == rec_id).First().EquipmentID/@sArray[i]'>
+                 }
+                 }></a>
         }
                             }
                         </div>

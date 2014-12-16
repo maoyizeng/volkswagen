@@ -219,6 +219,11 @@ namespace Volkswagen.ArControllers
                 return HttpNotFound();
             }
             RepairModels origin = await db.Repairs.FindAsync(a.SheetID);
+            ArRepairModels ar = new ArRepairModels();
+            if (origin != null)
+            {
+                ar = new ArRepairModels(origin);
+            }
 
             ArEquipmentModels.OperatorType change;
 
@@ -248,12 +253,16 @@ namespace Volkswagen.ArControllers
                     else
                     {
                         change = ArEquipmentModels.OperatorType.创建;
-                        db.Repairs.Add(origin);
                     }
                     origin = new RepairModels();
                     origin.upcast(a);
                     origin.Creator = User.Identity.Name;
                     origin.CreateTime = DateTime.Now;
+                    if (change == ArEquipmentModels.OperatorType.创建)
+                    {
+                        db.Repairs.Add(origin);
+                        ar = new ArRepairModels(origin);
+                    }
                     break;
                 default:
                     if (origin == null)
@@ -270,7 +279,6 @@ namespace Volkswagen.ArControllers
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArRepairModels ar = new ArRepairModels(origin);
                 ar.Operator = change;
                 db.ArRepairs.Add(ar);
                 await db.SaveChangesAsync();

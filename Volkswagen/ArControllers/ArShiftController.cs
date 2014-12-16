@@ -204,6 +204,11 @@ namespace Volkswagen.ArControllers
                 return HttpNotFound();
             }
             ShiftModels origin = await db.Shifts.FindAsync(a.ShiftID);
+            ArShiftModels ar = new ArShiftModels();
+            if (origin != null)
+            {
+                ar = new ArShiftModels(origin);
+            }
 
             ArEquipmentModels.OperatorType change;
 
@@ -232,6 +237,7 @@ namespace Volkswagen.ArControllers
                     origin.Creator = User.Identity.Name;
                     origin.CreateTime = DateTime.Now;
                     db.Shifts.Add(origin);
+                    ar = new ArShiftModels(origin);
                     break;
                 default:
                     if (origin == null)
@@ -248,7 +254,6 @@ namespace Volkswagen.ArControllers
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArShiftModels ar = new ArShiftModels(origin);
                 ar.Operator = change;
                 db.ArShifts.Add(ar);
                 await db.SaveChangesAsync();

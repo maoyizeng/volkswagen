@@ -194,6 +194,11 @@ namespace Volkswagen.ArControllers
                 return HttpNotFound();
             }
             FileModels origin = await db.Files.FindAsync(a.FileName);
+            ArFileModels ar = new ArFileModels();
+            if (origin != null)
+            {
+                ar = new ArFileModels(origin);
+            }
 
             ArEquipmentModels.OperatorType change;
 
@@ -223,12 +228,18 @@ namespace Volkswagen.ArControllers
                     else
                     {
                         change = ArEquipmentModels.OperatorType.创建;
-                        db.Files.Add(origin);
                     }
                     origin = new FileModels();
                     origin.upcast(a);
+                    
                     origin.Creator = User.Identity.Name;
                     origin.CreateTime = DateTime.Now;
+
+                    if (change == ArEquipmentModels.OperatorType.创建)
+                    {
+                        db.Files.Add(origin);
+                        ar = new ArFileModels(origin);
+                    }
                     break;
                 default:
                     if (origin == null)
@@ -245,7 +256,6 @@ namespace Volkswagen.ArControllers
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArFileModels ar = new ArFileModels(origin);
                 ar.Operator = change;
                 db.ArFiles.Add(ar);
                 await db.SaveChangesAsync();

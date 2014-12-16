@@ -202,6 +202,11 @@ namespace Volkswagen.ArControllers
                 return HttpNotFound();
             }
             SpareModels origin = await db.Spares.FindAsync(a.SpareID);
+            ArSpareModels ar = new ArSpareModels();
+            if (origin != null)
+            {
+                ar = new ArSpareModels(origin);
+            }
 
             ArEquipmentModels.OperatorType change;
 
@@ -231,12 +236,16 @@ namespace Volkswagen.ArControllers
                     else
                     {
                         change = ArEquipmentModels.OperatorType.创建;
-                        db.Spares.Add(origin);
                     }
                     origin = new SpareModels();
                     origin.upcast(a);
                     origin.Creator = User.Identity.Name;
                     origin.CreateTime = DateTime.Now;
+                    if (change == ArEquipmentModels.OperatorType.创建)
+                    {
+                        db.Spares.Add(origin);
+                        ar = new ArSpareModels(origin);
+                    }
                     break;
                 default:
                     if (origin == null)
@@ -253,7 +262,6 @@ namespace Volkswagen.ArControllers
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArSpareModels ar = new ArSpareModels(origin);
                 ar.Operator = change;
                 db.ArSpares.Add(ar);
                 await db.SaveChangesAsync();

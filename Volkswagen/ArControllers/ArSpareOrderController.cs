@@ -199,6 +199,11 @@ namespace Volkswagen.ArControllers
                 return HttpNotFound();
             }
             SpareOrderModels origin = await db.SpareOrders.FindAsync(a.OrderID);
+            ArSpareOrderModels ar = new ArSpareOrderModels();
+            if (origin != null)
+            {
+                ar = new ArSpareOrderModels(origin);
+            }
 
             ArEquipmentModels.OperatorType change;
 
@@ -227,6 +232,7 @@ namespace Volkswagen.ArControllers
                     origin.Creator = User.Identity.Name;
                     origin.CreateTime = DateTime.Now;
                     db.SpareOrders.Add(origin);
+                    ar = new ArSpareOrderModels(origin);
                     break;
                 default:
                     if (origin == null)
@@ -243,7 +249,6 @@ namespace Volkswagen.ArControllers
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArSpareOrderModels ar = new ArSpareOrderModels(origin);
                 ar.Operator = change;
                 db.ArSpareOrders.Add(ar);
                 await db.SaveChangesAsync();

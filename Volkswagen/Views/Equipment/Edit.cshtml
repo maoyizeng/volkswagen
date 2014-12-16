@@ -158,17 +158,17 @@
 
     // 为每一项构建一个地址并作为img输出
     for (var i = 1; i < arr.length; i++) {
-        init_arr[i - 1] = "<img src='/img/equipments/" + arr[i] + "' class='file-preview-image'>";
+        init_arr[i - 1] = "<img src='/img/equipments/@Model.EquipmentID/" + arr[i] + "' class='file-preview-image'>";
     }
 
     // 给fileinput的参数 然后它会显示出图片上传框组
     $("#photo-input").fileinput({
         initialPreview: init_arr, // 初始图片数组
-        overwriteInitial: true, // 可覆盖初始图片
+        overwriteInitial: false, // 可覆盖初始图片
         browseLabel: "浏览",  // 按钮显示
         uploadLabel: "上传",
         removeLabel: "移除",
-        showPreview: true //显示图片
+        //showPreview: true //显示图片
     });
 
 

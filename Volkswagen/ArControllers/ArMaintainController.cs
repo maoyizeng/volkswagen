@@ -207,6 +207,11 @@ namespace Volkswagen.ArControllers
                 return HttpNotFound();
             }
             MaintainModels origin = await db.Maintains.FindAsync(a.MaintainId);
+            ArMaintainModels ar = new ArMaintainModels();
+            if (origin != null)
+            {
+                ar = new ArMaintainModels(origin);
+            }
 
             ArEquipmentModels.OperatorType change;
 
@@ -236,6 +241,7 @@ namespace Volkswagen.ArControllers
                     origin.CreateTime = DateTime.Now;
 
                     db.Maintains.Add(origin);
+                    ar = new ArMaintainModels(origin);
                     break;
                 default:
                     if (origin == null)
@@ -252,7 +258,6 @@ namespace Volkswagen.ArControllers
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArMaintainModels ar = new ArMaintainModels(origin);
                 ar.Operator = change;
                 db.ArMaintains.Add(ar);
                 await db.SaveChangesAsync();

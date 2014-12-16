@@ -285,6 +285,11 @@ namespace Volkswagen.ArControllers
                 return HttpNotFound();
             }
             EquipmentModels origin = await db.Equipments.FindAsync(a.EquipmentID);
+            ArEquipmentModels ar = new ArEquipmentModels();
+            if (origin != null)
+            {
+               ar  = new ArEquipmentModels(origin);
+            }
 
             ArEquipmentModels.OperatorType change;
 
@@ -320,12 +325,17 @@ namespace Volkswagen.ArControllers
                     {
                     // 不存在这条记录了 那么再重新创建这条被删的记录
                         change = ArEquipmentModels.OperatorType.创建;
-                        db.Equipments.Add(origin);
                     }
                     origin = new EquipmentModels();
                     origin.upcast(a);
+                    
                     origin.Creator = User.Identity.Name;
-                    origin.CreateTime = DateTime.Now;                    
+                    origin.CreateTime = DateTime.Now;
+                    if (change == ArEquipmentModels.OperatorType.创建)
+                    {
+                        db.Equipments.Add(origin);
+                        ar = new ArEquipmentModels(origin);
+                    }
                     break;
                 default:
                     // 缺省 不应该跑进来的 随便操作一下
@@ -344,7 +354,6 @@ namespace Volkswagen.ArControllers
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArEquipmentModels ar = new ArEquipmentModels(origin);
                 ar.Operator = change;
                 db.ArEquipments.Add(ar);
                 await db.SaveChangesAsync();

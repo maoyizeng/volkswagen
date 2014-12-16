@@ -331,6 +331,7 @@ namespace Volkswagen.Controllers
                 equipmentmodels.ChangeTime = DateTime.Now;
                 equipmentmodels.Creator = toUpdate.Creator;
                 equipmentmodels.CreateTime = toUpdate.CreateTime;
+                equipmentmodels.Photo = toUpdate.Photo;
 
                 // 将原纪录剔除
                 db.Entry(toUpdate).State = EntityState.Detached;
@@ -502,23 +503,40 @@ namespace Volkswagen.Controllers
             // 得到主键号
             string key = Request.Form["key"];
             string fullname = "";
+            string directory = AppDomain.CurrentDomain.BaseDirectory + @"img\equipments\" + key + @"\";
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
                 
             // 得到多个图片的文件
             foreach (HttpPostedFileBase file in photos)
             {
                 if (file != null)
                 {
+                    string filename = DateTime.Now.ToString("yy-MM-dd HH-mm-ss") + " - " + Path.GetFileName(file.FileName);
                     // 构造需要保存的路径并保存, 然后将$...加到字符串中
-                    string filePath = Path.Combine((AppDomain.CurrentDomain.BaseDirectory + @"img\equipments\"), Path.GetFileName(file.FileName));
+                    string filePath = Path.Combine(directory, filename);
                     file.SaveAs(filePath);
-                    fullname += "$" + file.FileName;
+                    fullname += "$" + filename;
                 }
             }
 
             EquipmentModels e = db.Equipments.Find(key);
+            ArEquipmentModels ar = new ArEquipmentModels(e);
             // TODO - check e;
+            e.Changer = User.Identity.Name;
+            e.ChangeTime = DateTime.Now;
             e.Photo = fullname;
-            db.SaveChanges();
+            int x = db.SaveChanges();
+
+            if (x != 0)
+            {
+                ar.Operator = ArEquipmentModels.OperatorType.修改;
+                db.ArEquipments.Add(ar);
+                db.SaveChanges();
+            }
             return RedirectToAction("Edit", new { id = key });
             
         }

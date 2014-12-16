@@ -156,7 +156,37 @@
                 @Html.DisplayFor(model => model.Remark)
             </dd>
 
-        </dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.Photo)
+            </dt>
+
+            <dd>
+                @using System.Text.RegularExpressions;
+
+                <div class="row">
+                    <div class="col-xs-6 col-md-3">
+                        @{
+                            string init = Model.Photo;
+                            if (init == null)
+                            {
+                                <p>无</p>
+                            }
+                            else
+                            {
+                                <a class="thumbnail">
+                                    @{string[] sArray = Regex.Split(init, "[$]");//, RegexOptions.IgnoreCase);
+                                    for (var i = 1; i < sArray.Length; i++)
+                                    {
+                                        <img src='/img/equipments/@Model.EquipmentID/@sArray[i]'>
+                                    }
+                                    }
+                                </a>
+                            }
+                        }
+                    </div>
+                </div>
+
+</dl>
 
         @{
             var origin = ViewData["origin"] as Volkswagen.Models.EquipmentModels;
@@ -284,7 +314,37 @@
                 @origin.Remark
             </dd>
 
-        </dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.Photo)
+            </dt>
+
+            <dd>
+                @using System.Text.RegularExpressions;
+
+                <div class="row">
+                    <div class="col-xs-6 col-md-3">
+                        @{
+                string init2 = origin.Photo;
+                if (init2 == null)
+                {
+                    <p>无</p>
+                }
+                else
+                {
+                    <a class="thumbnail">
+                        @{string[] sArray = Regex.Split(init2, "[$]");//, RegexOptions.IgnoreCase);
+                        for (var i = 1; i < sArray.Length; i++)
+                        {
+                            <img src='/img/equipments/@origin.EquipmentID/@sArray[i]'>
+                        }
+                        }
+                    </a>
+                }
+                        }
+                    </div>
+                </div>
+
+</dl>
             }
         }
     </div>

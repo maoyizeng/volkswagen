@@ -201,6 +201,11 @@ namespace Volkswagen.ArControllers
                 return HttpNotFound();
             }
             EquipLogModels origin = await db.EquipLogs.FindAsync(a.EquipmentID);
+            ArEquipLogModels ar = new ArEquipLogModels();
+            if (origin != null)
+            {
+                ar = new ArEquipLogModels(origin);
+            }
 
             ArEquipmentModels.OperatorType change;
 
@@ -230,12 +235,17 @@ namespace Volkswagen.ArControllers
                     else
                     {
                         change = ArEquipmentModels.OperatorType.创建;
-                        db.EquipLogs.Add(origin);
                     }
                     origin = new EquipLogModels();
                     origin.upcast(a);
+                    
                     origin.Creator = User.Identity.Name;
                     origin.CreateTime = DateTime.Now;
+                    if (change == ArEquipmentModels.OperatorType.创建)
+                    {
+                        db.EquipLogs.Add(origin);
+                        ar = new ArEquipLogModels(origin);
+                    }
                     break;
                 default:
                     if (origin == null)
@@ -252,7 +262,6 @@ namespace Volkswagen.ArControllers
             int x = await db.SaveChangesAsync();
             if (x != 0)
             {
-                ArEquipLogModels ar = new ArEquipLogModels(origin);
                 ar.Operator = change;
                 db.ArEquipLogs.Add(ar);
                 await db.SaveChangesAsync();
