@@ -229,19 +229,13 @@ namespace Volkswagen.ArControllers
                     change = ArEquipmentModels.OperatorType.修改;
                     break;
                 case ArEquipmentModels.OperatorType.删除:
-                    if (origin != null)
-                    {
-                        change = ArEquipmentModels.OperatorType.修改;
-                    }
-                    else
-                    {
-                        change = ArEquipmentModels.OperatorType.创建;
-                        db.Maintains.Add(origin);
-                    }
+                    change = ArEquipmentModels.OperatorType.创建;
                     origin = new MaintainModels();
                     origin.upcast(a);
                     origin.Creator = User.Identity.Name;
                     origin.CreateTime = DateTime.Now;
+
+                    db.Maintains.Add(origin);
                     break;
                 default:
                     if (origin == null)
