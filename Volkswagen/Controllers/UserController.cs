@@ -16,6 +16,7 @@ using MvcContrib.Sorting;
 using MvcContrib.Pagination;
 using System.Text;
 using System.Linq.Dynamic;
+using System.Text.RegularExpressions;
 
 namespace Volkswagen.Controllers
 {
@@ -396,6 +397,45 @@ namespace Volkswagen.Controllers
             base.Dispose(disposing);
         }
 
+        [HttpPost]
+        public ActionResult FileRemove()
+        {
+            int key = int.Parse(Request.Form["key2"]);
+
+            UserModels e = db.Users.Find(key);
+            if (e == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            string origin_photo = e.Image;
+            string new_photo = "";
+            string[] sArray = Regex.Split(origin_photo, "[$]");
+
+            for (int i = 1; i < sArray.Length; i++)
+            {
+                if (Request.Form["photo_" + i] != "on")
+                {
+                    new_photo += "$" + sArray[i];
+                }
+            }
+
+            ArUserModels ar = new ArUserModels(e);
+            // TODO - check e;
+            e.Changer = User.Identity.Name;
+            e.ChangeTime = DateTime.Now;
+            e.Image = new_photo;
+            int x = db.SaveChanges();
+
+            if (x != 0)
+            {
+                ar.Operator = ArEquipmentModels.OperatorType.修改;
+                db.ArUsers.Add(ar);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Edit", new { id = key });
+        }
+
         // POST: /Equipment/FileUpload
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
@@ -403,23 +443,41 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public ActionResult FileUpload(HttpPostedFileBase[] photos)
         {
-            string key = Request.Form["key"];
+            int key = int.Parse(Request.Form["key"]);
             string fullname = "";
+            string directory = AppDomain.CurrentDomain.BaseDirectory + @"img\user\";
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
 
             foreach (HttpPostedFileBase file in photos)
             {
                 if (file != null)
                 {
-                    string filePath = Path.Combine((AppDomain.CurrentDomain.BaseDirectory + @"img\user\"), Path.GetFileName(file.FileName));
+                    string filename = DateTime.Now.ToString("yy-MM-dd HH-mm-ss") + " - " + Path.GetFileName(file.FileName);
+                    // 构造需要保存的路径并保存, 然后将$...加到字符串中
+                    string filePath = Path.Combine(directory, filename);
                     file.SaveAs(filePath);
-                    fullname += "$" + file.FileName;
+                    fullname += "$" + filename;
                 }
             }
 
             UserModels e = db.Users.Find(key);
+            ArUserModels ar = new ArUserModels(e);
             // TODO - check e;
-            e.Image = fullname;
-            db.SaveChanges();
+            e.Changer = User.Identity.Name;
+            e.ChangeTime = DateTime.Now;
+            e.Image += fullname;
+            int x = db.SaveChanges();
+
+            if (x != 0)
+            {
+                ar.Operator = ArEquipmentModels.OperatorType.修改;
+                db.ArUsers.Add(ar);
+                db.SaveChanges();
+            }
             return RedirectToAction("Edit", new { id = key });
 
         }

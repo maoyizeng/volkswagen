@@ -279,7 +279,7 @@
     @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareModels).ChangeTime, new { type = "datetime-local" })
     @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareModels).Creator)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareModels).CreateTime, new { type = "datetime-local" })
-        @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareModels).Remark)
+    @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareModels).Remark)
     @Html.DropDownList("Operator", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.ArEquipmentModels.OperatorType))), "缺省")
     @Html.TextBoxFor(model => (model as Volkswagen.Models.ArSpareModels).OperateTime, new { type = "datetime-local" })
 </div>
@@ -499,6 +499,36 @@
                     @Html.DisplayFor(model => model.Where(e => e.RecordID == rec_id).First().Creator)
                 </dd>
 
+                @using System.Text.RegularExpressions;
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Where(e => e.RecordID == rec_id).First().Picture1)
+                </dt>
+
+                <dd>
+                    <div class="row">
+                        <div class="col-xs-6 col-md-3">
+                            @{
+        string init = Model.Where(e => e.RecordID == rec_id).First().Picture1;
+        if (init == null)
+        {
+            <p>无</p>
+        }
+        else
+        {
+            <a class="thumbnail">
+                @{string[] sArray = Regex.Split(init, "[$]");//, RegexOptions.IgnoreCase);
+for (var i = 1; i < sArray.Length; i++)
+{
+    <img src='/img/spare/@sArray[i]'>
+}
+}
+            </a>
+        }
+                            }
+                        </div>
+                    </div>
+                </dd>
             </dl>
 
             @{ var em = Model.GetEnumerator();
@@ -591,7 +621,7 @@
     column.For(p => p.SpareID).Sortable(true);
     column.For(p => p.SpareDes).Sortable(true);
     column.For(p => p.Type).Sortable(true);
-    column.For(p => p.Picture1.IsEmpty() ? "无" : "有").Named("图片1").Sortable(true);
+    column.For(p => p.Picture1).Sortable(true);
     column.For(p => p.Mark).Sortable(true);
     column.For(p => p.PresentValue).Sortable(true);
     column.For(p => p.SafeValue).Sortable(true);
@@ -613,23 +643,23 @@
     column.For(p => Html.ActionLink("删除", "Delete", new { id = p.SpareID, op = p.Operator, opt = p.OperateTime.ToBinary() }));
 }).Empty("无数据").Attributes(@width => "100%", @style => "align:left;border-collapse:collapse;white-space:nowrap;overflow:hidden;text-overflow:ellipsis", @class => "table table-striped table-hover")
 
-<nav>
-    <ul class="pager">
-        @if (Model.HasPreviousPage)
-        {
-            <li><button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='1';">首页</button></li>
-            <li>
-                <button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='@(Model.PageNumber - 1)';"><span class='glyphicon glyphicon-chevron-left'></span>上一页</button>
-            </li>
-        }
-        <li>共 @Model.TotalItems 项 | 当前 @Model.PageNumber 页 | 全 @Model.TotalPages 页</li>
-        @if (Model.HasNextPage)
-        {
-            <li>
-                <button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='@(Model.PageNumber + 1)';"><span class='glyphicon glyphicon-chevron-right'></span>下一页</button>
-            </li>
-            <li><button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='@Model.TotalPages';">末页</button></li>
-        }
-    </ul>
-</nav>
+    <nav>
+        <ul class="pager">
+            @if (Model.HasPreviousPage)
+            {
+                <li><button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='1';">首页</button></li>
+                <li>
+                    <button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='@(Model.PageNumber - 1)';"><span class='glyphicon glyphicon-chevron-left'></span>上一页</button>
+                </li>
+            }
+            <li>共 @Model.TotalItems 项 | 当前 @Model.PageNumber 页 | 全 @Model.TotalPages 页</li>
+            @if (Model.HasNextPage)
+            {
+                <li>
+                    <button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='@(Model.PageNumber + 1)';"><span class='glyphicon glyphicon-chevron-right'></span>下一页</button>
+                </li>
+                <li><button class='btn btn-default' onclick="var sel=document.getElementById('page'); sel.value='@Model.TotalPages';">末页</button></li>
+            }
+        </ul>
+    </nav>
 </form>

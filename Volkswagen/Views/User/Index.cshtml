@@ -594,7 +594,7 @@
     column.For(p => p.Skill).Sortable(true);
     column.For(p => p.Experience).Sortable(true);
     column.For(p => p.Remark).Sortable(true);
-    column.For(p => p.Image.IsEmpty() ? "无" : "有").Named("图片").Sortable(true);
+    column.For(p => p.Image).Sortable(true);
     column.For(p => p.UserID).Sortable(true);
     column.For(p => p.ChangeTime).Sortable(true);
     column.For(p => p.Changer).Sortable(true);

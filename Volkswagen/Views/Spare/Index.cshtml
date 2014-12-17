@@ -582,7 +582,7 @@
     column.For(p => p.SpareID).Sortable(true);
     column.For(p => p.SpareDes).Sortable(true);
     column.For(p => p.Type).Sortable(true);
-    column.For(p => p.Picture1.IsEmpty() ? "无" : "有").Named("图片").Sortable(false);
+    column.For(p => p.Picture1).Sortable(false);
     column.For(p => p.Mark).Sortable(true);
     column.For(p => p.PresentValue).Sortable(true);
     column.For(p => p.SafeValue).Sortable(true);

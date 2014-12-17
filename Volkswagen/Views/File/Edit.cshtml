@@ -75,9 +75,63 @@
     </div>
 }
 
+@using System.Text.RegularExpressions;
 <div class="form-horizontal">
     <div class="row">
         @Html.LabelFor(model => model.File, new { @class = "control-label  col-md-2" })
+        <div class="col-lg-8">
+            <form action="/File/FileRemove" method="post">
+                @{
+                    // 得到当前显示的记录的图片值($...$...$...)
+                    string init = Model.File;
+                    if (init == null)
+                    {
+                        // 为空则不显示
+                        <p>无</p>
+                    }
+                    else
+                    {
+                        <!-- 以$为分隔符进行分割 -->
+                        string[] sArray = Regex.Split(init, "[$]");//, RegexOptions.IgnoreCase);
+                        for (var i = 1; i < sArray.Length; i++)
+                        {
+                            <div class="row">
+                                <input type="checkbox" name="photo_@i" class="col-md-1" />
+                                <a href='/files/@Model.Class/@Model.EquipDes/@sArray[i]'>@sArray[i]</a>
+                            </div>
+                        }
+
+                    }
+                    <input type="hidden" value=@Model.FileName name="key2" />
+                    <input type="submit" value="删除文件" class="btn btn-default" data-toggle="modal" data-target="#myModal2" />
+                    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">删除文件确认</h4>
+                                </div>
+                                <div class="modal-body">
+                                    是否删除这些文件?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                    <input type="submit" value="确定" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </form>
+        </div>
+    </div>
+</div>
+
+<br />
+
+<div class="form-horizontal">
+    <div class="row">
+        <label class="control-label  col-md-2" for="Photo">上传新的文件</label>
         @using (Html.BeginForm("FileUpload", "File", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             <div class="form-group col-md-6">
@@ -88,22 +142,21 @@
     </div>
 </div>
 <script>
-    var init = "@Model.FileName";
+    var init = "@Model.File";
     var arr = new Array();
 
     arr = init.split('$');
     var init_arr = new Array();
-    for (var i = 1; i < arr.length; i++) {
-        init_arr[i - 1] = "<img src='/files/" + arr[i] + "' class='file-preview-image'>";
-    }
+    //for (var i = 1; i < arr.length; i++) {
+    //    init_arr[i - 1] = "<img src='/files/" + arr[i] + "' class='file-preview-image'>";
+    //}
 
     $("#photo-input").fileinput({
-        initialPreview: init_arr,
-        overwriteInitial: true,
-        browseLabel: "浏览",
+        //initialPreview: init_arr, // 初始图片数组
+        overwriteInitial: false, // 可覆盖初始图片
+        browseLabel: "浏览",  // 按钮显示
         uploadLabel: "上传",
-        removeLabel: "移除",
-        showCaption: false
+        //removeLabel: "移除"
     });
 
 

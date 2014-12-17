@@ -139,8 +139,6 @@
         <dd>
             @using System.Text.RegularExpressions;
 
-            <div class="row">
-                <div class="col-xs-6 col-md-3">
                     @{
                         string init = Model.Photo;
                         if (init == null)
@@ -149,18 +147,15 @@
                         }
                         else
                         {
-                            <a class="thumbnail">
-                                @{string[] sArray = Regex.Split(init, "[$]");//, RegexOptions.IgnoreCase);
-                                for (var i = 1; i < sArray.Length; i++)
-                                {
-                                    <img src='/img/equipments/@Model.EquipmentID/@sArray[i]'>
-                                }
-                                }
-                            </a>
+                            string[] sArray = Regex.Split(init, "[$]");//, RegexOptions.IgnoreCase);
+                            for (var i = 1; i < sArray.Length; i++)
+                            {
+                                <img src='/img/equipments/@sArray[i]' class="thumbnail">
+                            }
+
                         }
-                    }
-                </div>
-            </div>
+}
+</dd>
 
 </dl>
 

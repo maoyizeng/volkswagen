@@ -74,7 +74,28 @@
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.File)
+                @using System.Text.RegularExpressions;
+<div class="row">
+    <div class="col-xs-6 col-md-3">
+        @{
+            string init = Model.File;
+            if (init == null)
+            {
+                <p>无</p>
+            }
+            else
+            {
+                string[] sArray = Regex.Split(init, "[$]");//, RegexOptions.IgnoreCase);
+                for (var i = 1; i < sArray.Length; i++)
+                {
+                    <a href='/file/@Model.Class/@Model.EquipDes/@sArray[i]'>@sArray[i]</a>
+                }
+
+            }
+        }
+    </div>
+</div>
+
             </dd>
 
             <dt>
@@ -184,7 +205,28 @@
                     </dt>
 
                     <dd>
-                        @origin.File
+                        @using System.Text.RegularExpressions;
+<div class="row">
+    <div class="col-xs-6 col-md-3">
+        @{
+                string init2 = origin.File;
+                if (init == null)
+                {
+                    <p>无</p>
+                }
+                else
+                {
+                    string[] sArray = Regex.Split(init2, "[$]");//, RegexOptions.IgnoreCase);
+                    for (var i = 1; i < sArray.Length; i++)
+                    {
+                        <a href='/file/@origin.Class/@origin.EquipDes/@sArray[i]'>@sArray[i]</a>
+                    }
+
+                }
+        }
+    </div>
+</div>
+
                     </dd>
 
                     <dt>

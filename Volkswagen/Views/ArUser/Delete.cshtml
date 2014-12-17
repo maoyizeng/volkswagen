@@ -180,6 +180,34 @@
             @Html.DisplayFor(model => model.OperateTime)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.Image)
+        </dt>
+
+        <dd>
+            @using System.Text.RegularExpressions;
+
+            @{
+                string init = Model.Image;
+                if (init == null)
+                {
+                    <p>无</p>
+                }
+                else
+                {
+
+                    string[] sArray = Regex.Split(init, "[$]");//, RegexOptions.IgnoreCase);
+                    for (var i = 1; i < sArray.Length; i++)
+                    {
+                        <img src='/img/user/@sArray[i]' class="thumbnail">
+                    }
+                }
+
+            }
+        </dd>
+
+
+
     </dl>
 
     @using (Html.BeginForm()) {

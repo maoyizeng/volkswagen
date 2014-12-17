@@ -197,6 +197,31 @@
                 @Html.DisplayFor(model => model.Operator)
             </dd>
 
+            <dt>
+                @Html.DisplayNameFor(model => model.Picture1)
+            </dt>
+
+            <dd>
+                @using System.Text.RegularExpressions;
+
+                @{
+                    string init = Model.Picture1;
+                    if (init == null)
+                    {
+                        <p>无</p>
+                    }
+                    else
+                    {
+                        string[] sArray = Regex.Split(init, "[$]");//, RegexOptions.IgnoreCase);
+                        for (var i = 1; i < sArray.Length; i++)
+                        {
+                            <img src='/img/spare/@sArray[i]' class="thumbnail">
+                        }
+
+                    }
+                }
+            </dd>
+
         </dl>
         @{
             var origin = ViewData["origin"] as Volkswagen.Models.SpareModels;
@@ -363,6 +388,30 @@
                         @origin.Creator
                     </dd>
 
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Picture1)
+                    </dt>
+
+                    <dd>
+                        @using System.Text.RegularExpressions;
+
+                        @{
+                string init2 = origin.Picture1;
+                if (init == null)
+                {
+                    <p>无</p>
+                }
+                else
+                {
+                    string[] sArray = Regex.Split(init2, "[$]");//, RegexOptions.IgnoreCase);
+                    for (var i = 1; i < sArray.Length; i++)
+                    {
+                        <img src='/img/spare/@sArray[i]' class="thumbnail">
+                    }
+
+                }
+                        }
+                    </dd>
                 </dl>
 
             }

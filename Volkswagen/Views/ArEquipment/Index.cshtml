@@ -472,7 +472,7 @@
                                 @{string[] sArray = Regex.Split(init, "[$]");//, RegexOptions.IgnoreCase);
 for (var i = 1; i < sArray.Length; i++)
 {
-            <img src='/img/equipments/@Model.Where(e => e.RecordID == rec_id).First().EquipmentID/@sArray[i]'>
+            <img src='/img/equipments/@sArray[i]'>
                  }
                  }></a>
         }
@@ -582,7 +582,7 @@ for (var i = 1; i < sArray.Length; i++)
     column.For(p => p.Person).Sortable(true);
     column.For(p => p.Section).Sortable(true);
     column.For(p => p.WSArea).Sortable(true);
-    column.For(p => p.Photo.IsEmpty() ? "无" : "有").Named("设备图片").Sortable(true);
+    column.For(p => p.Photo).Sortable(true);
     column.For(p => p.ItemInspect).Sortable(true);
     column.For(p => p.RegularCare).Sortable(true);
     column.For(p => p.Check).Sortable(true);

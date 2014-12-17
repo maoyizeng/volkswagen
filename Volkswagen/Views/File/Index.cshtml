@@ -266,7 +266,7 @@
                                 for (var i = 1; i < arr.length; i++)
                                 {
                                     var e = document.createElement("a");
-                                    e.href = "/files/" + arr[i];
+                                    e.href = "/files/" + eclass + "/" + eequip + "/" + arr[i];
                                     e.text = arr[i];
                                     dd.appendChild(e);
                                 }
@@ -275,7 +275,7 @@
                             order_by.value = '@col';
                             order_as.value = '@dir';
                         }
-                    </script>
+</script>
 
                 </div>
             </div>
@@ -404,6 +404,8 @@
 
             <script>
                 var init = "@Model.Where(e => e.FileName == ViewData["selected"] as string).First().File";
+                var eequip = "@Model.Where(e => e.FileName == ViewData["selected"] as string).First().EquipDes";
+                var eclass = "@Model.Where(e => e.FileName == ViewData["selected"] as string).First().Class";
             </script>
         </div>
     }
@@ -460,7 +462,7 @@
     column.For(p => p.EquipmentID).Sortable(true);
     column.For(p => p.EquipDes).Sortable(true);
     column.For(p => p.Charger).Sortable(true);
-    column.For(p => p.File.IsEmpty() ? "无" : "有").Named("文件").Sortable(true);
+    column.For(p => p.File).Sortable(true);
     column.For(p => p.ChangeTime).Sortable(true);
     column.For(p => p.Changer).Sortable(true);
     column.For(p => p.CreateTime).Sortable(true);

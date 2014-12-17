@@ -1,21 +1,22 @@
-﻿using System;
+﻿using MvcContrib.Pagination;
+using MvcContrib.Sorting;
+using MvcContrib.UI.Grid;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Dynamic;
+using System.Linq.Expressions;
 using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Volkswagen.Models;
 using Volkswagen.DAL;
-using MvcContrib.UI.Grid;
-using System.Linq.Expressions;
-using System.IO;
-using System.Linq.Dynamic;
-using MvcContrib.Sorting;
-using MvcContrib.Pagination;
-using System.Text;
+using Volkswagen.Models;
 
 namespace Volkswagen.Controllers
 {
@@ -407,6 +408,45 @@ namespace Volkswagen.Controllers
             base.Dispose(disposing);
         }
 
+        [HttpPost]
+        public ActionResult FileRemove()
+        {
+            string key = Request.Form["key2"];
+
+            SpareModels e = db.Spares.Find(key);
+            if (e == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            string origin_photo = e.Picture1;
+            string new_photo = "";
+            string[] sArray = Regex.Split(origin_photo, "[$]");
+
+            for (int i = 1; i < sArray.Length; i++)
+            {
+                if (Request.Form["photo_" + i] != "on")
+                {
+                    new_photo += "$" + sArray[i];
+                }
+            }
+
+            ArSpareModels ar = new ArSpareModels(e);
+            // TODO - check e;
+            e.Changer = User.Identity.Name;
+            e.ChangeTime = DateTime.Now;
+            e.Picture1 = new_photo;
+            int x = db.SaveChanges();
+
+            if (x != 0)
+            {
+                ar.Operator = ArEquipmentModels.OperatorType.修改;
+                db.ArSpares.Add(ar);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Edit", new { id = key });
+        }
+
         // POST: /Spare/FileUpload
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
@@ -416,21 +456,38 @@ namespace Volkswagen.Controllers
         {
             string key = Request.Form["key"];
             string fullname = "";
+            string directory = AppDomain.CurrentDomain.BaseDirectory + @"img\spare\";
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
 
             foreach (HttpPostedFileBase file in photos)
             {
                 if (file != null)
                 {
-                    string filePath = Path.Combine((AppDomain.CurrentDomain.BaseDirectory + @"img\spare\"), Path.GetFileName(file.FileName));
+                    string filename = DateTime.Now.ToString("yy-MM-dd HH-mm-ss") + " - " + Path.GetFileName(file.FileName);
+                    string filePath = Path.Combine(directory, filename); 
                     file.SaveAs(filePath);
-                    fullname += "$" + file.FileName;
+                    fullname += "$" + filename;
                 }
             }
 
             SpareModels e = db.Spares.Find(key);
-            // TODO - check e;
-            e.Picture1 = fullname;
-            db.SaveChanges();
+            ArSpareModels ar = new ArSpareModels(e);
+
+            e.Changer = User.Identity.Name;
+            e.ChangeTime = DateTime.Now;
+            e.Picture1 += fullname;
+            int x = db.SaveChanges();
+
+            if (x != 0)
+            {
+                ar.Operator = ArEquipmentModels.OperatorType.修改;
+                db.ArSpares.Add(ar);
+                db.SaveChanges();
+            }
             return RedirectToAction("Edit", new { id = key });
 
         }

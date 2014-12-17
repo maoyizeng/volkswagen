@@ -1,6 +1,5 @@
 ﻿@model Volkswagen.Models.EquipmentModels
 <!-- 本页面的主model为一条记录, 而不是一个记录的数组 -->
-
 @{
     ViewBag.Title = "编辑设备履历 - " + Model.EquipmentID;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -131,15 +130,69 @@
     </div>
 }
 
-<!-- 照片的显示模块 使用了fileinput.css插件 -->
+@using System.Text.RegularExpressions;
 <div class="form-horizontal">
     <div class="row">
         @Html.LabelFor(model => model.Photo, new { @class = "control-label  col-md-2" })
+        <div class="col-lg-8">
+            <form action="/Equipment/FileRemove" method="post">
+                @{
+                    // 得到当前显示的记录的图片值($...$...$...)
+                    string init = Model.Photo;
+                    if (init == null)
+                    {
+                        // 为空则不显示
+                        <p>无</p>
+                    }
+                    else
+                    {
+                        <!-- 以$为分隔符进行分割 -->
+                        string[] sArray = Regex.Split(init, "[$]");//, RegexOptions.IgnoreCase);
+                        for (var i = 1; i < sArray.Length; i++)
+                        {
+                            <div class="row">
+                                <input type="checkbox" name="photo_@i" class="col-md-1" />
+                                <img src='/img/equipments/@sArray[i]' class="thumbnail col-lg-7">
+                            </div>
+                        }
+
+                    }
+                    <input type="hidden" value=@Model.EquipmentID name="key2" />
+                    <input type="submit" value="删除图片" class="btn btn-default" data-toggle="modal" data-target="#myModal2" />
+                    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">删除图片确认</h4>
+                            </div>
+                            <div class="modal-body">
+                                是否删除这些图片?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                <input type="submit" value="确定" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+            </form>
+        </div>
+    </div>
+</div>
+
+<br />
+
+<!-- 照片的显示模块 使用了fileinput.css插件 -->
+<div class="form-horizontal">
+    <div class="row">
+        <label class="control-label  col-md-2" for="Photo">上传新的设备照片</label>
         @using (Html.BeginForm("FileUpload", "Equipment", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             <div class="form-group col-md-6">
                 <!-- 照片的框组 -->
-                <input id="photo-input" type="file" class="file" name="photos" data-preview-file-type="any" multiple="multiple">
+                <input id="photo-input" type="file" class="file-loading" name="photos" data-preview-file-type="any" multiple="multiple">
             </div>
             <!-- 隐藏输入 告诉服务器主键号 -->
             <input type="hidden" value=@Model.EquipmentID name="key" />
@@ -157,18 +210,17 @@
     var init_arr = new Array();
 
     // 为每一项构建一个地址并作为img输出
-    for (var i = 1; i < arr.length; i++) {
-        init_arr[i - 1] = "<img src='/img/equipments/@Model.EquipmentID/" + arr[i] + "' class='file-preview-image'>";
-    }
+    //for (var i = 1; i < arr.length; i++) {
+    //    init_arr[i - 1] = "<img src='/img/equipments/@Model.EquipmentID/" + arr[i] + "' class='file-preview-image'>";
+    //}
 
     // 给fileinput的参数 然后它会显示出图片上传框组
     $("#photo-input").fileinput({
-        initialPreview: init_arr, // 初始图片数组
+        //initialPreview: init_arr, // 初始图片数组
         overwriteInitial: false, // 可覆盖初始图片
         browseLabel: "浏览",  // 按钮显示
         uploadLabel: "上传",
-        removeLabel: "移除",
-        //showPreview: true //显示图片
+        //removeLabel: "移除"
     });
 
 

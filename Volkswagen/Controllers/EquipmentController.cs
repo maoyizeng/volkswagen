@@ -1,21 +1,21 @@
-﻿using System;
+﻿using MvcContrib.Pagination;
+using MvcContrib.Sorting;
+using MvcContrib.UI.Grid;
+using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Volkswagen.Models;
 using Volkswagen.DAL;
-using System.Linq.Expressions;
-using MvcContrib.UI.Grid;
-using System.IO;
-using MvcContrib.Sorting;
-using MvcContrib.Pagination;
-using System.Text;
+using Volkswagen.Models;
 
 namespace Volkswagen.Controllers
 {
@@ -219,7 +219,7 @@ namespace Volkswagen.Controllers
             foreach (EquipmentModels e in list_origin)
             {
                 // 由于checkbox的名字设置为Checked+主键, 所以这边逐一分析
-                if (Request.Form["Checked" + e.EquipmentID] != "false")
+                if (Request.Form["Checked" + e.EquipmentID] == "on")
                 {
                     list.Add(e);
                 }
@@ -494,6 +494,47 @@ namespace Volkswagen.Controllers
             base.Dispose(disposing);
         }
 
+        // POST: /Equipment/FileRemove
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public ActionResult FileRemove()
+        {
+            string key = Request.Form["key2"];
+
+            EquipmentModels e = db.Equipments.Find(key);
+            if (e == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            string origin_photo = e.Photo;
+            string new_photo = "";
+            string[] sArray = Regex.Split(origin_photo, "[$]");
+
+            for (int i = 1; i < sArray.Length; i++)
+            {
+                if (Request.Form["photo_" + i] != "on")
+                {
+                    new_photo += "$" + sArray[i];
+                }
+            }
+
+            ArEquipmentModels ar = new ArEquipmentModels(e);
+            // TODO - check e;
+            e.Changer = User.Identity.Name;
+            e.ChangeTime = DateTime.Now;
+            e.Photo = new_photo;
+            int x = db.SaveChanges();
+
+            if (x != 0)
+            {
+                ar.Operator = ArEquipmentModels.OperatorType.修改;
+                db.ArEquipments.Add(ar);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Edit", new { id = key });
+        }
+
         // POST: /Equipment/FileUpload
         // 文件上传
         [HttpPost]
@@ -503,7 +544,7 @@ namespace Volkswagen.Controllers
             // 得到主键号
             string key = Request.Form["key"];
             string fullname = "";
-            string directory = AppDomain.CurrentDomain.BaseDirectory + @"img\equipments\" + key + @"\";
+            string directory = AppDomain.CurrentDomain.BaseDirectory + @"img\equipments\";
 
             if (!Directory.Exists(directory))
             {
@@ -528,7 +569,7 @@ namespace Volkswagen.Controllers
             // TODO - check e;
             e.Changer = User.Identity.Name;
             e.ChangeTime = DateTime.Now;
-            e.Photo = fullname;
+            e.Photo += fullname;
             int x = db.SaveChanges();
 
             if (x != 0)
