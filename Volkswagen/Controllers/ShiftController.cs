@@ -111,6 +111,10 @@ namespace Volkswagen.Controllers
                         right = Expression.Constant(Convert.ToDateTime(operand));
                         right = Expression.Convert(right, left.Type);
                         break;
+                    case "ShiftID":
+                        right = Expression.Constant(int.Parse(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
                     default:
                         break;
                 }

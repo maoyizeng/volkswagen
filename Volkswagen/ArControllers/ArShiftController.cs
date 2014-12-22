@@ -113,6 +113,7 @@ namespace Volkswagen.ArControllers
                         right = Expression.Convert(right, left.Type);
                         break;
                     case "RecordID":
+                    case "ShiftID":
                         right = Expression.Constant(int.Parse(operand));
                         right = Expression.Convert(right, left.Type);
                         break;

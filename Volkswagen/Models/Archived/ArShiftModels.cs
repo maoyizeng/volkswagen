@@ -19,8 +19,8 @@ namespace Volkswagen.Models
 
         [Required]
         [Display(Name = "记录编号")]
-        [StringLength(15)]
-        public string ShiftID { get; set; }
+        //[StringLength(15)]
+        public int ShiftID { get; set; }
 
         [Display(Name = "交班日期")]
   //      [Column(TypeName = "date")]
