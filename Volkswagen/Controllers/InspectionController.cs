@@ -102,6 +102,9 @@ namespace Volkswagen.Controllers
                 {
                     //p.Equipments.Person
                     left = Expression.Property(Expression.Property(param, typeof(InspectionModels).GetProperty("Equipments")), typeof(EquipmentModels).GetProperty(field));
+                } else if (field == "WSArea")
+                {
+                    left = Expression.Property(Expression.Property(param, typeof(InspectionModels).GetProperty("Equipments")), typeof(EquipmentModels).GetProperty(field));
                 }
                 else
                 {
@@ -136,6 +139,10 @@ namespace Volkswagen.Controllers
                         break;
                     case "InspectionId":
                         right = Expression.Constant(int.Parse(operand));
+                        right = Expression.Convert(right, left.Type);
+                        break;
+                    case "WSArea":
+                        right = Expression.Constant(Convert.ToInt32(Enum.Parse(typeof(EquipmentModels.WSNames), operand)));
                         right = Expression.Convert(right, left.Type);
                         break;
                     default:

@@ -23,6 +23,7 @@
     var fieldMap = new Array(
         "负责人",
         "设备编号",
+        "车间生产线",
         "设备名称",
         "维护类别",
         "保养部件",
@@ -52,6 +53,7 @@
     var valueMap = new Array(
         "Person",
     "EquipmentID",
+        "WSArea",
     "EquipDes",
     "Class",
     "Part",
@@ -238,6 +240,7 @@
 
 <div hidden="hidden">
     @Html.TextBoxFor(model => (model as Volkswagen.Models.EquipmentModels).Person)
+    @Html.DropDownList("WSArea", new SelectList(Enum.GetValues(typeof(Volkswagen.Models.EquipmentModels.WSNames))), String.Empty)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).EquipmentID)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).EquipDes)
     @Html.TextBoxFor(model => (model as Volkswagen.Models.InspectionModels).Position)
