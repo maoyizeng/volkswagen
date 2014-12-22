@@ -10,7 +10,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>@Model.SheetID</h4>
         <hr />
@@ -41,12 +41,22 @@
         <div class="form-group">
             @Html.LabelFor(model => model.StartTime, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.StartTime, new { @class = "form-control", type = "datetime-local" })
+                @Html.TextBoxFor(model => model.StartTime, new { @class = "form-control", type = "text" })
+                <script>
+                    $('#StartTime').datetimepicker({
+                        format: 'yyyy-mm-dd hh:ii',
+                        todayBtn: true
+                    });</script>
                 @Html.ValidationMessageFor(model => model.StartTime)
             </div>
             @Html.LabelFor(model => model.FinishTime, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.FinishTime, new { @class = "form-control", type = "datetime-local" })
+                @Html.TextBoxFor(model => model.FinishTime, new { @class = "form-control", type = "text" })
+                <script>
+                    $('#FinishTime').datetimepicker({
+                        format: 'yyyy-mm-dd hh:ii',
+                        todayBtn: true
+                    });</script>
                 @Html.ValidationMessageFor(model => model.FinishTime)
             </div>
         </div>
