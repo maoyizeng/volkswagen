@@ -236,6 +236,11 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "PlanID,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
         {
+            if (db.Equipments.Find(inspectionmodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(inspectionmodels);
+            }
             if (ModelState.IsValid)
             {
                 inspectionmodels.Changer = User.Identity.Name;
@@ -284,6 +289,11 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "InspectionId,PlanID,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
         {
+            if (db.Equipments.Find(inspectionmodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(inspectionmodels);
+            }
             if (ModelState.IsValid)
             {
                 var toUpdate = db.Inspections.Find(inspectionmodels.InspectionId);
@@ -331,6 +341,11 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "InspectionId,PlanID,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
         {
+            if (db.Equipments.Find(inspectionmodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(inspectionmodels);
+            }
             bool changed = false;
             List<InspectionModels> l = new List<InspectionModels>();
             for (int i = 0; ; i++)

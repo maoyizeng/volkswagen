@@ -266,6 +266,11 @@ namespace Volkswagen.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Create([Bind(Include="EquipmentID,EquipDes,Person,Section,WSArea,Photo,ItemInspect,ItemInspectNum,RegularCare,RegularCareNum,Check,CheckNum,RoutingInspect,Rules,TechnicFile,TrainingFile,ChangeTime,Changer,CreateTime,Creator,Remark")] EquipmentModels equipmentmodels)
         {
+            if (db.Equipments.Find(equipmentmodels.EquipmentID) != null)
+            {
+                ViewData["valid"] = "exist_key";
+                return View(equipmentmodels);
+            }
             if (ModelState.IsValid) // 确认传回的值是有效的, 要是有输入错误, 则返回原页面并显示错误
             {
                 // 给记录做上必要记录

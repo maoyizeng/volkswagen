@@ -230,6 +230,16 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include="SheetID,EquipmentID,EquipDes,StartTime,FinishTime,RepairTime,Class,Line,Section,FaultView,Repairman,Description,FaultType,Result,Problem,Checker,Remark,StopTime,File,RepairNum,ChangeTime,Changer,CreateTime,Creator")] RepairModels repairmodels)
         {
+            if (db.Equipments.Find(repairmodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(repairmodels);
+            }
+            if (db.Repairs.Find(repairmodels.SheetID) != null)
+            {
+                ViewData["valid"] = "exist_key";
+                return View(repairmodels);
+            }
             if (ModelState.IsValid)
             {
                 repairmodels.Changer = User.Identity.Name;
@@ -278,6 +288,11 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include="SheetID,EquipmentID,EquipDes,StartTime,FinishTime,RepairTime,Class,Line,Section,FaultView,Repairman,Description,FaultType,Result,Problem,Checker,Remark,StopTime,File,RepairNum,ChangeTime,Changer,CreateTime,Creator")] RepairModels repairmodels)
         {
+            if (db.Equipments.Find(repairmodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(repairmodels);
+            }
             if (ModelState.IsValid)
             {
                 var toUpdate = db.Repairs.Find(repairmodels.SheetID);
@@ -323,6 +338,12 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "SheetID,EquipmentID,EquipDes,StartTime,FinishTime,RepairTime,Class,Line,Section,FaultView,Repairman,Description,FaultType,Result,Problem,Checker,Remark,StopTime,File,RepairNum,ChangeTime,Changer,CreateTime,Creator")] RepairModels repairmodels)
         {
+            if (db.Equipments.Find(repairmodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(repairmodels);
+            }
+
             bool changed = false;
             List<RepairModels> l = new List<RepairModels>();
             for (int i = 0; ; i++)

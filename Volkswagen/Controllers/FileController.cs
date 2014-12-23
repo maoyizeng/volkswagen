@@ -191,6 +191,11 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include="FileName,Class,EquipmentID,EquipDes,Charger,File,ChangeTime,Changer,CreateTime,Creator")] FileModels filemodels)
         {
+            if (db.Equipments.Find(filemodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(filemodels);
+            }
             if (ModelState.IsValid)
             {
                 filemodels.Changer = User.Identity.Name;
@@ -235,6 +240,11 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include="FileName,Class,EquipmentID,EquipDes,Charger,File,ChangeTime,Changer,CreateTime,Creator")] FileModels filemodels)
         {
+            if (db.Equipments.Find(filemodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(filemodels);
+            }
             if (ModelState.IsValid)
             {
                 var toUpdate = db.Files.Find(filemodels.FileName);
@@ -279,6 +289,12 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "FileName,Class,EquipmentID,EquipDes,Charger,File,ChangeTime,Changer,CreateTime,Creator")] FileModels filemodels)
         {
+            if (db.Equipments.Find(filemodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(filemodels);
+            }
+
             bool changed = false;
             List<FileModels> l = new List<FileModels>();
             for (int i = 0; ; i++)

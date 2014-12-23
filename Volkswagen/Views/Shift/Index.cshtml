@@ -294,111 +294,112 @@
 
     @if ((ViewData["selected"] != null) && (ViewData["selected"] != ""))
     {
+        int ins_id = Convert.ToInt32(ViewData["selected"] as string);
         <div class="panel">
             <div class="panel-heading">
                 <h3 class="panel-title">@ViewData["selected"]</h3>
             </div>
             <dl class="dl-horizontal">
                 <dt>
-                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().ShiftDate)
+                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ins_id).First().ShiftDate)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().ShiftDate)
+                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ins_id).First().ShiftDate)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().ShiftTime)
+                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ins_id).First().ShiftTime)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().ShiftTime)
+                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ins_id).First().ShiftTime)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().Class)
+                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ins_id).First().Class)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().Class)
+                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ins_id).First().Class)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().Line)
+                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ins_id).First().Line)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().Line)
+                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ins_id).First().Line)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().Charger)
+                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ins_id).First().Charger)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().Charger)
+                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ins_id).First().Charger)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().Record)
+                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ins_id).First().Record)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().Record)
+                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ins_id).First().Record)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().Urgency)
+                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ins_id).First().Urgency)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().Urgency)
+                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ins_id).First().Urgency)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().Remark)
+                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ins_id).First().Remark)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().Remark)
+                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ins_id).First().Remark)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().ChangeTime)
+                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ins_id).First().ChangeTime)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().ChangeTime)
+                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ins_id).First().ChangeTime)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().Changer)
+                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ins_id).First().Changer)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().Changer)
+                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ins_id).First().Changer)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().CreateTime)
+                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ins_id).First().CreateTime)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().CreateTime)
+                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ins_id).First().CreateTime)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().Creator)
+                    @Html.DisplayNameFor(model => model.Where(e => e.ShiftID == ins_id).First().Creator)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ViewData["selected"] as string).First().Creator)
+                    @Html.DisplayFor(model => model.Where(e => e.ShiftID == ins_id).First().Creator)
                 </dd>
 
             </dl>
 
             @{ var em = Model.GetEnumerator();
-               var current_em = Model.Where(p => p.ShiftID == ViewData["selected"] as string).First();
+               var current_em = Model.Where(p => p.ShiftID == ins_id).First();
                var prev_em = em.Current;
                string first_one = "", last_one = "";
                try
@@ -425,9 +426,9 @@
 
             <div class="btn-group">
                 <button class='btn btn-default' @first_one onclick="var sel=document.getElementById('selected_item'); sel.value='@prev_em.ShiftID'; var pg=document.getElementById('page'); pg.value='@Model.PageNumber';"><span class='glyphicon glyphicon-chevron-left'></span>上一项</button>
-                @Html.ActionLink("详细", "Details", "Shift", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
-                @Html.ActionLink("编辑", "Edit", "Shift", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
-                @Html.ActionLink("删除", "Delete", "Shift", new { id = ViewData["selected"] as string }, new { @class = "btn btn-default" })
+                @Html.ActionLink("详细", "Details", "Shift", new { id = ins_id }, new { @class = "btn btn-default" })
+                @Html.ActionLink("编辑", "Edit", "Shift", new { id = ins_id }, new { @class = "btn btn-default" })
+                @Html.ActionLink("删除", "Delete", "Shift", new { id = ins_id }, new { @class = "btn btn-default" })
                 <button class='btn btn-default' @last_one onclick="var sel=document.getElementById('selected_item'); sel.value='@em.Current.ShiftID'; var pg=document.getElementById('page'); pg.value='@Model.PageNumber';"><span class='glyphicon glyphicon-chevron-right'></span>下一项</button>
             </div>
         </div>

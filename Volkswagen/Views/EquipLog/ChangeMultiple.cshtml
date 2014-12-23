@@ -26,6 +26,11 @@
     }
 }
 
+        @if (ViewData["valid"] == "no_foreign")
+        {
+            <label class=" alert-danger">设备不存在</label>
+        }
+
         <div class="form-group">
             @Html.LabelFor(model => model.EquipDes, new { @class = "control-label col-md-2" })
             <div class="col-md-2">

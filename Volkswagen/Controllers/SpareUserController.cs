@@ -198,6 +198,12 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include="SpareID,SpareDes,Type,InValue,OutValue,User,UseTime,ActualUse,ChangeTime,Changer,CreateTime,Creator")] SpareUserModels spareusermodels)
         {
+            if (db.Spares.Find(spareusermodels.SpareID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(spareusermodels);
+            }
+
             if (ModelState.IsValid)
             {
                 spareusermodels.Changer = User.Identity.Name;
@@ -264,6 +270,11 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include="UserID,SpareID,SpareDes,Type,InValue,OutValue,User,UseTime,ActualUse,ChangeTime,Changer,CreateTime,Creator")] SpareUserModels spareusermodels)
         {
+            if (db.Spares.Find(spareusermodels.SpareID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(spareusermodels);
+            }
             if (ModelState.IsValid)
             {
                 var toUpdate = db.SpareUsers.Find(spareusermodels.UserID);
@@ -330,6 +341,12 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "UserID,SpareID,SpareDes,Type,InValue,OutValue,User,UseTime,ActualUse,ChangeTime,Changer,CreateTime,Creator")] SpareUserModels spareusermodels)
         {
+            if (db.Spares.Find(spareusermodels.SpareID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(spareusermodels);
+            }
+
             bool changed = false;
             List<SpareUserModels> l = new List<SpareUserModels>();
             for (int i = 0; ; i++)

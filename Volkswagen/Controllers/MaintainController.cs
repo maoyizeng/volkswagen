@@ -208,6 +208,11 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include="EquipmentID,EquipDes,Line,MType,MPart,Content,Period,MStartTime,MEndTime,ResponseClass,CheckStatus,CheckDetail,EquipStatus,EquipDetail,CheckerType,Checker,CheckTime,Problem,Mark,Grade,ProblemStatus,CheckNum,ChangeTime,Changer,CreateTime,Creator")] MaintainModels maintainmodels)
         {
+            if (db.Equipments.Find(maintainmodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(maintainmodels);
+            }
             if (ModelState.IsValid)
             {
                 maintainmodels.Changer = User.Identity.Name;
@@ -256,6 +261,11 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include="MaintainId,EquipmentID,EquipDes,Line,MType,MPart,Content,Period,MStartTime,MEndTime,ResponseClass,CheckStatus,CheckDetail,EquipStatus,EquipDetail,CheckerType,Checker,CheckTime,Problem,Mark,Grade,ProblemStatus,CheckNum,ChangeTime,Changer,CreateTime,Creator")] MaintainModels maintainmodels)
         {
+            if (db.Equipments.Find(maintainmodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(maintainmodels);
+            }
             if (ModelState.IsValid)
             {
                 var toUpdate = db.Maintains.Find(maintainmodels.MaintainId);
@@ -303,6 +313,12 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "MaintainId,EquipmentID,EquipDes,Line,MType,MPart,Content,Period,MStartTime,MEndTime,ResponseClass,CheckStatus,CheckDetail,EquipStatus,EquipDetail,CheckerType,Checker,CheckTime,Problem,Mark,Grade,ProblemStatus,CheckNum,ChangeTime,Changer,CreateTime,Creator")] MaintainModels maintainmodels)
         {
+            if (db.Equipments.Find(maintainmodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(maintainmodels);
+            }
+
             bool changed = false;
             List<MaintainModels> l = new List<MaintainModels>();
             for (int i = 0; ; i++)

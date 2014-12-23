@@ -17,6 +17,15 @@
         <hr />
         @Html.ValidationSummary(true)
 
+        @if (ViewData["valid"] == "no_foreign")
+        {
+            <label class=" alert-danger">设备不存在</label>
+        }
+        @if (ViewData["valid"] == "exist_key")
+{
+    <label class="alert-danger">设备编号已存在</label>
+}
+
         <div class="form-group">
             @Html.LabelFor(model => model.EquipmentID, "EquipmentID", new { @class = "control-label col-md-2" })
             <div class="col-md-2">

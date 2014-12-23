@@ -199,6 +199,16 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include="EquipmentID,Department,EquipDes,Type,Spec,DocumentDate,EnableDate,OriginValue,Depreciation,Spot1,Spot2,Spot3,Remark,ChangeTime,Changer,CreateTime,Creator")] EquipLogModels equiplogmodels)
         {
+            if (db.Equipments.Find(equiplogmodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(equiplogmodels);
+            }
+            if (db.EquipLogs.Find(equiplogmodels.EquipmentID) != null)
+            {
+                ViewData["valid"] = "exist_key";
+                return View(equiplogmodels);
+            }
             if (ModelState.IsValid)
             {
                 equiplogmodels.Changer = User.Identity.Name;
@@ -248,6 +258,11 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include="EquipmentID,Department,EquipDes,Type,Spec,DocumentDate,EnableDate,OriginValue,Depreciation,Spot1,Spot2,Spot3,Remark,ChangeTime,Changer,CreateTime,Creator")] EquipLogModels equiplogmodels)
         {
+            if (db.Equipments.Find(equiplogmodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(equiplogmodels);
+            }
             if (ModelState.IsValid)
             {
                 var toUpdate = db.EquipLogs.Find(equiplogmodels.EquipmentID);
@@ -296,6 +311,12 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "EquipmentID,Department,EquipDes,Type,Spec,DocumentDate,EnableDate,OriginValue,Depreciation,Spot1,Spot2,Spot3,Remark,ChangeTime,Changer,CreateTime,Creator")] EquipLogModels equiplogmodels)
         {
+            if (db.Equipments.Find(equiplogmodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(equiplogmodels);
+            }
+
             bool changed = false;
             List<EquipLogModels> l = new List<EquipLogModels>();
             for (int i = 0; ; i++)

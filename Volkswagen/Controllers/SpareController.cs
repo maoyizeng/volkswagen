@@ -203,6 +203,16 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include="SpareID,SpareDes,Type,Picture1,Mark,PresentValue,SafeValue,DCMinValue,DCMaxValue,Property,EquipmentID,Producer,OrderNumber,Remark,KeyPart,File,ChangeTime,Changer,CreateTime,Creator")] SpareModels sparemodels)
         {
+            if (db.Equipments.Find(sparemodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(sparemodels);
+            }
+            if (db.Spares.Find(sparemodels.SpareID) != null)
+            {
+                ViewData["valid"] = "exist_key";
+                return View(sparemodels);
+            }
             if (ModelState.IsValid)
             {
                 sparemodels.Changer = User.Identity.Name;
@@ -248,6 +258,11 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include="SpareID,SpareDes,Type,Picture1,Mark,PresentValue,SafeValue,DCMinValue,DCMaxValue,Property,EquipmentID,Producer,OrderNumber,Remark,KeyPart,File,ChangeTime,Changer,CreateTime,Creator")] SpareModels sparemodels)
         {
+            if (db.Equipments.Find(sparemodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(sparemodels);
+            }
             if (ModelState.IsValid)
             {
                 var toUpdate = db.Spares.Find(sparemodels.SpareID);
@@ -294,6 +309,12 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "SpareID,SpareDes,Type,Picture1,Mark,PresentValue,SafeValue,DCMinValue,DCMaxValue,Property,EquipmentID,Producer,OrderNumber,Remark,KeyPart,File,ChangeTime,Changer,CreateTime,Creator")] SpareModels sparemodels)
         {
+            if (db.Equipments.Find(sparemodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(sparemodels);
+            }
+
             bool changed = false;
             List<SpareModels> l = new List<SpareModels>();
             for (int i = 0; ; i++)

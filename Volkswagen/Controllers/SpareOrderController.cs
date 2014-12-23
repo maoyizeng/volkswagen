@@ -200,6 +200,17 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include="SpareID,SpareDes,Type,OrderValue,Producer,OrderNum,Property,EquipmentID,Maker,MakerNum,Orderman,UseTime,UnitPrice,TotalPrice,Status,Mode,OrderFile,ChangeTime,Changer,CreateTime,Creator")] SpareOrderModels spareordermodels)
         {
+            if (db.Spares.Find(spareordermodels.SpareID) == null)
+            {
+                ViewData["valid"] = "no_spare";
+                return View(spareordermodels);
+            }
+            if (db.Equipments.Find(spareordermodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(spareordermodels);
+            }
+
             if (ModelState.IsValid)
             {
                 spareordermodels.Changer = User.Identity.Name;
@@ -250,6 +261,16 @@ namespace Volkswagen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include="OrderID,SpareID,SpareDes,Type,OrderValue,Producer,OrderNum,Property,EquipmentID,Maker,MakerNum,Orderman,UseTime,UnitPrice,TotalPrice,Status,Mode,OrderFile,ChangeTime,Changer,CreateTime,Creator")] SpareOrderModels spareordermodels)
         {
+            if (db.Spares.Find(spareordermodels.SpareID) == null)
+            {
+                ViewData["valid"] = "no_spare";
+                return View(spareordermodels);
+            }
+            if (db.Equipments.Find(spareordermodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(spareordermodels);
+            }
             if (ModelState.IsValid)
             {
                 var toUpdate = db.SpareOrders.Find(spareordermodels.OrderID);
@@ -299,6 +320,16 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "OrderID,SpareID,SpareDes,Type,OrderValue,Producer,OrderNum,Property,EquipmentID,Maker,MakerNum,Orderman,UseTime,UnitPrice,TotalPrice,Status,Mode,OrderFile,ChangeTime,Changer,CreateTime,Creator")] SpareOrderModels spareordermodels)
         {
+            if (db.Spares.Find(spareordermodels.SpareID) == null)
+            {
+                ViewData["valid"] = "no_spare";
+                return View(spareordermodels);
+            }
+            if (db.Equipments.Find(spareordermodels.EquipmentID) == null)
+            {
+                ViewData["valid"] = "no_foreign";
+                return View(spareordermodels);
+            }
             bool changed = false;
             List<SpareOrderModels> l = new List<SpareOrderModels>();
             for (int i = 0; ; i++)

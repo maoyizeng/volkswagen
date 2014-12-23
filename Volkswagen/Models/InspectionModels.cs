@@ -13,7 +13,6 @@ namespace Volkswagen.Models
     // 表2 设备保养计划
     public class InspectionModels
     {
-
         [Required]
         [Display(Name = "设备编号")]
         [StringLength(15)]
