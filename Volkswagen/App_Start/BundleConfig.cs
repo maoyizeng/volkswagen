@@ -39,13 +39,15 @@ namespace Volkswagen
                 "~/Scripts/bootstrap.min.js",
                 "~/Scripts/respond.js",
                 "~/Scripts/fileinput.min.js",
-                "~/Scripts/bootstrap-datetimepicker.js"));
+                "~/Scripts/bootstrap-datetimepicker.js",
+                "~/Scripts/locales/bootstrap-datetimepicker.zh-CN.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
+                 "~/Content/bootstrap-datetimepicker.css",
                  "~/Content/bootstrap.min.css",
                  "~/Content/Site.css",
-                 "~/Content/fileinput.min.css",
-                 "~/Content/bootstrap - datetimepicker.css"));
+                 "~/Content/fileinput.min.css"
+                 ));
         }
     }
 }
