@@ -191,7 +191,8 @@ namespace Volkswagen.Controllers
             List<RepairModels> list_origin = l.ToList();
             foreach (RepairModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.SheetID] != "false")
+                var ss = Request.Form["Checked" + e.SheetID];
+                if ((!string.IsNullOrEmpty(ss)) && (ss != "false"))
                 {
                     list.Add(e);
                 }
@@ -330,7 +331,7 @@ namespace Volkswagen.Controllers
             if (ViewData["list"] == null) ViewData["list"] = list;
             ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
             ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes");
-            return RedirectToAction("ChangeMultiple", new { Repairmodels = new RepairModels() });
+            return View("ChangeMultiple", new RepairModels());
         }
 
         // POST: /Repair/ChangeMultiple/
@@ -338,7 +339,7 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "SheetID,EquipmentID,EquipDes,StartTime,FinishTime,RepairTime,Class,Line,Section,FaultView,Repairman,Description,FaultType,Result,Problem,Checker,Remark,StopTime,File,RepairNum,ChangeTime,Changer,CreateTime,Creator")] RepairModels repairmodels)
         {
-            if (db.Equipments.Find(repairmodels.EquipmentID) == null)
+            if ((!string.IsNullOrEmpty(repairmodels.EquipmentID)) && (db.Equipments.Find(repairmodels.EquipmentID) == null))
             {
                 ViewData["valid"] = "no_foreign";
                 return View(repairmodels);
@@ -352,7 +353,7 @@ namespace Volkswagen.Controllers
                 if (Request.Form["item" + i] == null) break;
                 RepairModels e = db.Repairs.Find(id);
                 l.Add(e);
-                ArRepairModels ar = new ArRepairModels(e);
+                ArRepairModels ar = new ArRepairModels(e); 
                 if (repairmodels.EquipmentID != null && ModelState.IsValidField("EquipmentID")) e.EquipmentID = repairmodels.EquipmentID;
                 if (repairmodels.EquipDes != null && ModelState.IsValidField("EquipDes")) e.EquipDes = repairmodels.EquipDes;
                 if (repairmodels.Class != null && ModelState.IsValidField("Class")) e.Class = repairmodels.Class;
@@ -437,7 +438,7 @@ namespace Volkswagen.Controllers
         // POST: /Repair/DeleteMultiple/
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteMultiple()
+        public async Task<ActionResult> DeleteMultiple(int? page, string selected_item)
         {
             IQueryable<RepairModels> l = getQuery();
             List<RepairModels> list = getSelected(l);
@@ -453,7 +454,28 @@ namespace Volkswagen.Controllers
                     await db.SaveChangesAsync();
                 }
             }
-            return RedirectToAction("Index");
+
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+            ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
+
+            l = getQuery();
+
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    l = l.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    l = l.OrderBy(model.Column + " asc");
+                }
+            }
+
+            return View("Index", l.ToList().AsPagination(page ?? 1, 100));//RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
