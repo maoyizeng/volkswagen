@@ -154,7 +154,8 @@ namespace Volkswagen.Controllers
             List<FileModels> list_origin = l.ToList();
             foreach (FileModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.FileName] != "false")
+                var ss = Request.Form["Checked" + e.FileName];
+                if ((!string.IsNullOrEmpty(ss)) && (ss != "false"))
                 {
                     list.Add(e);
                 }
@@ -281,7 +282,7 @@ namespace Volkswagen.Controllers
             if (ViewData["list"] == null) ViewData["list"] = list;
             //string key = list.First().FileID;
             //return RedirectToAction("Edit", new { id = key });
-            return RedirectToAction("ChangeMultiple", new { Filemodels = new FileModels() });
+            return View("ChangeMultiple", new FileModels());
         }
 
         // POST: /File/ChangeMultiple/
@@ -289,7 +290,7 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "FileName,Class,EquipmentID,EquipDes,Charger,File,ChangeTime,Changer,CreateTime,Creator")] FileModels filemodels)
         {
-            if (db.Equipments.Find(filemodels.EquipmentID) == null)
+            if ((!string.IsNullOrEmpty(filemodels.EquipmentID)) && (db.Equipments.Find(filemodels.EquipmentID) == null))
             {
                 ViewData["valid"] = "no_foreign";
                 return View(filemodels);
@@ -371,7 +372,7 @@ namespace Volkswagen.Controllers
         // POST: /File/DeleteMultiple/
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteMultiple()
+        public async Task<ActionResult> DeleteMultiple(int? page, string selected_item)
         {
             IQueryable<FileModels> l = getQuery();
             List<FileModels> list = getSelected(l);
@@ -387,7 +388,25 @@ namespace Volkswagen.Controllers
                     await db.SaveChangesAsync();
                 }
             }
-            return RedirectToAction("Index");
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+            ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
+            l = getQuery();
+
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    l = l.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    l = l.OrderBy(model.Column + " asc");
+                }
+            }
+            return View("Index", l.ToList().AsPagination(page ?? 1, 100));
         }
 
         protected override void Dispose(bool disposing)

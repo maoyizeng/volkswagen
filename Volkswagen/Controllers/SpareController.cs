@@ -165,7 +165,8 @@ namespace Volkswagen.Controllers
             List<SpareModels> list_origin = l.ToList();
             foreach (SpareModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.SpareID] != "false")
+                var ss = Request.Form["Checked" + e.SpareID];
+                if ((!string.IsNullOrEmpty(ss)) && (ss != "false"))
                 {
                     list.Add(e);
                 }
@@ -300,8 +301,8 @@ namespace Volkswagen.Controllers
             //string key = list.First().SpareID;
             //return RedirectToAction("Edit", new { id = key });
             ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
-            
-            return RedirectToAction("ChangeMultiple", new { Sparemodels = new SpareModels() });
+
+            return View("ChangeMultiple", new SpareModels());
         }
 
         // POST: /Spare/ChangeMultiple/
@@ -309,7 +310,7 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "SpareID,SpareDes,Type,Picture1,Mark,PresentValue,SafeValue,DCMinValue,DCMaxValue,Property,EquipmentID,Producer,OrderNumber,Remark,KeyPart,File,ChangeTime,Changer,CreateTime,Creator")] SpareModels sparemodels)
         {
-            if (db.Equipments.Find(sparemodels.EquipmentID) == null)
+            if ((!string.IsNullOrEmpty(sparemodels.EquipmentID)) && (db.Equipments.Find(sparemodels.EquipmentID) == null))
             {
                 ViewData["valid"] = "no_foreign";
                 return View(sparemodels);
@@ -401,7 +402,7 @@ namespace Volkswagen.Controllers
         // POST: /Spare/DeleteMultiple/
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteMultiple()
+        public async Task<ActionResult> DeleteMultiple(int? page, string selected_item)
         {
             IQueryable<SpareModels> l = getQuery();
             List<SpareModels> list = getSelected(l);
@@ -417,7 +418,27 @@ namespace Volkswagen.Controllers
                     await db.SaveChangesAsync();
                 }
             }
-            return RedirectToAction("Index");
+
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+            ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
+            l = getQuery();
+
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    l = l.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    l = l.OrderBy(model.Column + " asc");
+                }
+            }
+
+            return View("Index", l.ToList().AsPagination(page ?? 1, 100));
         }
 
         protected override void Dispose(bool disposing)

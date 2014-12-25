@@ -160,7 +160,8 @@ namespace Volkswagen.Controllers
             List<EquipLogModels> list_origin = l.ToList();
             foreach (EquipLogModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.EquipmentID] != "false")
+                var ss = Request.Form["Checked" + e.EquipmentID];
+                if ((!string.IsNullOrEmpty(ss)) && (ss != "false"))
                 {
                     list.Add(e);
                 }
@@ -303,7 +304,7 @@ namespace Volkswagen.Controllers
             //return RedirectToAction("Edit", new { id = key });
             ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
             ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes");
-            return RedirectToAction("ChangeMultiple", new { EquipLogmodels = new EquipLogModels() });
+            return View("ChangeMultiple", new EquipLogModels());
         }
 
         // POST: /EquipLog/ChangeMultiple/
@@ -311,7 +312,7 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "EquipmentID,Department,EquipDes,Type,Spec,DocumentDate,EnableDate,OriginValue,Depreciation,Spot1,Spot2,Spot3,Remark,ChangeTime,Changer,CreateTime,Creator")] EquipLogModels equiplogmodels)
         {
-            if (db.Equipments.Find(equiplogmodels.EquipmentID) == null)
+            if ((!string.IsNullOrEmpty(equiplogmodels.EquipmentID)) && (db.Equipments.Find(equiplogmodels.EquipmentID) == null))
             {
                 ViewData["valid"] = "no_foreign";
                 return View(equiplogmodels);
@@ -404,7 +405,7 @@ namespace Volkswagen.Controllers
         // POST: /EquipLog/DeleteMultiple/
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteMultiple()
+        public async Task<ActionResult> DeleteMultiple(int? page, string selected_item)
         {
             IQueryable<EquipLogModels> l = getQuery();
             List<EquipLogModels> list = getSelected(l);
@@ -420,7 +421,25 @@ namespace Volkswagen.Controllers
                     await db.SaveChangesAsync();
                 }
             }
-            return RedirectToAction("Index");
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+            ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
+            l = getQuery();
+
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    l = l.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    l = l.OrderBy(model.Column + " asc");
+                }
+            }
+            return View("Index", l.ToList().AsPagination(page ?? 1, 100));
         }
 
         protected override void Dispose(bool disposing)

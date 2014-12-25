@@ -197,7 +197,8 @@ namespace Volkswagen.Controllers
             List<InspectionModels> list_origin = l.ToList();
             foreach (InspectionModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.InspectionId] != "false")
+                var ss = Request.Form["Checked" + e.InspectionId];
+                if ((!string.IsNullOrEmpty(ss)) && (ss != "false"))
                 {
                     list.Add(e);
                 }
@@ -333,7 +334,7 @@ namespace Volkswagen.Controllers
             //return RedirectToAction("Edit", new { id = key });
             ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
             ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes");
-            return RedirectToAction("ChangeMultiple", new { Inspectionmodels = new InspectionModels() });
+            return View("ChangeMultiple", new InspectionModels());
         }
 
         // POST: /Inspection/ChangeMultiple/
@@ -341,7 +342,7 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "InspectionId,PlanID,EquipmentID,EquipDes,Class,Part,Position,Content,Period,Caution,Remark,ChangeTime,Changer,CreateTime,Creator")] InspectionModels inspectionmodels)
         {
-            if (db.Equipments.Find(inspectionmodels.EquipmentID) == null)
+            if ((!string.IsNullOrEmpty(inspectionmodels.EquipmentID)) && (db.Equipments.Find(inspectionmodels.EquipmentID) == null))
             {
                 ViewData["valid"] = "no_foreign";
                 return View(inspectionmodels);
@@ -436,7 +437,7 @@ namespace Volkswagen.Controllers
         // POST: /Inspection/DeleteMultiple/
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteMultiple()
+        public async Task<ActionResult> DeleteMultiple(int? page, string selected_item)
         {
             IQueryable<InspectionModels> l = getQuery();
             List<InspectionModels> list = getSelected(l);
@@ -452,7 +453,25 @@ namespace Volkswagen.Controllers
                     await db.SaveChangesAsync();
                 }
             }
-            return RedirectToAction("Index");
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+            ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
+            l = getQuery();
+
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    l = l.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    l = l.OrderBy(model.Column + " asc");
+                }
+            }
+            return View("Index", l.ToList().AsPagination(page ?? 1, 100));
         }
 
         protected override void Dispose(bool disposing)

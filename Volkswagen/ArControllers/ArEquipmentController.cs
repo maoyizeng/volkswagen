@@ -247,7 +247,8 @@ namespace Volkswagen.ArControllers
             List<ArEquipmentModels> list_origin = l.ToList();
             foreach (ArEquipmentModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.EquipmentID + e.OperateTime.ToBinary()] != "false")
+                var ss = Request.Form["Checked" + e.RecordID];
+                if ((!string.IsNullOrEmpty(ss)) && (ss != "false"))
                 {
                     list.Add(e);
                 }
@@ -391,7 +392,7 @@ namespace Volkswagen.ArControllers
         // POST: /ArEquipment/DeleteMultiple/
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteMultiple()
+        public async Task<ActionResult> DeleteMultiple(int? page, string selected_item)
         {
             IQueryable<ArEquipmentModels> l = getQuery();
             List<ArEquipmentModels> list = getSelected(l);
@@ -400,7 +401,27 @@ namespace Volkswagen.ArControllers
                 db.ArEquipments.Remove(e);
                 await db.SaveChangesAsync();
             }
-            return RedirectToAction("Index");
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+            ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
+
+            l = getQuery();
+
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    l = l.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    l = l.OrderBy(model.Column + " asc");
+                }
+            }
+
+            return View("Index", l.ToList().AsPagination(page ?? 1, 100));
         }
 
         protected override void Dispose(bool disposing)

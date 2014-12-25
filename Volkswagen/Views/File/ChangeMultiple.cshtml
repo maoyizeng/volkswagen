@@ -8,7 +8,7 @@
 <h3>文件库 - 批量编辑</h3>
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("ChangeMultiple", "File"))
 {
     @Html.AntiForgeryToken()
     
@@ -29,6 +29,7 @@
         {
             <label class="alert-danger">设备不存在</label>
         }
+        <label class="alert-info">填写要修改的字段， 不用修改的字段请留空</label>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Class, new { @class = "control-label col-md-2" })

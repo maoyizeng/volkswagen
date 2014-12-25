@@ -8,7 +8,7 @@
 <h3>人员信息 - 批量编辑</h3>
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("ChangeMultiple", "User"))
 {
     @Html.AntiForgeryToken()
 
@@ -25,6 +25,7 @@
         n++;
     }
 }
+        <label class="alert-info">填写要修改的字段， 不用修改的字段请留空</label>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Breviary, new { @class = "control-label col-md-2" })

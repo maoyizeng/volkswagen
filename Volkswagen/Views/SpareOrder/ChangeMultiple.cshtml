@@ -7,7 +7,7 @@
 
 <h3>备件订购信息 - 批量编辑</h3>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("ChangeMultiple", "SpareOrder"))
 {
     @Html.AntiForgeryToken()
 
@@ -33,6 +33,7 @@
 {
     <label class="alert-danger">备件不存在</label>
 }
+        <label class="alert-info">填写要修改的字段， 不用修改的字段请留空</label>
 
         <div class="form-group">
             @Html.LabelFor(model => model.SpareID, new { @class = "control-label col-md-2" })

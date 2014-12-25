@@ -160,7 +160,8 @@ namespace Volkswagen.Controllers
             List<SpareOrderModels> list_origin = l.ToList();
             foreach (SpareOrderModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.OrderID] != "false")
+                var ss = Request.Form["Checked" + e.OrderID];
+                if ((!string.IsNullOrEmpty(ss)) && (ss != "false"))
                 {
                     list.Add(e);
                 }
@@ -312,7 +313,7 @@ namespace Volkswagen.Controllers
             ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
             ViewBag.SpareID = new SelectList(db.Spares, "SpareID", "SpareID");
             ViewBag.SpareDes = new SelectList(db.Spares, "SpareDes", "SpareDes");
-            return RedirectToAction("ChangeMultiple", new { SpareOrdermodels = new SpareOrderModels() });
+            return View("ChangeMultiple", new SpareOrderModels());
         }
 
         // POST: /SpareOrder/ChangeMultiple/
@@ -320,12 +321,12 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "OrderID,SpareID,SpareDes,Type,OrderValue,Producer,OrderNum,Property,EquipmentID,Maker,MakerNum,Orderman,UseTime,UnitPrice,TotalPrice,Status,Mode,OrderFile,ChangeTime,Changer,CreateTime,Creator")] SpareOrderModels spareordermodels)
         {
-            if (db.Spares.Find(spareordermodels.SpareID) == null)
+            if ((!string.IsNullOrEmpty(spareordermodels.SpareID)) && (db.Spares.Find(spareordermodels.SpareID) == null))
             {
                 ViewData["valid"] = "no_spare";
                 return View(spareordermodels);
             }
-            if (db.Equipments.Find(spareordermodels.EquipmentID) == null)
+            if ((!string.IsNullOrEmpty(spareordermodels.EquipmentID)) && (db.Equipments.Find(spareordermodels.EquipmentID) == null))
             {
                 ViewData["valid"] = "no_foreign";
                 return View(spareordermodels);
@@ -421,7 +422,7 @@ namespace Volkswagen.Controllers
         // POST: /SpareOrder/DeleteMultiple/
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteMultiple()
+        public async Task<ActionResult> DeleteMultiple(int? page, string selected_item)
         {
             IQueryable<SpareOrderModels> l = getQuery();
             List<SpareOrderModels> list = getSelected(l);
@@ -437,7 +438,27 @@ namespace Volkswagen.Controllers
                     await db.SaveChangesAsync();
                 }
             }
-            return RedirectToAction("Index");
+
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+            ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
+            l = getQuery();
+
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    l = l.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    l = l.OrderBy(model.Column + " asc");
+                }
+            }
+
+            return View("Index", l.ToList().AsPagination(page ?? 1, 100));
         }
 
         protected override void Dispose(bool disposing)

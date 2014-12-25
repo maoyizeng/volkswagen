@@ -169,7 +169,8 @@ namespace Volkswagen.Controllers
             List<MaintainModels> list_origin = l.ToList();
             foreach (MaintainModels e in list_origin)
             {
-                if (Request.Form["Checked" + e.MaintainId] != "false")
+                var ss = Request.Form["Checked" + e.MaintainId];
+                if ((!string.IsNullOrEmpty(ss)) && (ss != "false"))
                 {
                     list.Add(e);
                 }
@@ -305,7 +306,7 @@ namespace Volkswagen.Controllers
             //return RedirectToAction("Edit", new { id = key });
             ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
             ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes");
-            return RedirectToAction("ChangeMultiple", new { Maintainmodels = new MaintainModels() });
+            return View("ChangeMultiple", new MaintainModels());
         }
 
         // POST: /Maintain/ChangeMultiple/
@@ -313,7 +314,7 @@ namespace Volkswagen.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangeMultiple([Bind(Include = "MaintainId,EquipmentID,EquipDes,Line,MType,MPart,Content,Period,MStartTime,MEndTime,ResponseClass,CheckStatus,CheckDetail,EquipStatus,EquipDetail,CheckerType,Checker,CheckTime,Problem,Mark,Grade,ProblemStatus,CheckNum,ChangeTime,Changer,CreateTime,Creator")] MaintainModels maintainmodels)
         {
-            if (db.Equipments.Find(maintainmodels.EquipmentID) == null)
+            if ((!string.IsNullOrEmpty(maintainmodels.EquipmentID)) && (db.Equipments.Find(maintainmodels.EquipmentID) == null))
             {
                 ViewData["valid"] = "no_foreign";
                 return View(maintainmodels);
@@ -414,7 +415,7 @@ namespace Volkswagen.Controllers
         // POST: /Maintain/DeleteMultiple/
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteMultiple()
+        public async Task<ActionResult> DeleteMultiple(int? page, string selected_item)
         {
             IQueryable<MaintainModels> l = getQuery();
             List<MaintainModels> list = getSelected(l);
@@ -430,7 +431,26 @@ namespace Volkswagen.Controllers
                     await db.SaveChangesAsync();
                 }
             }
-            return RedirectToAction("Index");
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+            ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
+
+            IQueryable<MaintainModels> l = getQuery();
+
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    l = l.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    l = l.OrderBy(model.Column + " asc");
+                }
+            }
+            return View("Index", l.ToList().AsPagination(page ?? 1, 100));
         }
 
         protected override void Dispose(bool disposing)

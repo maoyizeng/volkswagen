@@ -219,7 +219,8 @@ namespace Volkswagen.Controllers
             foreach (EquipmentModels e in list_origin)
             {
                 // 由于checkbox的名字设置为Checked+主键, 所以这边逐一分析
-                if (Request.Form["Checked" + e.EquipmentID] == "on")
+                var ss = Request.Form["Checked" + e.EquipmentID];
+                if ((!string.IsNullOrEmpty(ss)) && (ss != "false"))
                 {
                     list.Add(e);
                 }
@@ -370,7 +371,7 @@ namespace Volkswagen.Controllers
             if (ViewData["list"] == null) ViewData["list"] = list;
             //string key = list.First().EquipmentID;
             //return RedirectToAction("Edit", new { id = key });
-            return RedirectToAction("ChangeMultiple", new { equipmentmodels = new EquipmentModels() });
+            return View("ChangeMultiple", new EquipmentModels());
         }
 
         // POST: /Equipment/ChangeMultiple/
@@ -471,7 +472,7 @@ namespace Volkswagen.Controllers
         // POST: /Equipment/DeleteMultiple/
         // 复数删除
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> DeleteMultiple()
+        public async Task<ActionResult> DeleteMultiple(int? page, string selected_item)
         {
             IQueryable<EquipmentModels> l = getQuery();
             List<EquipmentModels> list = getSelected(l);
@@ -487,7 +488,25 @@ namespace Volkswagen.Controllers
                     await db.SaveChangesAsync();
                 }
             }
-            return RedirectToAction("Index");
+            GridSortOptions model = new GridSortOptions();
+            model.Column = Request.Form["Column"];
+            model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
+            ViewData["model"] = model;
+            ViewData["selected"] = selected_item;
+            l = getQuery();
+
+            if (!string.IsNullOrEmpty(model.Column))
+            {
+                if (model.Direction == SortDirection.Descending)
+                {
+                    l = l.OrderBy(model.Column + " desc");
+                }
+                else
+                {
+                    l = l.OrderBy(model.Column + " asc");
+                }
+            }
+            return View("Index", l.ToList().AsPagination(page ?? 1, 100));
         }
 
         protected override void Dispose(bool disposing)
