@@ -324,8 +324,8 @@ namespace Volkswagen.Controllers
             List<MaintainModels> l = new List<MaintainModels>();
             for (int i = 0; ; i++)
             {
-                string id = Request.Form["item" + i];
                 if (Request.Form["item" + i] == null) break;
+                int id = int.Parse(Request.Form["item" + i]); 
                 MaintainModels e = db.Maintains.Find(id);
                 l.Add(e);
                 ArMaintainModels ar = new ArMaintainModels(e);
@@ -437,7 +437,7 @@ namespace Volkswagen.Controllers
             ViewData["model"] = model;
             ViewData["selected"] = selected_item;
 
-            IQueryable<MaintainModels> l = getQuery();
+            l = getQuery();
 
             if (!string.IsNullOrEmpty(model.Column))
             {

@@ -288,8 +288,8 @@ namespace Volkswagen.Controllers
             List<UserModels> l = new List<UserModels>();
             for (int i = 0; ; i++)
             {
-                string id = Request.Form["item" + i];
                 if (Request.Form["item" + i] == null) break;
+                int id = int.Parse(Request.Form["item" + i]);
                 UserModels e = db.Users.Find(id);
                 l.Add(e);
                 ArUserModels ar = new ArUserModels(e);

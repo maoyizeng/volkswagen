@@ -213,7 +213,7 @@ namespace Volkswagen.Controllers
         }
 
         // GET: /Shift/Edit/5
-        public async Task<ActionResult> Edit(string id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -281,8 +281,8 @@ namespace Volkswagen.Controllers
             List<ShiftModels> l = new List<ShiftModels>();
             for (int i = 0; ; i++)
             {
-                string id = Request.Form["item" + i];
                 if (Request.Form["item" + i] == null) break;
+                int id = int.Parse(Request.Form["item" + i]);
                 ShiftModels e = db.Shifts.Find(id);
                 l.Add(e);
                 ArShiftModels ar = new ArShiftModels(e);
@@ -322,7 +322,7 @@ namespace Volkswagen.Controllers
 
 
         // GET: /Shift/Delete/5
-        public async Task<ActionResult> Delete(string id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -339,7 +339,7 @@ namespace Volkswagen.Controllers
         // POST: /Shift/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(string id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
             ShiftModels toDelete = await db.Shifts.FindAsync(id);
             ArShiftModels ar = new ArShiftModels(toDelete);

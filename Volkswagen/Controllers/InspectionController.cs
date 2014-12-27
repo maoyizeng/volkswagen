@@ -351,8 +351,8 @@ namespace Volkswagen.Controllers
             List<InspectionModels> l = new List<InspectionModels>();
             for (int i = 0; ; i++)
             {
-                string id = Request.Form["item" + i];
                 if (Request.Form["item" + i] == null) break;
+                int id = int.Parse(Request.Form["item" + i]);                
                 InspectionModels e = db.Inspections.Find(id);
                 l.Add(e);
                 ArInspectionModels ar = new ArInspectionModels(e);
@@ -365,6 +365,7 @@ namespace Volkswagen.Controllers
                 if (inspectionmodels.Content != null && ModelState.IsValidField("Content")) e.Content = inspectionmodels.Content;
                 if (inspectionmodels.Period != null && ModelState.IsValidField("Period")) e.Period = inspectionmodels.Period;
                 if (inspectionmodels.Caution != null && ModelState.IsValidField("Caution")) e.Caution = inspectionmodels.Caution;
+                if (inspectionmodels.PlanID != null && ModelState.IsValidField("PlanID")) e.PlanID = inspectionmodels.PlanID;
                 if (inspectionmodels.Remark != null && ModelState.IsValidField("Remark")) e.Remark = inspectionmodels.Remark;
 
                 if (db.Entry(e).State == EntityState.Modified)
@@ -443,11 +444,11 @@ namespace Volkswagen.Controllers
             List<InspectionModels> list = getSelected(l);
             foreach (InspectionModels e in list)
             {
+                ArInspectionModels ar = new ArInspectionModels(e);
                 db.Inspections.Remove(e);
                 int x = await db.SaveChangesAsync();
                 if (x != 0)
                 {
-                    ArInspectionModels ar = new ArInspectionModels(e);
                     ar.Operator = ArEquipmentModels.OperatorType.删除;
                     db.ArInspections.Add(ar);
                     await db.SaveChangesAsync();

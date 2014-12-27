@@ -352,8 +352,8 @@ namespace Volkswagen.Controllers
             List<SpareUserModels> l = new List<SpareUserModels>();
             for (int i = 0; ; i++)
             {
-                string id = Request.Form["item" + i];
                 if (Request.Form["item" + i] == null) break;
+                int id = int.Parse(Request.Form["item" + i]);
                 SpareUserModels e = db.SpareUsers.Find(id);
                 l.Add(e);
                 ArSpareUserModels ar = new ArSpareUserModels(e);

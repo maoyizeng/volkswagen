@@ -335,8 +335,8 @@ namespace Volkswagen.Controllers
             List<SpareOrderModels> l = new List<SpareOrderModels>();
             for (int i = 0; ; i++)
             {
-                string id = Request.Form["item" + i];
                 if (Request.Form["item" + i] == null) break;
+                int id = int.Parse(Request.Form["item" + i]);
                 SpareOrderModels e = db.SpareOrders.Find(id);
                 l.Add(e);
                 ArSpareOrderModels ar = new ArSpareOrderModels(e);
