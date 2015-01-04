@@ -227,6 +227,7 @@ namespace Volkswagen.Controllers
         {
             ViewBag.EquipmentID = new SelectList(db.Equipments, "EquipmentID", "EquipmentID");
             ViewBag.EquipDes = new SelectList(db.Equipments, "EquipDes", "EquipDes");
+            ViewBag.Person = new SelectList(db.Equipments.Select(e => e.Person).Distinct(), "Person");
             return View();
         }
 
@@ -724,6 +725,10 @@ namespace Volkswagen.Controllers
             int ranfolder = random.Next();
             string folder = AppDomain.CurrentDomain.BaseDirectory + @"files\tmp\" + ranfolder;
             Directory.CreateDirectory(folder);
+
+            // 打开excel
+            Application app = new Application();
+            Workbooks wbks = app.Workbooks;
             
             // 对每个设备逐个生成excel
             foreach (string equip_number in l.Select(p => p.EquipmentID).Distinct())
@@ -733,10 +738,7 @@ namespace Volkswagen.Controllers
                 string equip_name = data_now.First().EquipDes;
                 string equip_person = data_now.First().Equipments.Person;
                 string equip_line = data_now.First().Equipments.WSArea.ToString();
-
-                // 打开excel
-                Application app = new Application();
-                Workbooks wbks = app.Workbooks;
+                
                 // 打开模板 之后另存为新的工作本
                 _Workbook wbk = wbks.Add(AppDomain.CurrentDomain.BaseDirectory + @"files\file_template\设备月度保养计划表.xls");
                 Sheets shs = wbk.Sheets;
@@ -858,17 +860,18 @@ namespace Volkswagen.Controllers
                 //{
                 //    wbk.PrintOutEx(Type.Missing, sheet, Type.Missing, false, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
                 //}
-                
-                wbk.Close(null, null, null);
-                wbks.Close();
-                app.Quit();
 
-                //释放掉多余的excel进程
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(app);
-                app = null;
+                wbk.Close(null, null, null);                
 
                 // 结束 输出下一个设备的报表
             }
+
+            wbks.Close();
+            app.Quit();
+
+            //释放掉多余的excel进程
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(app);
+            app = null;
 
             // 压缩
             FastZip fz = new FastZip();
