@@ -1,22 +1,22 @@
-﻿using System;
+﻿using ICSharpCode.SharpZipLib.Zip;
+using MvcContrib.Pagination;
+using MvcContrib.Sorting;
+using MvcContrib.UI.Grid;
+using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Dynamic;
+using System.Linq.Expressions;
 using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Volkswagen.Models;
 using Volkswagen.DAL;
-using System.Linq.Expressions;
-using MvcContrib.UI.Grid;
-using System.IO;
-using MvcContrib.Sorting;
-using MvcContrib.Pagination;
-using System.Text;
-using System.Linq.Dynamic;
-using System.Text.RegularExpressions;
+using Volkswagen.Models;
 
 namespace Volkswagen.Controllers
 {
@@ -418,6 +418,38 @@ namespace Volkswagen.Controllers
             base.Dispose(disposing);
         }
 
+        // POST: /File/DownloadMultiple/
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> DownloadMultiple(int? page, string selected_item)
+        {
+            IQueryable<FileModels> l = getQuery();
+            List<FileModels> list = getSelected(l);
+
+            Random random = new Random();
+            int ranfolder = random.Next();
+            string folder = AppDomain.CurrentDomain.BaseDirectory + @"files\tmp\" + ranfolder;
+            Directory.CreateDirectory(folder);
+
+            foreach (FileModels e in list)
+            {
+                string[] sArray = Regex.Split(e.File, "[$]");
+
+                for (int i = 1; i < sArray.Length; i++)
+                {
+                    System.IO.File.Copy(AppDomain.CurrentDomain.BaseDirectory + @"files\" + e.Class + @"\" + e.EquipDes + @"\" + sArray[i], folder + @"\" + sArray[i], true);
+                }
+            }
+
+            // 压缩
+            FastZip fz = new FastZip();
+            fz.CreateZip(folder + @"\..\" + ranfolder + ".zip", folder, false, "");
+            fz = null;
+
+            // 返回
+            return File(folder + @"\..\" + ranfolder + ".zip", "application/zip", "多个文件.zip");
+        }
+
         // POST: /Equipment/FileRemove
         [HttpPost]
         [Authorize(Roles = "Admin")]
@@ -494,6 +526,7 @@ namespace Volkswagen.Controllers
                     string filename = DateTime.Now.ToString("yy-MM-dd HH-mm-ss") + " - " + Path.GetFileName(file.FileName);
                     // 构造需要保存的路径并保存, 然后将$...加到字符串中
                     string filePath = Path.Combine(directory, filename);
+                    file.SaveAs(filePath);
                     fullname += "$" + filename;
                 }
             }
