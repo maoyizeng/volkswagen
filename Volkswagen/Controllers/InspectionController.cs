@@ -735,6 +735,8 @@ namespace Volkswagen.Controllers
             {
                 var data_now = data.Where(p => p.EquipmentID == equip_number).ToList();
 
+                bool printed_something = false;
+
                 string equip_name = data_now.First().EquipDes;
                 string equip_person = data_now.First().Equipments.Person;
                 string equip_line = data_now.First().Equipments.WSArea.ToString();
@@ -801,6 +803,7 @@ namespace Volkswagen.Controllers
                             // 要输出 跳出循环继续
                             if (to_print)
                             {
+                                printed_something = true;
                                 break;
                             }
                             // 跳过此项 下一个循环, 查看下一个部件
@@ -853,15 +856,17 @@ namespace Volkswagen.Controllers
 
                 int ran = random.Next();
 
-                //保存到指定目录
-                wbk.SaveAs(folder + @"\" + equip_name + ".xls", Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+                if (printed_something) { 
+                    //保存到指定目录
+                    wbk.SaveAs(folder + @"\" + equip_name + ".xls", Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+                }
 
                 //if (Request.Form["print_month"] != "false")
                 //{
                 //    wbk.PrintOutEx(Type.Missing, sheet, Type.Missing, false, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
                 //}
 
-                wbk.Close(null, null, null);                
+                wbk.Close(false, null, null);                
 
                 // 结束 输出下一个设备的报表
             }
