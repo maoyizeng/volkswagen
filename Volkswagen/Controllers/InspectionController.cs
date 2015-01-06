@@ -675,6 +675,14 @@ namespace Volkswagen.Controllers
                 for (int i = 1; i <= sheet; i++)
                 {
                     ((_Worksheet)shs.get_Item(i)).Cells[35, 31] = i + "/" + sheet;
+                    if ((Request.Form["print_year"] != "false") && (i > 1))
+                    {
+                        //wbk.PrintOutEx(Type.Missing, sheet, Type.Missing, false, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                        var new_wbk = wbks.Add();
+                        ((_Worksheet)shs.get_Item(i)).Copy((_Worksheet)new_wbk.Sheets.get_Item(1));
+                        new_wbk.SaveAs(folder + @"\" + equip_name + "_" + i + ".xls", Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+                        new_wbk.Close(false, null, null);
+                    }
                 }
 
                 // 删除多余的sheet 要把删除时的alert先关掉
@@ -844,6 +852,14 @@ namespace Volkswagen.Controllers
                 for (int i = 1; i <= sheet; i++)
                 {
                     ((_Worksheet)shs.get_Item(i)).Cells[28, 35] = i + "/" + sheet;
+                    if ((Request.Form["print_month"] != "false") && (i > 1))
+                    {
+                        //wbk.PrintOutEx(Type.Missing, sheet, Type.Missing, false, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                        var new_wbk = wbks.Add();
+                        ((_Worksheet)shs.get_Item(i)).Copy((_Worksheet)new_wbk.Sheets.get_Item(1));
+                        new_wbk.SaveAs(folder + @"\" + equip_name + "_" + i + ".xls", Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+                        new_wbk.Close(false, null, null);
+                    }
                 }
 
                 // 将多的sheet删除 将删除时的alert关掉
@@ -860,11 +876,6 @@ namespace Volkswagen.Controllers
                     //保存到指定目录
                     wbk.SaveAs(folder + @"\" + equip_name + ".xls", Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
                 }
-
-                //if (Request.Form["print_month"] != "false")
-                //{
-                //    wbk.PrintOutEx(Type.Missing, sheet, Type.Missing, false, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
-                //}
 
                 wbk.Close(false, null, null);                
 

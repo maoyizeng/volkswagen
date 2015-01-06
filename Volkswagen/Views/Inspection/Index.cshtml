@@ -512,6 +512,8 @@
                     <input type="submit" class="btn btn-default" formaction="/Inspection/ExportYearPlan" value="生成年度保养计划">
                 </span>
             </div>
+            @Html.CheckBox("print_year")
+            生成打印版本
         </div>
         <div class="row">
 
@@ -523,6 +525,8 @@
                     <input type="submit" class="btn btn-default" formaction="/Inspection/ExportMonthPlan" value="生成月度保养计划">
                 </span>
             </div>
+            @Html.CheckBox("print_month")
+            生成打印版本
         </div>
         <div class="row">
             <div class="col-md-2">
