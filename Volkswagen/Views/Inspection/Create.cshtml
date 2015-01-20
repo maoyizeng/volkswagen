@@ -55,11 +55,13 @@
             @Html.LabelFor(model => model.Part, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
                 @Html.TextBoxFor(model => model.Part, new { @class = "form-control" })
+                <input type="button" value="新建保养部件" onclick="append_part()" class="btn btn-sm" />
                 @Html.ValidationMessageFor(model => model.Part)
             </div>
             @Html.LabelFor(model => model.Position, new { @class = "control-label col-md-1" })
             <div class="col-md-2">
                 @Html.TextBoxFor(model => model.Position, new { @class = "form-control" })
+                <input type="button" value="新建保养位置" onclick="append_position()" class="btn btn-sm" />
                 @Html.ValidationMessageFor(model => model.Position)
             </div>
         </div>
@@ -126,6 +128,52 @@
     @Html.ActionLink("返回列表", "Index")
 </div>
 
+<script>
+    var eid = document.getElementById("EquipmentID");
+    eid.onchange = function () {
+        var part = document.getElementById("Part");
+        var pos = document.getElementById("Position");
+        var new_part = document.getElementById("select_part_" + eid.value).cloneNode(true);
+        var new_position = document.getElementById("select_position_" + eid.value).cloneNode(true);
+        part.parentElement.replaceChild(new_part, part);
+        pos.parentElement.replaceChild(new_position, pos);
+        new_part.id = "Part";
+        new_part.name = "Part";
+        new_position.id = "Position";
+        new_position.name = "Position";
+    }
+    function append_part() {
+        var part = document.getElementById("Part");
+        var new_part = document.getElementById("Part_reserve").cloneNode(true);
+        part.parentElement.replaceChild(new_part, part);
+        new_part.id = "Part";
+        new_part.name = "Part";
+    }
+    function append_position() {
+        var pos = document.getElementById("Position");
+        var new_position = document.getElementById("Position_reserve").cloneNode(true);
+        pos.parentElement.replaceChild(new_position, pos);
+        new_position.id = "Position";
+        new_position.name = "Position";
+    }
+</script>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+<div hidden="hidden">
+    @using Volkswagen.Controllers;
+    @using Volkswagen.Models;
+    @{
+        var db = new Volkswagen.DAL.SVWContext();
+        foreach (EquipmentModels e in db.Equipments)
+        {
+            @Html.DropDownList("select_part_" + e.EquipmentID, new SelectList(db.Inspections.Where(p => p.EquipmentID == e.EquipmentID).Select(p => p.Part).Distinct()));
+            @Html.DropDownList("select_position_" + e.EquipmentID, new SelectList(db.Inspections.Where(p => p.EquipmentID == e.EquipmentID).Select(p => p.Position).Distinct()));
+        }
+        db.Dispose();
+    }
+    <input class="form-control" data-val="true" data-val-length="字段 保养部件 必须是最大长度为 30 的字符串。" data-val-length-max="30" id="Part_reserve" name="Part_reserve" type="text" value="" />
+    <input class="form-control" data-val="true" data-val-length="字段 保养位置 必须是最大长度为 30 的字符串。" data-val-length-max="30" id="Position_reserve" name="Position_reserve" type="text" value="" />
+</div>
