@@ -543,7 +543,7 @@ namespace Volkswagen.Controllers
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Part);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Position);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Content);
-                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Period);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", "'" + i.Period);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Caution);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.InspectionId);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.PlanID);

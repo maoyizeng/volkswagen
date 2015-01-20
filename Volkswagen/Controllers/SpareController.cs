@@ -15,6 +15,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Reflection;
+using Microsoft.Office.Core;
+using Microsoft.Office.Interop.Excel;
 using Volkswagen.DAL;
 using Volkswagen.Models;
 
@@ -534,9 +537,9 @@ namespace Volkswagen.Controllers
 
         }
 
-        public FileResult ExportExcel()
+        public ActionResult ExportExcel()
         {
-            var sbHtml = new StringBuilder();
+            //var sbHtml = new StringBuilder();
             GridSortOptions model = new GridSortOptions();
             model.Column = Request.Form["Column"];
             model.Direction = (Request.Form["Direction"] == "Ascending") ? SortDirection.Ascending : SortDirection.Descending;
@@ -558,8 +561,8 @@ namespace Volkswagen.Controllers
 
             var list = l.ToList();
 
-            sbHtml.Append("<table border='1' cellspacing='0' cellpadding='0'>");
-            sbHtml.Append("<tr>");
+            /*sbHtml.Append("<table border='1' cellspacing='0' cellpadding='0'>");
+            sbHtml.Append("<tr>");*/
             var lstTitle = new List<string> { 
                 "设备物流编号",
         "备件名称",
@@ -580,6 +583,7 @@ namespace Volkswagen.Controllers
         "创建人",
         "备注"
             };
+            /*
             foreach (var item in lstTitle)
             {
                 sbHtml.AppendFormat("<td style='font-size: 14px;text-align:center;background-color: #DCE0E2; font-weight:bold;' height='25'>{0}</td>", item);
@@ -592,7 +596,6 @@ namespace Volkswagen.Controllers
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.SpareID);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.SpareDes);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Type);
-                //sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Picture1);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Mark);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.PresentValue);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.SafeValue);
@@ -608,6 +611,10 @@ namespace Volkswagen.Controllers
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.CreateTime);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Creator);
                 sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i.Remark);
+                if (Request.Form["export_picture"] != "false")
+                {
+                    sbHtml.AppendFormat("<td>{0}</td>", i.Picture1);
+                }
                 sbHtml.Append("</tr>");
             }
             sbHtml.Append("</table>");
@@ -615,7 +622,85 @@ namespace Volkswagen.Controllers
             byte[] fileContents = Encoding.UTF8.GetBytes(sbHtml.ToString());
 
             var fileStream = new MemoryStream(fileContents);
-            return File(fileStream, "application/ms-excel", "备件库存.xls");
+            return File(fileStream, "application/ms-excel", "备件库存.xls");*/
+
+            // 用随机数构造一个新的文件夹
+            Random random = new Random();
+            int ranfolder = random.Next();
+            string folder = AppDomain.CurrentDomain.BaseDirectory + @"files\tmp\" + ranfolder;
+            Directory.CreateDirectory(folder);
+
+            // 打开excel和工作簿
+            Application app = new Application();
+            Workbooks wbks = app.Workbooks;
+
+            // 打开模版文件 之后会另存
+            _Workbook wbk = wbks.Add();
+            Sheets shs = wbk.Sheets;
+            _Worksheet sh = shs.Item[1];
+
+            int j = 1;
+            foreach (var item in lstTitle)
+            {
+                sh.Cells[1, j] = item;
+                j++;
+            }
+
+            j = 1;
+            foreach (var i in list)
+            {
+                j++;
+                sh.Cells[j, 1] = i.SpareID;
+                sh.Cells[j, 2] = i.SpareDes;
+                sh.Cells[j, 3] = i.Type;
+                sh.Cells[j, 4] = i.Mark;
+                sh.Cells[j, 5] = i.PresentValue;
+                sh.Cells[j, 6] = i.SafeValue;
+                sh.Cells[j, 7] = i.DCMinValue;
+                sh.Cells[j, 8] = i.DCMaxValue;
+                sh.Cells[j, 9] = i.Property;
+                sh.Cells[j, 10] = i.EquipmentID;
+                sh.Cells[j, 11] = i.Producer;
+                sh.Cells[j, 12] = i.OrderNumber;
+                sh.Cells[j, 13] = i.KeyPart;
+                sh.Cells[j, 14] = i.ChangeTime;
+                sh.Cells[j, 15] = i.Changer;
+                sh.Cells[j, 16] = i.CreateTime;
+                sh.Cells[j, 17] = i.Creator;
+                sh.Cells[j, 18] = i.Remark;
+                if (Request.Form["export_picture"] != "false") //如果需要输出图片
+                {
+                    string origin_photo = i.Picture1;
+                    string[] sArray = Regex.Split(origin_photo, "[$]");
+
+                    float pleft = Convert.ToSingle(sh.Cells[j, 19].Left); //图片左侧锚点
+                    foreach (var photo in sArray)
+                    {
+                        float ptop = Convert.ToSingle(sh.Cells[j, 19].Top); //图片上方锚点
+                        float pheight = (float)(5 / 0.035); //高度 0.035为1磅 这个可自调
+                        float pwidth = (float)(5 / 0.035);  //宽度
+                        if (!string.IsNullOrEmpty(photo))
+                        {
+                            sh.Shapes.AddPicture(AppDomain.CurrentDomain.BaseDirectory + @"img\spare\" + photo, MsoTriState.msoFalse, MsoTriState.msoTrue, pleft, ptop, pwidth, pheight);
+                        }
+                        pleft += (float)(5 / 0.035); //右移一张图片的位置
+                    }
+                    sh.Rows[j].RowHeight = 5 / 0.035; //含图片的行高
+                }
+                sh.Columns[14].ColumnWidth = 16; //时间输出的列宽
+                sh.Columns[16].ColumnWidth = 16;
+            }
+            wbk.SaveAs(folder + @"\备件库存.xls", Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+
+            wbk.Close(null, null, null);
+            wbks.Close();
+            app.Quit();
+
+            //释放掉多余的excel进程
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(app);
+            app = null;
+
+            return File(folder + @"\备件库存.xls", "application/ms-excel", "备件库存.xls");
         }
     }
 }

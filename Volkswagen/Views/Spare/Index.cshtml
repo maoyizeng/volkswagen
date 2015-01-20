@@ -578,6 +578,8 @@
     <p>
         @Html.ActionLink("新建", "Create", "Spare", null, new { @class = "btn btn-default" })
         <input type="submit" class="btn btn-default" formaction="/Spare/ExportExcel" value="导出">
+        @Html.CheckBox("export_picture")
+        导出图片
     </p>
 
     <input type="hidden" name="selected_item" id="selected_item" />
